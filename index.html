@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon IT - Montage & Dépannage PC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div id="site-content" style="opacity: 0;">
+
+        <div class="background-glow"></div>
+
+        <nav>
+            <div class="logo">HORIZON <span class="text-accent">IT</span></div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#galerie">Setup & Builds</a></li>
+                <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
+            </ul>
+        </nav>
+
+        <header id="hero">
+            <div class="hero-content">
+                <p class="subtitle">PASSIONNÉ D'INFORMATIQUE 🚀</p>
+                <h1>PC REPAIR & <br><span class="text-outline">ASSEMBLY</span></h1>
+                <p class="description">Montage de PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.</p>
+                <div class="cta-group">
+                    <a href="#contact" class="btn-primary">Lancer mon projet</a>
+                    <a href="#galerie" class="btn-secondary">Voir mes montages</a>
+                </div>
+            </div>
+        </header>
+
+        <section id="services">
+            <h2 class="section-title">MES <span class="text-accent">SERVICES</span></h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="icon">🛠️</div>
+                    <h3>Montage Custom</h3>
+                    <p>Gaming, Workstation ou Bureautique. Cable management impeccable et optimisation du flux d'air.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🚀</div>
+                    <h3>Optimisation</h3>
+                    <p>Overclocking, mise à jour BIOS, installation Windows & Drivers pour des perfs maximales.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🚑</div>
+                    <h3>Dépannage</h3>
+                    <p>Écran bleu ? Surchauffe ? Diagnostic panne hardware et réparation rapide.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <div class="contact-box">
+                <h2>Contactez <span class="text-accent">Horizon IT</span></h2>
+                <p>Un projet ? Une panne ? Remplissez ce formulaire.</p>
+                <form action="#" method="POST"> 
+                    <div class="input-group">
+                        <input type="text" placeholder="Votre Nom" required>
+                        <input type="email" placeholder="Votre Email" required>
+                    </div>
+                    <select>
+                        <option>Je veux un PC Gamer</option>
+                        <option>J'ai une panne</option>
+                        <option>Autre demande</option>
+                    </select>
+                    <textarea placeholder="Détails de votre demande..."></textarea>
+                    <button type="submit" class="btn-primary">Envoyer le message</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2024 Horizon IT. Tous droits réservés.</p>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
