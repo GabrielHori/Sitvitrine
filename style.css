@@ -29,10 +29,12 @@ body {
     left: 0;
     z-index: 9999;
     background: var(--bg-color);
+    will-change: opacity; /* Optimize animation performance */
 }
 #site-content {
     width: 100%;
     min-height: 100vh;
+    will-change: opacity; /* Optimize fade-in performance */
 }
 
 /* --- Effet de fond --- */
@@ -49,49 +51,80 @@ body {
 }
 
 /* --- Navigation --- */
+/* NAVIGATION */
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 5%;
-    backdrop-filter: blur(10px); 
-    position: sticky;
+    padding: 15px 30px;
+    position: fixed;
+    width: 100%;
     top: 0;
+    background: rgba(0,0,0,0.85);
     z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
 }
 
-.logo {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 900;
-    letter-spacing: 2px;
+nav .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-white);
+    text-shadow: 0 0 8px #00f0ff;
 }
 
-.text-accent {
-    color: var(--primary);
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.6); 
-}
-
-.nav-links {
-    list-style: none;
+nav ul {
     display: flex;
-    gap: 30px;
-    align-items: center;
+    list-style: none;
 }
 
-.nav-links a {
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
     text-decoration: none;
     color: var(--text-white);
     font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.9rem;
     transition: 0.3s;
 }
 
-.nav-links a:hover {
-    color: var(--primary);
+nav ul li a:hover {
+    text-shadow: 0 0 15px #00f0ff;
 }
+
+/* BURGER MENU */
+.burger {
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.burger div {
+    width: 100%;
+    height: 3px;
+    background-color: #00f0ff;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity; /* Optimize animation */
+}
+
+/* BURGER ANIMATION OPEN */
+.burger.toggle .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+.burger.toggle .line2 {
+    opacity: 0;
+}
+.burger.toggle .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
 
 /* --- Hero Section --- */
 #hero {
@@ -146,8 +179,9 @@ h1 {
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
-    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); 
-    transition: 0.3s;
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-block;
 }
 
 .btn-primary:hover {
@@ -162,7 +196,8 @@ h1 {
     text-decoration: none;
     text-transform: uppercase;
     font-weight: 600;
-    transition: 0.3s;
+    transition: border-color 0.3s ease, color 0.3s ease;
+    display: inline-block;
 }
 
 .btn-secondary:hover {
@@ -190,13 +225,14 @@ section {
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.03); 
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     padding: 30px;
     border-radius: 10px;
-    transition: 0.3s;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
+    will-change: transform; /* Optimize hover animation */
 }
 
 .card:hover {
@@ -214,7 +250,8 @@ section {
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
     transform: scaleX(0);
-    transition: 0.3s;
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .card:hover::before {
@@ -267,6 +304,101 @@ form input:focus, form textarea:focus, form select:focus {
     border-color: var(--primary);
 }
 
+#tips {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+#tips h2 {
+    font-size: 2.4rem;
+    margin-bottom: 35px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    justify-items: center;
+}
+
+/* Carte stylée */
+.tip-card {
+    background: rgba(10,10,10,0.7);
+    border-radius: 20px;
+    padding: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 0 20px rgba(0,180,255,0.25);
+    transition: transform 0.25s ease, box-shadow 0.3s ease;
+    will-change: transform; /* Optimize hover animation */
+    contain: layout style paint; /* CSS containment for performance */
+}
+
+.tip-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 35px rgba(0,180,255,0.45);
+}
+
+/* Cadre vidéo verticale */
+.video-wrapper {
+    width: 100%;
+    aspect-ratio: 9/16;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+
+/* SECTION BUILDS */
+.builds-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.build {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid #00f0ff44;
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px #00f0ff33;
+    max-width: 900px;
+    width: 100%;
+}
+
+/* GALERIE D'IMAGES DANS LE BUILD */
+.build img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    will-change: transform; /* Optimize hover animation */
+}
+
+.build img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px #00f0ffaa;
+}
+
+/* DESCRIPTION DU BUILD */
+.build p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #00f0ff;
+    font-weight: 500;
+}
+
+
 /* --- Footer --- */
 footer {
     text-align: center;
@@ -279,44 +411,84 @@ footer {
 /* ====== MEDIA QUERIES (Responsive) ===== */
 /* ======================================= */
 
-/* --- PETITS ÉCRANS (Smartphones) --- */
-@media (max-width: 768px) {
-    
-    /* Navigation */
-    .nav-links {
-        /* Cacher les liens pour l'instant (on pourrait faire un menu hamburger mais simplifions pour cette fois) */
-        display: none; 
+/* ======================================= */
+/* ====== MEDIA QUERIES (Responsive) ===== */
+/* ======================================= */
+
+/* RESPONSIVE GRID POUR LES IMAGES - Desktop */
+@media (min-width: 700px) {
+    .build {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
     }
-    
+
+    .build p {
+        grid-column: 1 / -1;
+        margin-top: 0;
+        padding-top: 15px;
+    }
+}
+
+/* TABLETTES ET SMARTPHONES (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    /* Navigation mobile */
+    .nav-links {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        width: 250px;
+        background: rgba(0,0,0,0.95);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        will-change: transform;
+    }
+
+    .nav-links li {
+        margin: 20px 0;
+    }
+
+    .nav-links.nav-active {
+        transform: translateX(0);
+    }
+
+    .burger {
+        display: flex;
+    }
+
     /* Titre Hero */
     h1 {
-        font-size: 3rem; /* Rendre le titre moins massif */
+        font-size: 3rem;
         text-align: center;
     }
-    
+
     .text-outline {
-         -webkit-text-stroke: 1px var(--text-white); /* Affiner le contour */
+         -webkit-text-stroke: 1px var(--text-white);
     }
-    
+
     .hero-content {
         text-align: center;
     }
 
     /* Boutons CTA */
     .cta-group {
-        flex-direction: column; /* Les boutons passent l'un sous l'autre */
+        flex-direction: column;
         align-items: center;
         gap: 15px;
     }
-    
+
     .btn-primary, .btn-secondary {
         width: 100%;
-        max-width: 300px; /* Limiter la largeur sur mobile */
+        max-width: 300px;
     }
 
     /* Sections */
     section {
-        padding: 50px 5%; /* Réduire le padding vertical */
+        padding: 50px 5%;
     }
 
     .section-title {
@@ -326,7 +498,7 @@ footer {
 
     /* Contact */
     .input-group {
-        flex-direction: column; /* Les champs nom/email passent l'un sous l'autre */
+        flex-direction: column;
         gap: 0;
     }
 
@@ -336,6 +508,29 @@ footer {
 
     /* Cartes Services */
     .cards-grid {
-        grid-template-columns: 1fr; /* Une seule carte par ligne */
+        grid-template-columns: 1fr;
+    }
+}
+
+/* PETITS SMARTPHONES (max-width: 480px) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .build {
+        padding: 15px;
+    }
+
+    .build img {
+        margin-bottom: 10px;
+    }
+
+    .build p {
+        font-size: 1rem;
+    }
+
+    nav .logo {
+        font-size: 1.5rem;
     }
 }

@@ -1,77 +1,139 @@
-  const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-    const siteContent = document.getElementById('site-content');
-    
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+// ============================================
+// OPTIMIZED MATRIX ANIMATION
+// ============================================
 
-    const binary = "01";
-    const characters = binary.split("");
+// Cache DOM elements
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for better performance
+const siteContent = document.getElementById('site-content');
 
-    const fontSize = 16;
-    const columns = canvas.width / fontSize; 
+// Initialize canvas
+let canvasWidth = window.innerWidth;
+let canvasHeight = window.innerHeight;
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
 
-    const drops = [];
-    for (let i = 0; i < columns; i++) {
-        drops[i] = 1;
-    }
+// Constants
+const CHARACTERS = ['0', '1']; // Pre-split array
+const FONT_SIZE = 16;
+const ANIMATION_DURATION = 1400;
+const FADE_OUT_DURATION = 800;
 
-    // Fonction d'animation Matrix (inchangée)
-    function draw() {
-        ctx.fillStyle = "rgba(5, 5, 5, 0.05)"; 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+// Calculate columns and initialize drops
+let columns = Math.floor(canvasWidth / FONT_SIZE);
+const drops = Array.from({ length: columns }, () => 1);
 
-        ctx.fillStyle = "#00f0ff"; 
-        ctx.shadowColor = "#00f0ff";
-        ctx.shadowBlur = 5;
-        ctx.font = fontSize + "px 'Rajdhani', monospace";
+// Pre-set static styles
+ctx.fillStyle = "#00f0ff";
+ctx.shadowColor = "#00f0ff";
+ctx.shadowBlur = 5;
+ctx.font = `${FONT_SIZE}px 'Rajdhani', monospace`;
 
-        for (let i = 0; i < drops.length; i++) {
-            const text = characters[Math.floor(Math.random() * characters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+// Animation state
+let animationId = null;
+let isAnimating = true;
 
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
+// Optimized draw function using requestAnimationFrame
+function draw() {
+    if (!isAnimating) return;
 
-            drops[i]++;
+    // Clear with trail effect
+    ctx.fillStyle = "rgba(5, 5, 5, 0.1)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    // Reset fill style for characters
+    ctx.fillStyle = "#00f0ff";
+
+    // Draw characters
+    for (let i = 0; i < drops.length; i++) {
+        const char = CHARACTERS[Math.random() < 0.5 ? 0 : 1];
+        const x = i * FONT_SIZE;
+        const y = drops[i] * FONT_SIZE;
+
+        ctx.fillText(char, x, y);
+
+        // Reset drop randomly when it goes off screen
+        if (y > canvasHeight && Math.random() > 0.95) {
+            drops[i] = 0;
         }
+
+        drops[i]++;
     }
 
-    // Lancer l'animation
-    const animationInterval = setInterval(draw, 35);
+    animationId = requestAnimationFrame(draw);
+}
 
-    // --- Arrêt progressif et fondu enchaîné ---
-    // Total de l'intro = 4.5 secondes (4500ms)
+// Start animation
+animationId = requestAnimationFrame(draw);
 
+// Stop animation and fade out
+setTimeout(() => {
+    isAnimating = false;
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
+
+    // Fade out canvas
+    canvas.style.transition = `opacity ${FADE_OUT_DURATION}ms ease-in`;
+    canvas.style.opacity = '0';
+
+    // Fade in site content
+    siteContent.style.transition = 'opacity 0.9s ease-in 0.2s';
+    siteContent.style.opacity = '1';
+
+    // Remove canvas from DOM after fade
     setTimeout(() => {
-        // 1. ARRÊT DU DESSIN APRÈS 3.5s
-        // Le code arrête la logique de descente des chiffres, mais la traînée (fade) continue
-        clearInterval(animationInterval); 
-        
-        // On rend la traînée du canvas plus transparente pour accélérer son effacement visuel
-        ctx.fillStyle = "rgba(5, 5, 5, 0.1)"; 
+        canvas.remove();
+    }, FADE_OUT_DURATION);
 
-        // 2. DÉMARRAGE DU FADE-OUT DU CANVAS (dure 1.5s)
-        canvas.style.transition = "opacity 1.5s ease-in"; // Augmenté à 1.5s
-        canvas.style.opacity = 0;
+}, ANIMATION_DURATION);
 
-        // 3. DÉMARRAGE DU FADE-IN DU CONTENU (dure 1.5s, mais démarre 0.5s après)
-        // L'effet "0.5s" permet de commencer à voir le site apparaître quand l'animation Matrix est déjà bien transparente.
-        siteContent.style.transition = "opacity 1.5s ease-in 0.5s";
-        siteContent.style.opacity = 1;
+// ============================================
+// DEBOUNCED RESIZE HANDLER
+// ============================================
 
-        // 4. NETTOYAGE : Suppression du canvas du DOM une fois que tout est fini
-        setTimeout(() => {
-            canvas.remove();
-        }, 2000); // On attend 2 secondes après le début du fade-out pour être sûr
+let resizeTimeout;
+function handleResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (canvas && canvas.parentNode) {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            columns = Math.floor(canvasWidth / FONT_SIZE);
 
-    }, 3000); // <-- On laisse l'animation "vivre" pendant 3 secondes (au lieu de 3.5s) avant le fondu.
+            // Adjust drops array
+            drops.length = columns;
+            for (let i = 0; i < columns; i++) {
+                if (drops[i] === undefined) drops[i] = 1;
+            }
+        }
+    }, 150); // Debounce delay
+}
 
-    // Gestion du Responsive
-    window.addEventListener('resize', () => {
-        if (canvas) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+window.addEventListener('resize', handleResize, { passive: true });
+
+// ============================================
+// BURGER MENU
+// ============================================
+
+const burger = document.querySelector('.burger');
+const nav = document.querySelector('nav ul');
+const navLinks = document.querySelectorAll('nav ul li a');
+
+// Toggle menu
+burger.addEventListener('click', () => {
+    nav.classList.toggle('nav-active');
+    burger.classList.toggle('toggle');
+});
+
+// Close menu when clicking on a link (mobile)
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        if (nav.classList.contains('nav-active')) {
+            nav.classList.remove('nav-active');
+            burger.classList.remove('toggle');
         }
     });
+});

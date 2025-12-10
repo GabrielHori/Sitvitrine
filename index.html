@@ -3,26 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horizon IT - Montage & Dépannage PC</title>
+    <meta name="description" content="Horizon IT - Expert en montage PC sur mesure, dépannage informatique et optimisation. Gaming, Workstation, Bureautique. Service professionnel et rapide.">
+    <meta name="keywords" content="montage PC, dépannage PC, réparation ordinateur, PC gaming, optimisation PC, overclocking, installation Windows">
+    <meta name="author" content="Horizon IT">
+    <meta name="theme-color" content="#00f0ff">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Horizon IT - Montage & Dépannage PC">
+    <meta property="og:description" content="Expert en montage PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.">
+    <meta property="og:image" content="images/build1.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Horizon IT - Montage & Dépannage PC">
+    <meta name="twitter:description" content="Expert en montage PC sur mesure, dépannage et optimisation.">
+
+    <title>Horizon IT - Montage & Dépannage PC | Expert Gaming & Workstation</title>
+
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.tiktok.com">
+
+    <!-- Optimized font loading with display=swap -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <canvas id="matrix-canvas"></canvas>
+    <canvas id="matrix-canvas" aria-hidden="true"></canvas>
 
     <div id="site-content" style="opacity: 0;">
 
-        <div class="background-glow"></div>
+        <div class="background-glow" aria-hidden="true"></div>
 
-        <nav>
-            <div class="logo">HORIZON <span class="text-accent">IT</span></div>
+        <nav role="navigation" aria-label="Navigation principale">
+            <div class="logo" aria-label="Horizon IT Logo">HORIZON <span class="text-accent">IT</span></div>
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
+                <li><a href="#tips">Astuces</a></li>
                 <li><a href="#galerie">Setup & Builds</a></li>
                 <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
             </ul>
+            <!-- Burger Icon -->
+            <button class="burger" aria-label="Menu de navigation" aria-expanded="false">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </button>
         </nav>
 
         <header id="hero">
@@ -37,6 +67,7 @@
             </div>
         </header>
 
+        <!-- SECTION SERVICES -->
         <section id="services">
             <h2 class="section-title">MES <span class="text-accent">SERVICES</span></h2>
             <div class="cards-grid">
@@ -57,34 +88,96 @@
                 </div>
             </div>
         </section>
-        
+
+        <section id="tips">
+            <h2 class="section-title">CONSEILS <span class="text-accent">ASTUCES</span></h2>
+        <div class="tips-grid">
+
+            <div class="tip-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.tiktok.com/embed/7576624204196384022"
+                            allowfullscreen
+                            loading="lazy"
+                            title="Astuce PC 1"></iframe>
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.tiktok.com/embed/7577047561022917910"
+                            allowfullscreen
+                            loading="lazy"
+                            title="Astuce PC 2"></iframe>
+                </div>
+            </div>
+
+        </div>
+        </section>
+
+
+
+
+        <!--  SECTION MES MONTAGES / BUILDS -->
+        <section id="galerie">
+            <h2 class="section-title">MES <span class="text-accent">MONTAGES</span></h2>
+
+            <div class="builds-grid">
+                <div class="build">
+                    <img src="images/build1.jpg"
+                         alt="PC Gaming avec RTX 2070 Super - Vue d'ensemble"
+                         loading="lazy"
+                         width="900"
+                         height="600">
+                    <img src="images/build2.jpg"
+                         alt="PC Gaming avec RTX 2070 Super - Détails internes"
+                         loading="lazy"
+                         width="900"
+                         height="600">
+                    <p>PC Gaming - RTX 2070 Super</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION CONTACT -->
         <section id="contact">
             <div class="contact-box">
                 <h2>Contactez <span class="text-accent">Horizon IT</span></h2>
                 <p>Un projet ? Une panne ? Remplissez ce formulaire.</p>
-                <form action="#" method="POST"> 
+                <form action="#" method="POST" aria-label="Formulaire de contact">
                     <div class="input-group">
-                        <input type="text" placeholder="Votre Nom" required>
-                        <input type="email" placeholder="Votre Email" required>
+                        <input type="text"
+                               name="name"
+                               placeholder="Votre Nom"
+                               aria-label="Votre nom"
+                               required>
+                        <input type="email"
+                               name="email"
+                               placeholder="Votre Email"
+                               aria-label="Votre email"
+                               required>
                     </div>
-                    <select>
-                        <option>Je veux un PC Gamer</option>
-                        <option>J'ai une panne</option>
-                        <option>Autre demande</option>
+                    <select name="service" aria-label="Type de service">
+                        <option value="gaming">Je veux un PC Gamer</option>
+                        <option value="repair">J'ai une panne</option>
+                        <option value="other">Autre demande</option>
                     </select>
-                    <textarea placeholder="Détails de votre demande..."></textarea>
+                    <textarea name="message"
+                              placeholder="Détails de votre demande..."
+                              aria-label="Détails de votre demande"
+                              rows="5"></textarea>
                     <button type="submit" class="btn-primary">Envoyer le message</button>
                 </form>
             </div>
         </section>
 
-        <footer>
-            <p>© 2024 Horizon IT. Tous droits réservés.</p>
+        <footer role="contentinfo">
+            <p>© 2025 Horizon IT. Tous droits réservés.</p>
         </footer>
 
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 
 </body>
 </html>
