@@ -24,7 +24,7 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.tiktok.com">
+    <link rel="preconnect" href="https://www.instagram.com">
 
     <!-- Optimized font loading with display=swap -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
@@ -39,31 +39,39 @@
 
         <div class="background-glow" aria-hidden="true"></div>
 
-        <nav role="navigation" aria-label="Navigation principale">
-            <div class="logo" aria-label="Horizon IT Logo">HORIZON <span class="text-accent">IT</span></div>
-            <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#tips">Astuces</a></li>
-                <li><a href="#galerie">Setup & Builds</a></li>
-                <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
-            </ul>
-            <!-- Burger Icon -->
-            <button class="burger" aria-label="Menu de navigation" aria-expanded="false">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </button>
-        </nav>
+        <nav>
+    <div class="logo">HORIZON <span class="text-accent">IT</span></div>
+    
+    <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#tips">Astuces</a></li>
+        <li><a href="#galerie">Setup & Builds</a></li>
+        <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
+    </ul>
+
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+</nav>
+
 
         <header id="hero">
             <div class="hero-content">
-                <p class="subtitle">PASSIONNÉ D'INFORMATIQUE 🚀</p>
-                <h1>PC REPAIR & <br><span class="text-outline">ASSEMBLY</span></h1>
-                <p class="description">Montage de PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.</p>
-                <div class="cta-group">
+                <p class="subtitle animate-on-scroll">PASSIONNÉ D'INFORMATIQUE 🚀</p>
+                <h1 class="typing-effect">PC REPAIR & <br><span class="text-outline">ASSEMBLY</span></h1>
+                <p class="description animate-on-scroll">Montage de PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.</p>
+                <div class="cta-group animate-on-scroll">
                     <a href="#contact" class="btn-primary">Lancer mon projet</a>
                     <a href="#galerie" class="btn-secondary">Voir mes montages</a>
                 </div>
+            </div>
+            
+            <!-- Indicateur de scroll - Repositionné correctement -->
+            <div class="scroll-indicator">
+                <div class="scroll-arrow">↓</div>
+                <span>Découvrir</span>
             </div>
         </header>
 
@@ -89,29 +97,90 @@
             </div>
         </section>
 
+        <!-- Section Stats après Services -->
+        <section id="stats" class="stats-section">
+            <div class="stats-container">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="50">0</div>
+                    <div class="stat-label">PC Montés</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="100">0</div>
+                    <div class="stat-label">Clients Satisfaits</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Heures Support</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-target="99">0</div>
+                    <div class="stat-label">% Réussite</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Processus après Stats -->
+        <section id="process">
+            <h2 class="section-title">MON <span class="text-accent">PROCESSUS</span></h2>
+            <div class="process-timeline">
+                <div class="process-step animate-on-scroll">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Consultation</h3>
+                        <p>Analyse de tes besoins et budget pour définir la config parfaite</p>
+                    </div>
+                </div>
+                <div class="process-step animate-on-scroll">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Devis & Commande</h3>
+                        <p>Sélection des composants optimaux et commande groupée</p>
+                    </div>
+                </div>
+                <div class="process-step animate-on-scroll">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Montage Expert</h3>
+                        <p>Assemblage professionnel avec cable management impeccable</p>
+                    </div>
+                </div>
+                <div class="process-step animate-on-scroll">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Tests & Livraison</h3>
+                        <p>Stress tests complets et livraison avec garantie</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="tips">
             <h2 class="section-title">CONSEILS <span class="text-accent">ASTUCES</span></h2>
-        <div class="tips-grid">
+            <div class="tips-grid">
 
-            <div class="tip-card">
-                <div class="video-wrapper">
-                    <iframe src="https://www.tiktok.com/embed/7576624204196384022"
-                            allowfullscreen
-                            loading="lazy"
-                            title="Astuce PC 1"></iframe>
+                <div class="tip-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.instagram.com/reel/DRekB8oCNkA/embed"
+                                allowfullscreen
+                                loading="lazy"
+                                title="Astuce PC 1"
+                                frameborder="0"
+                                scrolling="no"></iframe>
+                    </div>
                 </div>
-            </div>
 
-            <div class="tip-card">
-                <div class="video-wrapper">
-                    <iframe src="https://www.tiktok.com/embed/7577047561022917910"
-                            allowfullscreen
-                            loading="lazy"
-                            title="Astuce PC 2"></iframe>
+                <div class="tip-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.instagram.com/reel/DRhiIfkjFbM/embed"
+                                allowfullscreen
+                                loading="lazy"
+                                title="Astuce PC 2"
+                                frameborder="0"
+                                scrolling="no"></iframe>
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
         </section>
 
 
@@ -144,28 +213,30 @@
             <div class="contact-box">
                 <h2>Contactez <span class="text-accent">Horizon IT</span></h2>
                 <p>Un projet ? Une panne ? Remplissez ce formulaire.</p>
-                <form action="#" method="POST" aria-label="Formulaire de contact">
+                <form id="contact-form" aria-label="Formulaire de contact">
                     <div class="input-group">
                         <input type="text"
-                               name="name"
+                               name="user_name"
                                placeholder="Votre Nom"
                                aria-label="Votre nom"
                                required>
                         <input type="email"
-                               name="email"
+                               name="user_email"
                                placeholder="Votre Email"
                                aria-label="Votre email"
                                required>
                     </div>
-                    <select name="service" aria-label="Type de service">
-                        <option value="gaming">Je veux un PC Gamer</option>
-                        <option value="repair">J'ai une panne</option>
-                        <option value="other">Autre demande</option>
+                    <select name="service" aria-label="Type de service" required>
+                        <option value="">Sélectionnez un service</option>
+                        <option value="PC Gaming">Je veux un PC Gamer</option>
+                        <option value="Dépannage">J'ai une panne</option>
+                        <option value="Autre">Autre demande</option>
                     </select>
                     <textarea name="message"
                               placeholder="Détails de votre demande..."
                               aria-label="Détails de votre demande"
-                              rows="5"></textarea>
+                              rows="5"
+                              required></textarea>
                     <button type="submit" class="btn-primary">Envoyer le message</button>
                 </form>
             </div>
@@ -178,6 +249,14 @@
     </div>
 
     <script src="script.js" defer></script>
+
+    <!-- Add EmailJS SDK before closing </body> tag -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("0JKz6zDmh95CbSknI"); // Your actual public key
+        })();
+    </script>
 
 </body>
 </html>

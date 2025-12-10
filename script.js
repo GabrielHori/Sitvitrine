@@ -122,18 +122,184 @@ const burger = document.querySelector('.burger');
 const nav = document.querySelector('nav ul');
 const navLinks = document.querySelectorAll('nav ul li a');
 
-// Toggle menu
 burger.addEventListener('click', () => {
     nav.classList.toggle('nav-active');
     burger.classList.toggle('toggle');
 });
 
-// Close menu when clicking on a link (mobile)
+// Auto-close menu when clicking on a link
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        if (nav.classList.contains('nav-active')) {
-            nav.classList.remove('nav-active');
-            burger.classList.remove('toggle');
+        nav.classList.remove('nav-active');
+        burger.classList.remove('toggle');
+    });
+});
+
+// EmailJS Contact Form Handler
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    // Show loading state
+    submitBtn.textContent = 'Envoi en cours...';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+    
+    // Send email using EmailJS
+    emailjs.sendForm('service_yb6h9t7', 'template_idokhq6', this)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            
+            // Success feedback
+            submitBtn.textContent = '✅ Message envoyé !';
+            submitBtn.style.backgroundColor = '#00ff88';
+            submitBtn.style.color = '#000';
+            
+            // Reset form
+            document.getElementById('contact-form').reset();
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.backgroundColor = '';
+                submitBtn.style.color = '';
+            }, 3000);
+            
+        }, function(error) {
+            console.log('FAILED...', error);
+            
+            // Error feedback
+            submitBtn.textContent = '❌ Erreur - Réessayer';
+            submitBtn.style.backgroundColor = '#ff4444';
+            submitBtn.style.color = '#fff';
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.backgroundColor = '';
+                submitBtn.style.color = '';
+            }, 3000);
+        });
+});
+
+// ============================================
+// SCROLL ANIMATIONS & COUNTERS
+// ============================================
+
+// Intersection Observer pour les animations au scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            
+            // Animation des compteurs
+            if (entry.target.classList.contains('stat-item')) {
+                animateCounter(entry.target.querySelector('.stat-number'));
+            }
         }
     });
+}, observerOptions);
+
+// Observer tous les éléments à animer
+document.addEventListener('DOMContentLoaded', () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach(el => observer.observe(el));
+    
+    // Ajouter la classe animate-on-scroll aux sections
+    const sections = document.querySelectorAll('.card, .process-step, .stat-item');
+    sections.forEach(section => {
+        section.classList.add('animate-on-scroll');
+        observer.observe(section);
+    });
+});
+
+// Animation des compteurs
+function animateCounter(element) {
+    const target = parseInt(element.getAttribute('data-target'));
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current) + (target === 99 ? '%' : '');
+    }, 16);
+}
+
+// ============================================
+// SMOOTH SCROLL AMÉLIORÉ
+// ============================================
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// ============================================
+// PARALLAX EFFECT SUR LE BACKGROUND GLOW
+// ============================================
+
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const backgroundGlow = document.querySelector('.background-glow');
+    if (backgroundGlow) {
+        backgroundGlow.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+});
+
+// Scroll indicator click handler - Refait au propre
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', (e) => {
+            e.preventDefault();
+            const servicesSection = document.querySelector('#services');
+            if (servicesSection) {
+                servicesSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    }
+});
+
+// Logo click handler - Scroll to top
+document.addEventListener('DOMContentLoaded', () => {
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Add cursor pointer to show it's clickable
+        logo.style.cursor = 'pointer';
+    }
 });
