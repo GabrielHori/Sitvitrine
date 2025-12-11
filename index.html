@@ -45,6 +45,7 @@
     <ul class="nav-links">
         <li><a href="#services">Services</a></li>
         <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#avis">Avis</a></li>
         <li><a href="#tips">Astuces</a></li>
         <li><a href="#galerie">Setup & Builds</a></li>
         <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
@@ -369,6 +370,39 @@
                               rows="5"
                               required></textarea>
                     <button type="submit" class="btn-primary">Envoyer le message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION AVIS -->
+        <section id="avis">
+            <h2 class="section-title">AVIS <span class="text-accent">CLIENTS</span></h2>
+            
+            <!-- Affichage des avis -->
+            <div class="reviews-container">
+                <div class="reviews-grid" id="reviews-list">
+                    <!-- Les avis seront chargés ici par JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Formulaire d'ajout d'avis -->
+            <div class="review-form-container">
+                <h3>Laissez votre avis</h3>
+                <form id="review-form">
+                    <div class="input-group">
+                        <input type="text" name="client_name" placeholder="Votre nom" required>
+                        <select name="rating" required>
+                            <option value="">Note</option>
+                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                            <option value="3">⭐⭐⭐ (3/5)</option>
+                            <option value="2">⭐⭐ (2/5)</option>
+                            <option value="1">⭐ (1/5)</option>
+                        </select>
+                    </div>
+                    <input type="text" name="service_type" placeholder="Service utilisé (ex: Montage PC Gaming)" required>
+                    <textarea name="review_text" placeholder="Votre avis détaillé..." rows="4" required></textarea>
+                    <button type="submit" class="btn-primary">Publier mon avis</button>
                 </form>
             </div>
         </section>

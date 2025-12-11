@@ -1054,3 +1054,121 @@ footer {
         transform: none;
     }
 }
+
+/* SECTION AVIS */
+#avis {
+    padding: 80px 5%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(10,10,10,0.9) 100%);
+}
+
+.reviews-container {
+    margin-bottom: 60px;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.review-card:hover {
+    border-color: rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.review-client {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.review-rating {
+    font-size: 1.2rem;
+}
+
+.review-service {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.review-text {
+    line-height: 1.6;
+    color: var(--text-white);
+    margin-bottom: 15px;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    text-align: right;
+}
+
+/* Formulaire d'avis */
+.review-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.review-form-container h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary);
+    font-family: var(--font-heading);
+}
+
+#review-form .input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#review-form input, #review-form select, #review-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    color: var(--text-white);
+    border-radius: 8px;
+    font-family: var(--font-body);
+}
+
+#review-form input:focus, #review-form select:focus, #review-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #review-form .input-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

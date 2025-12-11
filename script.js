@@ -303,3 +303,134 @@ document.addEventListener('DOMContentLoaded', () => {
         logo.style.cursor = 'pointer';
     }
 });
+
+// ============================================
+// SYSTÈME D'AVIS CLIENTS AVEC BACKEND
+// ============================================
+
+const API_URL = '/.netlify/functions/reviews';
+
+// Charger les avis depuis l'API
+async function loadReviews() {
+    try {
+        const response = await fetch(API_URL);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des avis:', error);
+    }
+    
+    // Fallback vers les avis par défaut
+    return [
+        {
+            name: "Thomas M.",
+            rating: 5,
+            service: "Montage PC Gaming",
+            text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
+            date: "2024-12-15"
+        }
+    ];
+}
+
+// Sauvegarder un nouvel avis
+async function saveNewReview(reviewData) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reviewData)
+        });
+        
+        const result = await response.json();
+        return { success: response.ok, data: result };
+    } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error);
+        return { success: false, error: 'Erreur de connexion' };
+    }
+}
+
+// Afficher les étoiles
+function getStarsHTML(rating) {
+    return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+}
+
+// Afficher les avis
+async function displayReviews() {
+    const reviews = await loadReviews();
+    const reviewsList = document.getElementById('reviews-list');
+    
+    if (!reviewsList) return;
+    
+    reviewsList.innerHTML = reviews.map(review => `
+        <div class="review-card animate-on-scroll">
+            <div class="review-header">
+                <div class="review-client">${review.name}</div>
+                <div class="review-rating">${getStarsHTML(review.rating)}</div>
+            </div>
+            <div class="review-service">Service: ${review.service}</div>
+            <div class="review-text">"${review.text}"</div>
+            <div class="review-date">${new Date(review.date).toLocaleDateString('fr-FR')}</div>
+        </div>
+    `).join('');
+    
+    // Réappliquer l'observer pour les nouvelles cartes
+    const newCards = reviewsList.querySelectorAll('.animate-on-scroll');
+    newCards.forEach(card => observer.observe(card));
+}
+
+// Gérer l'ajout d'un nouvel avis
+document.addEventListener('DOMContentLoaded', () => {
+    const reviewForm = document.getElementById('review-form');
+    
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Loading state
+            submitBtn.textContent = 'Publication...';
+            submitBtn.disabled = true;
+            
+            const formData = new FormData(this);
+            const reviewData = {
+                name: formData.get('client_name'),
+                rating: parseInt(formData.get('rating')),
+                service: formData.get('service_type'),
+                text: formData.get('review_text')
+            };
+            
+            const result = await saveNewReview(reviewData);
+            
+            if (result.success) {
+                // Succès
+                submitBtn.textContent = '✅ Avis publié !';
+                submitBtn.style.backgroundColor = '#00ff88';
+                this.reset();
+                
+                // Recharger les avis
+                setTimeout(() => {
+                    displayReviews();
+                }, 1000);
+            } else {
+                // Erreur
+                submitBtn.textContent = '❌ Erreur - Réessayer';
+                submitBtn.style.backgroundColor = '#ff4444';
+            }
+            
+            // Reset button
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.backgroundColor = '';
+            }, 3000);
+        });
+    }
+    
+    // Charger les avis au démarrage
+    displayReviews();
+});

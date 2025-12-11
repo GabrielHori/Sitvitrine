@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Horizon IT</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
+        .review { background: #222; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .pending { border-left: 4px solid orange; }
+        .approved { border-left: 4px solid green; }
+        button { padding: 8px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .approve { background: green; color: white; }
+        .delete { background: red; color: white; }
+        input { padding: 10px; margin: 10px 0; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Administration des Avis - Horizon IT</h1>
+    
+    <div>
+        <input type="password" id="password" placeholder="Mot de passe admin">
+        <button onclick="loadReviews()">Charger les avis</button>
+    </div>
+    
+    <div id="reviews-container"></div>
+
+    <script>
+        async function loadReviews() {
+            const password = document.getElementById('password').value;
+            const response = await fetch('/.netlify/functions/admin-reviews', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+            
+            if (response.ok) {
+                const reviews = await response.json();
+                displayAdminReviews(reviews);
+            } else {
+                alert('Mot de passe incorrect');
+            }
+        }
+
+        function displayAdminReviews(reviews) {
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = reviews.map(review => `
+                <div class="review ${review.approved ? 'approved' : 'pending'}">
+                    <h3>${review.name} - ${review.rating}⭐</h3>
+                    <p><strong>Service:</strong> ${review.service}</p>
+                    <p>${review.text}</p>
+                    <p><small>${review.date} - ${review.approved ? 'Approuvé' : 'En attente'}</small></p>
+                    ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">Approuver</button>` : ''}
+                    <button class="delete" onclick="deleteReview(${review.id})">Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        async function approveReview(id) {
+            const password = document.getElementById('password').value;
+            await fetch('/.netlify/functions/admin-reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, action: 'approve', reviewId: id })
+            });
+            loadReviews();
+        }
+
+        async function deleteReview(id) {
+            if (confirm('Supprimer cet avis ?')) {
+                const password = document.getElementById('password').value;
+                await fetch('/.netlify/functions/admin-reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password, action: 'delete', reviewId: id })
+                });
+                loadReviews();
+            }
+        }
+    </script>
+</body>
+</html>
