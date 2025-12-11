@@ -215,6 +215,8 @@
         async function loadReviews() {
             if (!authToken) return;
             
+            console.log('🔄 Admin: Rechargement des avis...');
+            
             try {
                 const response = await fetch('/.netlify/functions/admin-reviews', {
                     method: 'GET',
@@ -226,13 +228,17 @@
                 
                 if (response.ok) {
                     const reviews = await response.json();
+                    console.log(`📋 Admin: ${reviews.length} avis chargés`);
                     displayAdminReviews(reviews);
                 } else if (response.status === 401) {
+                    console.log('🚨 Token expiré, déconnexion');
                     logout();
                 } else {
+                    console.error('❌ Erreur chargement:', response.status);
                     document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur lors du chargement</p>';
                 }
             } catch (error) {
+                console.error('❌ Erreur réseau:', error);
                 document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur de connexion</p>';
             }
         }
@@ -387,4 +393,5 @@
     </script>
 </body>
 </html>
+
 

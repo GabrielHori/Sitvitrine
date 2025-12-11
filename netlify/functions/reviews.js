@@ -104,14 +104,18 @@ const defaultReviews = [
 async function getReviews() {
     try {
         const data = await fs.readFile(REVIEWS_FILE, 'utf8');
-        return JSON.parse(data);
+        const reviews = JSON.parse(data);
+        console.log(`📖 Lecture de ${reviews.length} avis depuis ${REVIEWS_FILE}`);
+        return reviews;
     } catch (error) {
+        console.log('📝 Création du fichier avec avis par défaut');
         await saveReviews(defaultReviews);
         return defaultReviews;
     }
 }
 
 async function saveReviews(reviews) {
+    console.log(`💾 Sauvegarde de ${reviews.length} avis dans ${REVIEWS_FILE}`);
     await fs.writeFile(REVIEWS_FILE, JSON.stringify(reviews, null, 2));
 }
 
@@ -225,6 +229,7 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
 
 
 

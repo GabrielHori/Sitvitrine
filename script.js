@@ -359,6 +359,8 @@ async function loadReviews() {
 // Sauvegarder un nouvel avis
 async function saveNewReview(reviewData) {
     try {
+        console.log('📤 Envoi avis:', reviewData);
+        
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -368,9 +370,11 @@ async function saveNewReview(reviewData) {
         });
         
         const result = await response.json();
+        console.log('📥 Réponse serveur:', result);
+        
         return { success: response.ok, data: result };
     } catch (error) {
-        console.error('Erreur lors de la sauvegarde:', error);
+        console.error('❌ Erreur lors de la sauvegarde:', error);
         return { success: false, error: 'Erreur de connexion' };
     }
 }
@@ -382,7 +386,10 @@ function getStarsHTML(rating) {
 
 // Afficher les avis
 async function displayReviews() {
+    console.log('🔄 Rechargement des avis...');
     const reviews = await loadReviews();
+    console.log(`📋 ${reviews.length} avis chargés`);
+    
     const reviewsList = document.getElementById('reviews-list');
     
     if (!reviewsList) return;

@@ -16,13 +16,17 @@ function verifyToken(token) {
 async function getReviews() {
     try {
         const data = await fs.readFile(REVIEWS_FILE, 'utf8');
-        return JSON.parse(data);
+        const reviews = JSON.parse(data);
+        console.log(`📖 Admin lit ${reviews.length} avis depuis ${REVIEWS_FILE}`);
+        return reviews;
     } catch (error) {
+        console.log('📝 Admin: Fichier avis introuvable, retour tableau vide');
         return [];
     }
 }
 
 async function saveReviews(reviews) {
+    console.log(`💾 Admin sauvegarde ${reviews.length} avis dans ${REVIEWS_FILE}`);
     await fs.writeFile(REVIEWS_FILE, JSON.stringify(reviews, null, 2));
 }
 
@@ -38,11 +42,35 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // TEMPORAIRE : Pas d'auth pour tester
+        // TEMPORAIRE : Pas d'auth pour tester - SUPPRIME CETTE LIGNE
+        // const reviews = await getReviews();
+
+        // VÉRIFICATION TOKEN (RÉACTIVE CETTE PARTIE)
+        const authHeader = event.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return {
+                statusCode: 401,
+                headers,
+                body: JSON.stringify({ error: 'Token manquant' })
+            };
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = verifyToken(token);
+        
+        if (!decoded) {
+            return {
+                statusCode: 401,
+                headers,
+                body: JSON.stringify({ error: 'Token invalide' })
+            };
+        }
+
         const reviews = await getReviews();
 
         // GET - Voir tous les avis
         if (event.httpMethod === 'GET') {
+            console.log(`📋 Admin récupère ${reviews.length} avis`);
             return {
                 statusCode: 200,
                 headers: { ...headers, 'Content-Type': 'application/json' },
@@ -66,8 +94,10 @@ exports.handler = async (event, context) => {
 
             if (action === 'approve') {
                 reviews[reviewIndex].approved = true;
+                console.log(`✅ Avis ${reviewId} approuvé`);
             } else if (action === 'delete') {
                 reviews.splice(reviewIndex, 1);
+                console.log(`🗑️ Avis ${reviewId} supprimé`);
             }
 
             await saveReviews(reviews);
@@ -88,4 +118,6 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
+
 
