@@ -404,7 +404,7 @@ async function displayReviews() {
     newCards.forEach(card => observer.observe(card));
 }
 
-// Gérer l'ajout d'un nouvel avis
+// Gérer l'ajout d'un nouvel avis (VERSION CORRIGÉE)
 document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
     
@@ -421,11 +421,42 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const formData = new FormData(this);
             const reviewData = {
-                name: formData.get('client_name'),
+                name: formData.get('client_name')?.trim(),
                 rating: parseInt(formData.get('rating')),
-                service: formData.get('service_type'),
-                text: formData.get('review_text')
+                service: formData.get('service_type')?.trim(),
+                text: formData.get('review_text')?.trim()
             };
+            
+            console.log('📤 Envoi des données:', reviewData);
+            
+            // Validation côté client
+            if (!reviewData.name || reviewData.name.length < 2) {
+                alert('❌ Le nom doit contenir au moins 2 caractères');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            if (!reviewData.rating || reviewData.rating < 1 || reviewData.rating > 5) {
+                alert('❌ Veuillez sélectionner une note');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            if (!reviewData.service || reviewData.service.length < 3) {
+                alert('❌ Le service doit contenir au moins 3 caractères');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            if (!reviewData.text || reviewData.text.length < 10) {
+                alert('❌ Le commentaire doit contenir au moins 10 caractères');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
             
             const result = await saveNewReview(reviewData);
             
@@ -441,8 +472,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1000);
             } else {
                 // Erreur
+                console.error('❌ Erreur:', result);
                 submitBtn.textContent = '❌ Erreur - Réessayer';
                 submitBtn.style.backgroundColor = '#ff4444';
+                
+                // Afficher l'erreur détaillée
+                if (result.data?.error) {
+                    alert(`Erreur: ${result.data.error}`);
+                }
             }
             
             // Reset button

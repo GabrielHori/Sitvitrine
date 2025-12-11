@@ -4,34 +4,45 @@ const path = require('path');
 const REVIEWS_FILE = path.join('/tmp', 'reviews.json');
 const rateLimiter = new Map();
 
-// Validation et sanitisation
+// Validation et sanitisation (VERSION CORRIGÉE)
 function validateAndSanitize(data) {
+    console.log('🔍 Données reçues:', data);
+    
     const { name, rating, service, text } = data;
     
-    // Validation stricte
-    if (!name || typeof name !== 'string' || name.length < 2 || name.length > 50) {
+    // Validation avec logs détaillés
+    if (!name || typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 50) {
+        console.log('❌ Nom invalide:', name);
         throw new Error('Nom invalide (2-50 caractères)');
     }
     
-    if (!rating || !Number.isInteger(parseInt(rating)) || rating < 1 || rating > 5) {
+    // Convertir rating en nombre si c'est une string
+    const ratingNum = typeof rating === 'string' ? parseInt(rating) : rating;
+    if (!ratingNum || !Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+        console.log('❌ Rating invalide:', rating, 'converti en:', ratingNum);
         throw new Error('Note invalide (1-5)');
     }
     
-    if (!service || typeof service !== 'string' || service.length < 3 || service.length > 100) {
-        throw new Error('Service invalide');
+    if (!service || typeof service !== 'string' || service.trim().length < 3 || service.trim().length > 100) {
+        console.log('❌ Service invalide:', service);
+        throw new Error('Service invalide (3-100 caractères)');
     }
     
-    if (!text || typeof text !== 'string' || text.length < 10 || text.length > 500) {
+    if (!text || typeof text !== 'string' || text.trim().length < 10 || text.trim().length > 500) {
+        console.log('❌ Texte invalide:', text);
         throw new Error('Commentaire invalide (10-500 caractères)');
     }
     
-    // Sanitisation (supprimer HTML/scripts)
-    return {
+    // Sanitisation
+    const sanitized = {
         name: name.replace(/<[^>]*>/g, '').trim(),
-        rating: parseInt(rating),
+        rating: ratingNum,
         service: service.replace(/<[^>]*>/g, '').trim(),
         text: text.replace(/<[^>]*>/g, '').trim()
     };
+    
+    console.log('✅ Données validées:', sanitized);
+    return sanitized;
 }
 
 // Rate limiting
@@ -132,6 +143,9 @@ exports.handler = async (event, context) => {
 
         // POST - Ajouter un nouvel avis
         if (event.httpMethod === 'POST') {
+            console.log('📝 Nouvelle tentative d\'ajout d\'avis');
+            console.log('📦 Body reçu:', event.body);
+            
             // Rate limiting
             if (!checkRateLimit(clientIP)) {
                 console.log(`🚨 RATE LIMIT: IP ${clientIP} a dépassé la limite`);
@@ -144,7 +158,19 @@ exports.handler = async (event, context) => {
                 };
             }
 
-            const rawData = JSON.parse(event.body);
+            // Parse et validation
+            let rawData;
+            try {
+                rawData = JSON.parse(event.body);
+            } catch (parseError) {
+                console.log('❌ Erreur parsing JSON:', parseError);
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ error: 'Format JSON invalide' })
+                };
+            }
+
             const validatedData = validateAndSanitize(rawData);
             
             const reviews = await getReviews();
@@ -153,7 +179,7 @@ exports.handler = async (event, context) => {
                 ...validatedData,
                 date: new Date().toISOString().split('T')[0],
                 approved: false,
-                ip: clientIP.substring(0, 10) + '***' // IP partielle pour logs
+                ip: clientIP.substring(0, 10) + '***'
             };
 
             reviews.unshift(newReview);
@@ -166,7 +192,7 @@ exports.handler = async (event, context) => {
                 headers: { ...headers, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     message: 'Avis ajouté avec succès, en attente d\'approbation',
-                    review: { ...newReview, ip: undefined } // Ne pas renvoyer l'IP
+                    review: { ...newReview, ip: undefined }
                 })
             };
         }
@@ -179,20 +205,26 @@ exports.handler = async (event, context) => {
 
     } catch (error) {
         console.error('🚨 Erreur reviews:', error.message);
+        console.error('🚨 Stack:', error.stack);
         
         if (error.message.includes('invalide')) {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ error: error.message })
+                body: JSON.stringify({ 
+                    error: error.message,
+                    details: 'Vérifiez que tous les champs sont correctement remplis'
+                })
             };
         }
         
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Erreur serveur' })
+            body: JSON.stringify({ error: 'Erreur serveur interne' })
         };
     }
 };
+
+
 
