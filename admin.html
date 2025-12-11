@@ -3,80 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Admin - Horizon IT</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
+        .login-form { max-width: 400px; margin: 50px auto; padding: 30px; background: #222; border-radius: 10px; }
+        .admin-panel { display: none; }
         .review { background: #222; padding: 15px; margin: 10px 0; border-radius: 8px; }
         .pending { border-left: 4px solid orange; }
         .approved { border-left: 4px solid green; }
+        .default { border-left: 4px solid blue; }
         button { padding: 8px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
         .approve { background: green; color: white; }
         .delete { background: red; color: white; }
-        input { padding: 10px; margin: 10px 0; width: 200px; }
+        .logout { background: #666; color: white; float: right; }
+        input { padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; }
+        .error { color: red; margin: 10px 0; }
+        .success { color: green; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <h1>Administration des Avis - Horizon IT</h1>
-    
-    <div>
+    <div id="login-form" class="login-form">
+        <h1>🔐 Connexion Admin</h1>
         <input type="password" id="password" placeholder="Mot de passe admin">
-        <button onclick="loadReviews()">Charger les avis</button>
+        <button onclick="login()">Se connecter</button>
+        <div id="login-error" class="error"></div>
     </div>
     
-    <div id="reviews-container"></div>
+    <div id="admin-panel" class="admin-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>📊 Administration - Horizon IT</h1>
+            <button class="logout" onclick="logout()">Déconnexion</button>
+        </div>
+        
+        <button onclick="loadReviews()">🔄 Actualiser les avis</button>
+        <div id="reviews-container"></div>
+    </div>
 
     <script>
-        async function loadReviews() {
+        let authToken = localStorage.getItem('admin-token');
+        
+        // Vérifier si déjà connecté
+        if (authToken) {
+            showAdminPanel();
+            loadReviews();
+        }
+
+        async function login() {
             const password = document.getElementById('password').value;
-            const response = await fetch('/.netlify/functions/admin-reviews', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
-            });
+            const errorDiv = document.getElementById('login-error');
             
-            if (response.ok) {
-                const reviews = await response.json();
-                displayAdminReviews(reviews);
-            } else {
-                alert('Mot de passe incorrect');
+            try {
+                const response = await fetch('/.netlify/functions/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    authToken = result.token;
+                    localStorage.setItem('admin-token', authToken);
+                    showAdminPanel();
+                    loadReviews();
+                    errorDiv.textContent = '';
+                } else {
+                    errorDiv.textContent = result.error;
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Erreur de connexion';
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.removeItem('admin-token');
+            authToken = null;
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('password').value = '';
+        }
+
+        async function loadReviews() {
+            if (!authToken) return;
+            
+            try {
+                const response = await fetch('/.netlify/functions/admin-reviews', {
+                    method: 'GET',
+                    headers: { 
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const reviews = await response.json();
+                    displayAdminReviews(reviews);
+                } else if (response.status === 401) {
+                    logout();
+                } else {
+                    alert('Erreur lors du chargement');
+                }
+            } catch (error) {
+                alert('Erreur de connexion');
             }
         }
 
         function displayAdminReviews(reviews) {
             const container = document.getElementById('reviews-container');
+            
+            if (reviews.length === 0) {
+                container.innerHTML = '<p>Aucun avis pour le moment.</p>';
+                return;
+            }
+            
             container.innerHTML = reviews.map(review => `
-                <div class="review ${review.approved ? 'approved' : 'pending'}">
-                    <h3>${review.name} - ${review.rating}⭐</h3>
+                <div class="review ${review.approved ? 'approved' : 'pending'} ${review.isDefault ? 'default' : ''}">
+                    <h3>${review.name} - ${review.rating}⭐ ${review.isDefault ? '(Par défaut)' : ''}</h3>
                     <p><strong>Service:</strong> ${review.service}</p>
-                    <p>${review.text}</p>
-                    <p><small>${review.date} - ${review.approved ? 'Approuvé' : 'En attente'}</small></p>
-                    ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">Approuver</button>` : ''}
-                    <button class="delete" onclick="deleteReview(${review.id})">Supprimer</button>
+                    <p>"${review.text}"</p>
+                    <p><small>${review.date} - ${review.approved ? '✅ Approuvé' : '⏳ En attente'}</small></p>
+                    ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">✅ Approuver</button>` : ''}
+                    <button class="delete" onclick="deleteReview(${review.id}, '${review.name}')">🗑️ Supprimer</button>
                 </div>
             `).join('');
         }
 
         async function approveReview(id) {
-            const password = document.getElementById('password').value;
-            await fetch('/.netlify/functions/admin-reviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password, action: 'approve', reviewId: id })
-            });
-            loadReviews();
+            await adminAction('approve', id);
         }
 
-        async function deleteReview(id) {
-            if (confirm('Supprimer cet avis ?')) {
-                const password = document.getElementById('password').value;
-                await fetch('/.netlify/functions/admin-reviews', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password, action: 'delete', reviewId: id })
-                });
-                loadReviews();
+        async function deleteReview(id, name) {
+            if (confirm(`Supprimer l'avis de ${name} ?`)) {
+                await adminAction('delete', id);
             }
         }
+
+        async function adminAction(action, reviewId) {
+            try {
+                const response = await fetch('/.netlify/functions/admin-reviews', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action, reviewId })
+                });
+                
+                if (response.ok) {
+                    loadReviews(); // Recharger la liste
+                } else if (response.status === 401) {
+                    logout();
+                } else {
+                    alert('Erreur lors de l\'action');
+                }
+            } catch (error) {
+                alert('Erreur de connexion');
+            }
+        }
+
+        // Connexion avec Enter
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>

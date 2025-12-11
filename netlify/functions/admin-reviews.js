@@ -1,8 +1,17 @@
 const fs = require('fs').promises;
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 const REVIEWS_FILE = path.join('/tmp', 'reviews.json');
-const ADMIN_PASSWORD = 'HorizonIT2024!'; // Change ce mot de passe !
+
+// Vérifier le token JWT
+function verifyToken(token) {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return null;
+    }
+}
 
 async function getReviews() {
     try {
@@ -20,7 +29,7 @@ async function saveReviews(reviews) {
 exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
     };
 
@@ -29,21 +38,33 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { password, action, reviewId } = JSON.parse(event.body || '{}');
-
-        // Vérifier le mot de passe
-        if (password !== ADMIN_PASSWORD) {
+        // Vérifier l'authentification JWT
+        const authHeader = event.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return {
                 statusCode: 401,
                 headers,
-                body: JSON.stringify({ error: 'Mot de passe incorrect' })
+                body: JSON.stringify({ error: 'Token manquant' })
+            };
+        }
+
+        const token = authHeader.substring(7);
+        const decoded = verifyToken(token);
+        
+        if (!decoded || !decoded.admin) {
+            console.log(`🚨 SECURITY: Token invalide depuis IP ${event.headers['x-forwarded-for']}`);
+            return {
+                statusCode: 401,
+                headers,
+                body: JSON.stringify({ error: 'Token invalide' })
             };
         }
 
         const reviews = await getReviews();
 
-        // GET - Voir tous les avis (approuvés et en attente)
+        // GET - Voir tous les avis
         if (event.httpMethod === 'GET') {
+            console.log('📊 Admin: Consultation des avis');
             return {
                 statusCode: 200,
                 headers: { ...headers, 'Content-Type': 'application/json' },
@@ -51,8 +72,10 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // POST - Approuver ou supprimer un avis
+        // POST - Approuver ou supprimer
         if (event.httpMethod === 'POST') {
+            const { action, reviewId } = JSON.parse(event.body);
+            
             const reviewIndex = reviews.findIndex(r => r.id === parseInt(reviewId));
             
             if (reviewIndex === -1) {
@@ -65,8 +88,10 @@ exports.handler = async (event, context) => {
 
             if (action === 'approve') {
                 reviews[reviewIndex].approved = true;
+                console.log(`✅ Admin: Avis approuvé - ID ${reviewId}`);
             } else if (action === 'delete') {
-                reviews.splice(reviewIndex, 1);
+                const deletedReview = reviews.splice(reviewIndex, 1)[0];
+                console.log(`🗑️ Admin: Avis supprimé - ${deletedReview.name}`);
             }
 
             await saveReviews(reviews);
@@ -79,6 +104,7 @@ exports.handler = async (event, context) => {
         }
 
     } catch (error) {
+        console.error('🚨 Erreur admin:', error);
         return {
             statusCode: 500,
             headers,

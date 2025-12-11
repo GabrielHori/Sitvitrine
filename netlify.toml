@@ -1,0 +1,33 @@
+[build]
+  functions = "netlify/functions"
+
+# Redirection HTTPS forcée
+[[redirects]]
+  from = "http://horizonit.netlify.app/*"
+  to = "https://horizonit.netlify.app/:splat"
+  status = 301
+  force = true
+
+# Headers de sécurité
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Protection XSS
+    X-XSS-Protection = "1; mode=block"
+    # Pas de sniffing MIME
+    X-Content-Type-Options = "nosniff"
+    # Pas d'iframe
+    X-Frame-Options = "DENY"
+    # HTTPS strict
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # Referrer policy
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Content Security Policy
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.instagram.com https://cdn.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.instagram.com; connect-src 'self' https://api.emailjs.com;"
+
+# Headers spécifiques pour l'admin
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-cache, no-store, must-revalidate"
