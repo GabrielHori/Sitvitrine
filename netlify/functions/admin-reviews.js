@@ -1,33 +1,74 @@
-const fs = require('fs').promises;
-const path = require('path');
 const jwt = require('jsonwebtoken');
 
-const REVIEWS_FILE = path.join('/tmp', 'reviews.json');
+// Fonction pour lire les avis depuis le stockage
+async function getReviews() {
+    try {
+        const fs = require('fs').promises;
+        const path = require('path');
+        const filePath = path.join('/tmp', 'reviews.json');
+        
+        const data = await fs.readFile(filePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.log('📁 Fichier avis non trouvé, retour aux avis par défaut');
+        return [
+            {
+                id: 999,
+                name: "Thomas M.",
+                rating: 5,
+                service: "Montage PC Gaming",
+                text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
+                date: "2024-12-15",
+                approved: true,
+                isDefault: true
+            },
+            {
+                id: 998,
+                name: "Sarah L.",
+                rating: 5,
+                service: "Dépannage PC",
+                text: "Intervention rapide pour un écran bleu. Problème résolu en 1h, très professionnel !",
+                date: "2024-12-10",
+                approved: true,
+                isDefault: true
+            },
+            {
+                id: 997,
+                name: "Kevin R.",
+                rating: 4,
+                service: "Optimisation PC",
+                text: "PC beaucoup plus rapide après optimisation. Bon rapport qualité/prix.",
+                date: "2024-12-08",
+                approved: true,
+                isDefault: true
+            }
+        ];
+    }
+}
+
+// Fonction pour sauvegarder les avis
+async function saveReviews(reviews) {
+    try {
+        const fs = require('fs').promises;
+        const path = require('path');
+        const filePath = path.join('/tmp', 'reviews.json');
+        
+        await fs.writeFile(filePath, JSON.stringify(reviews, null, 2));
+        console.log(`💾 ${reviews.length} avis sauvegardés`);
+    } catch (error) {
+        console.error('❌ Erreur sauvegarde:', error);
+        throw error;
+    }
+}
 
 // Vérifier le token JWT
 function verifyToken(token) {
     try {
         return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
+        console.error('❌ Token invalide:', error.message);
         return null;
     }
-}
-
-async function getReviews() {
-    try {
-        const data = await fs.readFile(REVIEWS_FILE, 'utf8');
-        const reviews = JSON.parse(data);
-        console.log(`📖 Admin lit ${reviews.length} avis depuis ${REVIEWS_FILE}`);
-        return reviews;
-    } catch (error) {
-        console.log('📝 Admin: Fichier avis introuvable, retour tableau vide');
-        return [];
-    }
-}
-
-async function saveReviews(reviews) {
-    console.log(`💾 Admin sauvegarde ${reviews.length} avis dans ${REVIEWS_FILE}`);
-    await fs.writeFile(REVIEWS_FILE, JSON.stringify(reviews, null, 2));
 }
 
 exports.handler = async (event, context) => {
@@ -42,12 +83,10 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // TEMPORAIRE : Pas d'auth pour tester - SUPPRIME CETTE LIGNE
-        // const reviews = await getReviews();
-
-        // VÉRIFICATION TOKEN (RÉACTIVE CETTE PARTIE)
+        // Vérifier l'authentification
         const authHeader = event.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            console.log('❌ Token manquant');
             return {
                 statusCode: 401,
                 headers,
@@ -59,12 +98,15 @@ exports.handler = async (event, context) => {
         const decoded = verifyToken(token);
         
         if (!decoded) {
+            console.log('❌ Token invalide');
             return {
                 statusCode: 401,
                 headers,
                 body: JSON.stringify({ error: 'Token invalide' })
             };
         }
+
+        console.log('✅ Admin authentifié:', decoded.admin);
 
         const reviews = await getReviews();
 
@@ -94,10 +136,10 @@ exports.handler = async (event, context) => {
 
             if (action === 'approve') {
                 reviews[reviewIndex].approved = true;
-                console.log(`✅ Avis ${reviewId} approuvé`);
+                console.log(`✅ Avis ${reviewId} approuvé par admin`);
             } else if (action === 'delete') {
                 reviews.splice(reviewIndex, 1);
-                console.log(`🗑️ Avis ${reviewId} supprimé`);
+                console.log(`🗑️ Avis ${reviewId} supprimé par admin`);
             }
 
             await saveReviews(reviews);
@@ -109,6 +151,12 @@ exports.handler = async (event, context) => {
             };
         }
 
+        return {
+            statusCode: 405,
+            headers,
+            body: JSON.stringify({ error: 'Méthode non autorisée' })
+        };
+
     } catch (error) {
         console.error('🚨 Erreur admin:', error);
         return {
@@ -118,6 +166,4 @@ exports.handler = async (event, context) => {
         };
     }
 };
-
-
 
