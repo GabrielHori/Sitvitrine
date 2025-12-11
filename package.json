@@ -1,0 +1,18 @@
+{
+  "name": "horizon-it",
+  "version": "1.0.0",
+  "description": "Site web Horizon IT avec système d'avis",
+  "main": "index.html",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "build": "echo 'No build step required'"
+  },
+  "keywords": ["netlify", "functions", "reviews", "jwt"],
+  "author": "Horizon IT",
+  "license": "MIT"
+}
