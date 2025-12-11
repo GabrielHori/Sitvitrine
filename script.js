@@ -250,10 +250,33 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            // Calcul de la distance pour ajuster la durée
+            const targetPosition = target.offsetTop - 80; // -80px pour la nav fixe
+            const startPosition = window.pageYOffset;
+            const distance = Math.abs(targetPosition - startPosition);
+            const duration = Math.min(Math.max(distance / 3, 800), 2000); // Entre 800ms et 2s
+            
+            // Animation personnalisée plus fluide
+            const startTime = performance.now();
+            
+            function animateScroll(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Fonction d'easing pour un mouvement plus naturel
+                const easeInOutCubic = progress < 0.5 
+                    ? 4 * progress * progress * progress 
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                
+                const currentPosition = startPosition + (targetPosition - startPosition) * easeInOutCubic;
+                window.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            
+            requestAnimationFrame(animateScroll);
         }
     });
 });
