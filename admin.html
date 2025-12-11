@@ -4,25 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Admin - Horizon IT</title>
+    <title>Admin Hub - Horizon IT</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
         .login-form { max-width: 400px; margin: 50px auto; padding: 30px; background: #222; border-radius: 10px; }
-        .admin-panel { display: none; }
-        .review { background: #222; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .admin-hub { display: none; }
+        
+        /* Navigation Tabs */
+        .nav-tabs { display: flex; background: #333; border-radius: 10px 10px 0 0; overflow: hidden; }
+        .nav-tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; background: #333; border: none; color: #fff; transition: all 0.3s; }
+        .nav-tab.active { background: #00f0ff; color: #000; }
+        .nav-tab:hover { background: #555; }
+        .nav-tab.active:hover { background: #00f0ff; }
+        
+        /* Content Panels */
+        .tab-content { background: #222; padding: 20px; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        
+        /* Reviews Styles */
+        .review { background: #333; padding: 15px; margin: 10px 0; border-radius: 8px; }
         .pending { border-left: 4px solid orange; }
         .approved { border-left: 4px solid green; }
         .default { border-left: 4px solid blue; }
+        
+        /* Monitoring Styles */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #333; padding: 15px; border-radius: 8px; border-left: 4px solid #00f0ff; }
+        .stat-number { font-size: 1.8rem; font-weight: bold; color: #00f0ff; }
+        .log-entry { background: #444; padding: 8px; margin: 3px 0; border-radius: 5px; font-size: 0.85rem; }
+        .error { border-left: 3px solid #ff4444; }
+        .warning { border-left: 3px solid #ffaa00; }
+        .info { border-left: 3px solid #00ff88; }
+        .security { border-left: 3px solid #ff0088; }
+        
+        /* Buttons */
         button { padding: 8px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
         .approve { background: green; color: white; }
         .delete { background: red; color: white; }
+        .refresh { background: #00f0ff; color: #000; }
         .logout { background: #666; color: white; float: right; }
+        
+        /* Form Styles */
         input { padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; }
         .error { color: red; margin: 10px 0; }
         .success { color: green; margin: 10px 0; }
+        
+        /* Header */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
+    <!-- LOGIN FORM -->
     <div id="login-form" class="login-form">
         <h1>🔐 Connexion Admin</h1>
         <input type="password" id="password" placeholder="Mot de passe admin">
@@ -30,25 +63,90 @@
         <div id="login-error" class="error"></div>
     </div>
     
-    <div id="admin-panel" class="admin-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>📊 Administration - Horizon IT</h1>
+    <!-- ADMIN HUB -->
+    <div id="admin-hub" class="admin-hub">
+        <div class="admin-header">
+            <h1>🚀 Admin Hub - Horizon IT</h1>
             <button class="logout" onclick="logout()">Déconnexion</button>
         </div>
         
-        <button onclick="loadReviews()">🔄 Actualiser les avis</button>
-        <div id="reviews-container"></div>
+        <!-- NAVIGATION TABS -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('reviews')">📝 Avis Clients</button>
+            <button class="nav-tab" onclick="switchTab('monitoring')">📊 Monitoring</button>
+            <button class="nav-tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
+        </div>
+        
+        <!-- TAB CONTENT -->
+        <div class="tab-content">
+            <!-- REVIEWS PANEL -->
+            <div id="reviews-panel" class="tab-panel active">
+                <div style="margin-bottom: 20px;">
+                    <button class="refresh" onclick="loadReviews()">🔄 Actualiser les avis</button>
+                    <span id="reviews-count" style="margin-left: 15px; color: #888;"></span>
+                </div>
+                <div id="reviews-container">Chargement des avis...</div>
+            </div>
+            
+            <!-- MONITORING PANEL -->
+            <div id="monitoring-panel" class="tab-panel">
+                <div style="margin-bottom: 20px;">
+                    <button class="refresh" onclick="loadStats()">🔄 Actualiser Stats</button>
+                    <button class="refresh" onclick="loadLogs()">📋 Recharger Logs</button>
+                    <button class="refresh" onclick="testLog()">🧪 Test Log</button>
+                </div>
+                
+                <div class="dashboard">
+                    <div class="stat-card">
+                        <h3>📈 Statistiques Générales</h3>
+                        <div>Visites: <span class="stat-number" id="total-visits">0</span></div>
+                        <div>Erreurs: <span class="stat-number" id="total-errors">0</span></div>
+                        <div>Sécurité: <span class="stat-number" id="total-security">0</span></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>📅 Aujourd'hui</h3>
+                        <div>Visites: <span class="stat-number" id="today-visits">0</span></div>
+                        <div>Erreurs: <span class="stat-number" id="today-errors">0</span></div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>📋 Logs Récents</h3>
+                    <div id="logs-container" style="max-height: 400px; overflow-y: auto;">Chargement...</div>
+                </div>
+            </div>
+            
+            <!-- SETTINGS PANEL -->
+            <div id="settings-panel" class="tab-panel">
+                <div class="stat-card">
+                    <h3>⚙️ Configuration Système</h3>
+                    <p><strong>Version:</strong> 1.0.0</p>
+                    <p><strong>Dernière connexion:</strong> <span id="last-login">-</span></p>
+                    <p><strong>Statut:</strong> <span style="color: #00ff88;">✅ Opérationnel</span></p>
+                    
+                    <h4>🔧 Actions Rapides</h4>
+                    <button class="refresh" onclick="exportData()">📥 Exporter Données</button>
+                    <button class="refresh" onclick="clearLogs()">🗑️ Vider Logs</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         let authToken = localStorage.getItem('admin-token');
+        let currentTab = 'reviews';
         
         // Vérifier si déjà connecté
         if (authToken) {
-            showAdminPanel();
+            showAdminHub();
             loadReviews();
+            loadStats();
         }
 
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
         async function login() {
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('login-error');
@@ -65,8 +163,10 @@
                 if (response.ok) {
                     authToken = result.token;
                     localStorage.setItem('admin-token', authToken);
-                    showAdminPanel();
+                    localStorage.setItem('last-login', new Date().toLocaleString('fr-FR'));
+                    showAdminHub();
                     loadReviews();
+                    loadStats();
                     errorDiv.textContent = '';
                 } else {
                     errorDiv.textContent = result.error;
@@ -76,19 +176,42 @@
             }
         }
 
-        function showAdminPanel() {
+        function showAdminHub() {
             document.getElementById('login-form').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('admin-hub').style.display = 'block';
+            document.getElementById('last-login').textContent = localStorage.getItem('last-login') || 'Première connexion';
         }
 
         function logout() {
             localStorage.removeItem('admin-token');
             authToken = null;
             document.getElementById('login-form').style.display = 'block';
-            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('admin-hub').style.display = 'none';
             document.getElementById('password').value = '';
         }
 
+        // ============================================
+        // TAB NAVIGATION
+        // ============================================
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update panels
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(tabName + '-panel').classList.add('active');
+            
+            currentTab = tabName;
+            
+            // Load data for the active tab
+            if (tabName === 'reviews') loadReviews();
+            if (tabName === 'monitoring') { loadStats(); loadLogs(); }
+        }
+
+        // ============================================
+        // REVIEWS MANAGEMENT
+        // ============================================
         async function loadReviews() {
             if (!authToken) return;
             
@@ -107,15 +230,20 @@
                 } else if (response.status === 401) {
                     logout();
                 } else {
-                    alert('Erreur lors du chargement');
+                    document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur lors du chargement</p>';
                 }
             } catch (error) {
-                alert('Erreur de connexion');
+                document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur de connexion</p>';
             }
         }
 
         function displayAdminReviews(reviews) {
             const container = document.getElementById('reviews-container');
+            const countSpan = document.getElementById('reviews-count');
+            
+            const pending = reviews.filter(r => !r.approved).length;
+            const approved = reviews.filter(r => r.approved).length;
+            countSpan.textContent = `${reviews.length} total (${pending} en attente, ${approved} approuvés)`;
             
             if (reviews.length === 0) {
                 container.innerHTML = '<p>Aucun avis pour le moment.</p>';
@@ -156,7 +284,7 @@
                 });
                 
                 if (response.ok) {
-                    loadReviews(); // Recharger la liste
+                    loadReviews();
                 } else if (response.status === 401) {
                     logout();
                 } else {
@@ -167,6 +295,89 @@
             }
         }
 
+        // ============================================
+        // MONITORING
+        // ============================================
+        async function loadStats() {
+            try {
+                const response = await fetch('/.netlify/functions/monitoring?type=stats');
+                const stats = await response.json();
+                
+                document.getElementById('total-visits').textContent = stats.totalVisits || 0;
+                document.getElementById('total-errors').textContent = stats.totalErrors || 0;
+                document.getElementById('total-security').textContent = stats.totalSecurity || 0;
+                
+                const today = new Date().toISOString().split('T')[0];
+                const todayStats = stats.dailyStats?.[today] || { visits: 0, errors: 0 };
+                document.getElementById('today-visits').textContent = todayStats.visits;
+                document.getElementById('today-errors').textContent = todayStats.errors;
+                
+            } catch (error) {
+                console.error('Erreur stats:', error);
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const response = await fetch('/.netlify/functions/monitoring');
+                const logs = await response.json();
+                
+                const container = document.getElementById('logs-container');
+                container.innerHTML = logs.map(log => `
+                    <div class="log-entry ${log.type.toLowerCase()}">
+                        <strong>[${log.type}]</strong> ${new Date(log.timestamp).toLocaleString('fr-FR')}
+                        <br>${log.message}
+                        ${log.data?.ip ? `<br><small>IP: ${log.data.ip}</small>` : ''}
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Erreur logs:', error);
+                document.getElementById('logs-container').innerHTML = '<p style="color: red;">Erreur de chargement des logs</p>';
+            }
+        }
+
+        async function testLog() {
+            try {
+                await fetch('/.netlify/functions/monitoring', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'INFO',
+                        message: 'Test du système de monitoring depuis le hub admin',
+                        data: { source: 'admin-hub' }
+                    })
+                });
+                
+                alert('✅ Log de test créé !');
+                loadLogs();
+                loadStats();
+            } catch (error) {
+                alert('❌ Erreur test log');
+            }
+        }
+
+        // ============================================
+        // SETTINGS
+        // ============================================
+        function exportData() {
+            alert('🚧 Fonction d\'export en développement');
+        }
+
+        function clearLogs() {
+            if (confirm('⚠️ Vider tous les logs ? Cette action est irréversible.')) {
+                alert('🚧 Fonction de nettoyage en développement');
+            }
+        }
+
+        // ============================================
+        // AUTO-REFRESH
+        // ============================================
+        setInterval(() => {
+            if (currentTab === 'reviews') loadReviews();
+            if (currentTab === 'monitoring') { loadStats(); loadLogs(); }
+        }, 30000); // Refresh toutes les 30 secondes
+
         // Connexion avec Enter
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -176,3 +387,4 @@
     </script>
 </body>
 </html>
+
