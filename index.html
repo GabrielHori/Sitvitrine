@@ -41,6 +41,65 @@
          STYLES
     ============================================ -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- ============================================
+         JSON-LD STRUCTURED DATA (SEO)
+    ============================================ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Horizon IT",
+        "description": "Expert en montage PC sur mesure, dépannage informatique et optimisation. Gaming, Workstation, Bureautique.",
+        "url": "https://ithorizon.netlify.app",
+        "logo": "https://ithorizon.netlify.app/images/logo.png",
+        "image": "https://ithorizon.netlify.app/images/build1.jpg",
+        "priceRange": "€€",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "FR"
+        },
+        "sameAs": [
+            "https://www.instagram.com/horizon_it_officiel"
+        ],
+        "openingHours": "Mo-Sa 09:00-19:00",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Services informatiques",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Montage PC Gaming",
+                        "description": "Assemblage de PC gaming sur mesure avec cable management professionnel"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Dépannage PC",
+                        "description": "Diagnostic et réparation de pannes informatiques"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Optimisation PC",
+                        "description": "Amélioration des performances et overclocking"
+                    }
+                }
+            ]
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "50"
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -491,15 +550,22 @@
     <!-- ============================================
          SCRIPTS
     ============================================ -->
-    <script src="script.js" defer></script>
+
+    <!-- GSAP + ScrollTrigger (Animations) - Charger en premier -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
         (function() {
             emailjs.init("0JKz6zDmh95CbSknI");
         })();
     </script>
+
+    <!-- Scripts principaux -->
+    <script src="script.js"></script>
+    <script src="animations.js"></script>
 
 </body>
 

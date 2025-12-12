@@ -88,25 +88,55 @@ form {
 
 #review-form {
   .input-group {
+    display: flex;
+    gap: $spacing-md;
     margin-bottom: $spacing-md;
+
+    input, select {
+      flex: 1;
+      min-width: 0; // Permet au flexbox de fonctionner correctement
+    }
+
+    // Sur mobile, empiler verticalement
+    @include respond-to('sm') {
+      flex-direction: column;
+
+      input, select {
+        width: 100%;
+      }
+    }
   }
-  
+
   input,
   select,
   textarea {
     width: 100%;
     background: rgba($bg-color, 0.5);
     border: 1px solid rgba($text-white, 0.1);
-    padding: 12px;
+    padding: 12px 15px;
     color: $text-white;
     border-radius: 8px;
     font-family: $font-body;
-    
+    font-size: 1rem;
+
+    &::placeholder {
+      color: rgba($text-white, 0.5);
+    }
+
     &:focus {
       outline: none;
       border-color: $primary;
       box-shadow: 0 0 10px rgba($primary, 0.2);
     }
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300f0ff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
   }
 }
 

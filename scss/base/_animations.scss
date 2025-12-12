@@ -58,12 +58,12 @@
   }
 }
 
-// Animation au scroll
+// Animation au scroll - visible par défaut, GSAP gère les animations
 .animate-on-scroll {
-  opacity: 0;
-  transform: translateY(30px);
+  opacity: 1;
+  transform: translateY(0);
   transition: all $transition-slow;
-  
+
   &.visible {
     opacity: 1;
     transform: translateY(0);

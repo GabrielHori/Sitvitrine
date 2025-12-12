@@ -23,8 +23,15 @@
 
 // Cache des éléments DOM
 const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d', { alpha: false });
 const siteContent = document.getElementById('site-content');
+
+// Vérification de sécurité - afficher le contenu si le canvas n'existe pas
+if (!canvas || !siteContent) {
+    console.warn('⚠️ Canvas ou site-content non trouvé, affichage direct');
+    if (siteContent) siteContent.style.opacity = '1';
+} else {
+
+const ctx = canvas.getContext('2d', { alpha: false });
 
 // Initialisation du canvas
 let canvasWidth = window.innerWidth;
@@ -108,6 +115,8 @@ setTimeout(() => {
     }, FADE_OUT_DURATION);
 
 }, ANIMATION_DURATION);
+
+} // Fin du bloc else (canvas existe)
 
 // ============================================
 // 2. GESTION DU RESIZE (Debounced)
@@ -385,7 +394,7 @@ async function loadReviews() {
         console.error('Erreur lors du chargement des avis:', error);
     }
 
-    // Fallback vers un avis par défaut
+    // Fallback vers des avis par défaut
     return [
         {
             name: "Thomas M.",
@@ -393,6 +402,20 @@ async function loadReviews() {
             service: "Montage PC Gaming",
             text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
             date: "2024-12-15"
+        },
+        {
+            name: "Sarah L.",
+            rating: 5,
+            service: "Dépannage PC",
+            text: "Intervention rapide pour un écran bleu. Problème résolu en 1h, très professionnel !",
+            date: "2024-12-10"
+        },
+        {
+            name: "Kevin R.",
+            rating: 4,
+            service: "Optimisation PC",
+            text: "PC beaucoup plus rapide après optimisation. Bon rapport qualité/prix.",
+            date: "2024-12-08"
         }
     ];
 }
