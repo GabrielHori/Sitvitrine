@@ -284,6 +284,54 @@ function animateCounter(element) {
     }, 16);
 }
 
+/**
+ * Chargement des statistiques dynamiques depuis l'API
+ */
+async function loadDynamicStats() {
+    try {
+        const response = await fetch('/.netlify/functions/stats');
+
+        if (!response.ok) {
+            console.warn('⚠️ Impossible de charger les stats dynamiques');
+            return;
+        }
+
+        const stats = await response.json();
+        console.log('📊 Stats dynamiques chargées:', stats);
+
+        // Mettre à jour les data-target des éléments stats
+        const statMappings = {
+            'PC Montés': stats.pcBuilt,
+            'Clients Satisfaits': stats.happyClients,
+            'Réponse (h)': stats.responseTime,
+            'Note Moyenne': stats.avgRating
+        };
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            const label = item.querySelector('.stat-label');
+            const number = item.querySelector('.stat-number');
+
+            if (label && number) {
+                const labelText = label.textContent.trim();
+
+                // Chercher une correspondance
+                for (const [key, value] of Object.entries(statMappings)) {
+                    if (labelText.includes(key) || key.includes(labelText)) {
+                        number.setAttribute('data-target', value);
+                        break;
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.warn('⚠️ Erreur chargement stats:', error);
+    }
+}
+
+// Charger les stats au démarrage
+document.addEventListener('DOMContentLoaded', loadDynamicStats);
+
 
 // ============================================
 // 6. SMOOTH SCROLL AMÉLIORÉ

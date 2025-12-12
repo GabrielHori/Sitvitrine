@@ -6,52 +6,74 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Hub - Horizon IT</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
-        .login-form { max-width: 400px; margin: 50px auto; padding: 30px; background: #222; border-radius: 10px; }
-        .admin-hub { display: none; }
-        
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #0a0a0a; color: #fff; margin: 0; }
+        .login-form { max-width: 400px; margin: 50px auto; padding: 30px; background: linear-gradient(135deg, #1a1a1a, #222); border-radius: 15px; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .login-form h1 { text-align: center; margin-bottom: 25px; }
+        .admin-hub { display: none; max-width: 1400px; margin: 0 auto; }
+
         /* Navigation Tabs */
-        .nav-tabs { display: flex; background: #333; border-radius: 10px 10px 0 0; overflow: hidden; }
-        .nav-tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; background: #333; border: none; color: #fff; transition: all 0.3s; }
-        .nav-tab.active { background: #00f0ff; color: #000; }
-        .nav-tab:hover { background: #555; }
-        .nav-tab.active:hover { background: #00f0ff; }
-        
+        .nav-tabs { display: flex; background: #1a1a1a; border-radius: 12px 12px 0 0; overflow: hidden; border: 1px solid #333; border-bottom: none; }
+        .nav-tab { flex: 1; padding: 18px; text-align: center; cursor: pointer; background: transparent; border: none; color: #888; transition: all 0.3s; font-size: 1rem; font-weight: 500; }
+        .nav-tab.active { background: linear-gradient(135deg, #00f0ff, #00b4d8); color: #000; font-weight: 600; }
+        .nav-tab:hover:not(.active) { background: #252525; color: #fff; }
+
         /* Content Panels */
-        .tab-content { background: #222; padding: 20px; border-radius: 0 0 10px 10px; min-height: 500px; }
+        .tab-content { background: linear-gradient(135deg, #1a1a1a, #111); padding: 25px; border-radius: 0 0 12px 12px; min-height: 600px; border: 1px solid #333; border-top: none; }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
-        
+
+        /* Dashboard Grid */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #1e1e1e, #252525); padding: 20px; border-radius: 12px; border: 1px solid #333; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #00f0ff, #00b4d8); }
+        .stat-card h4 { margin: 0 0 10px 0; color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #00f0ff, #00ff88); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-label { color: #666; font-size: 0.8rem; margin-top: 5px; }
+
         /* Reviews Styles */
-        .review { background: #333; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        .pending { border-left: 4px solid orange; }
-        .approved { border-left: 4px solid green; }
-        .default { border-left: 4px solid blue; }
-        
-        /* Monitoring Styles */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #333; padding: 15px; border-radius: 8px; border-left: 4px solid #00f0ff; }
-        .stat-number { font-size: 1.8rem; font-weight: bold; color: #00f0ff; }
-        .log-entry { background: #444; padding: 8px; margin: 3px 0; border-radius: 5px; font-size: 0.85rem; }
-        .error { border-left: 3px solid #ff4444; }
-        .warning { border-left: 3px solid #ffaa00; }
-        .info { border-left: 3px solid #00ff88; }
-        .security { border-left: 3px solid #ff0088; }
-        
+        .reviews-grid { display: grid; gap: 15px; }
+        .review { background: linear-gradient(135deg, #1e1e1e, #252525); padding: 20px; border-radius: 12px; border: 1px solid #333; transition: all 0.3s; }
+        .review:hover { border-color: #00f0ff; transform: translateY(-2px); }
+        .review h3 { margin: 0 0 10px 0; color: #00f0ff; }
+        .review p { margin: 8px 0; color: #aaa; }
+        .pending { border-left: 4px solid #ffaa00; }
+        .approved { border-left: 4px solid #00ff88; }
+        .default { border-left: 4px solid #0088ff; }
+
         /* Buttons */
-        button { padding: 8px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
-        .approve { background: green; color: white; }
-        .delete { background: red; color: white; }
-        .refresh { background: #00f0ff; color: #000; }
-        .logout { background: #666; color: white; float: right; }
-        
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
+        button:hover { transform: translateY(-2px); }
+        .approve { background: linear-gradient(135deg, #00ff88, #00cc6a); color: #000; }
+        .delete { background: linear-gradient(135deg, #ff4444, #cc0000); color: white; }
+        .refresh { background: linear-gradient(135deg, #00f0ff, #00b4d8); color: #000; }
+        .logout { background: #333; color: white; }
+        .logout:hover { background: #ff4444; }
+        .btn-save { background: linear-gradient(135deg, #00ff88, #00cc6a); color: #000; padding: 12px 30px; font-size: 1rem; }
+
         /* Form Styles */
-        input { padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; }
-        .error { color: red; margin: 10px 0; }
-        .success { color: green; margin: 10px 0; }
-        
+        input, select { padding: 12px 15px; margin: 8px 0; width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; }
+        input:focus { outline: none; border-color: #00f0ff; box-shadow: 0 0 10px rgba(0,240,255,0.2); }
+        label { display: block; margin-top: 15px; color: #888; font-size: 0.9rem; }
+        .error-msg { color: #ff4444; margin: 10px 0; }
+        .success-msg { color: #00ff88; margin: 10px 0; }
+
         /* Header */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #333; }
+        .admin-header h1 { margin: 0; font-size: 1.8rem; background: linear-gradient(135deg, #00f0ff, #00ff88); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Stats Editor */
+        .stats-editor { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .stat-input-group { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; }
+        .stat-input-group h4 { margin: 0 0 15px 0; color: #00f0ff; }
+
+        /* Recent Activity */
+        .recent-activity { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-top: 20px; }
+        .recent-activity h3 { margin: 0 0 15px 0; color: #00f0ff; }
+        .activity-item { padding: 12px; background: #252525; border-radius: 8px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; }
+        .activity-item .name { color: #fff; font-weight: 500; }
+        .activity-item .rating { color: #ffcc00; }
+        .activity-item .date { color: #666; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -72,62 +94,92 @@
         
         <!-- NAVIGATION TABS -->
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('reviews')">📝 Avis Clients</button>
-            <button class="nav-tab" onclick="switchTab('monitoring')">📊 Monitoring</button>
+            <button class="nav-tab active" onclick="switchTab('dashboard')">🏠 Dashboard</button>
+            <button class="nav-tab" onclick="switchTab('reviews')">📝 Avis</button>
             <button class="nav-tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
         </div>
-        
+
         <!-- TAB CONTENT -->
         <div class="tab-content">
-            <!-- REVIEWS PANEL -->
-            <div id="reviews-panel" class="tab-panel active">
-                <div style="margin-bottom: 20px;">
-                    <button class="refresh" onclick="loadReviews()">🔄 Actualiser les avis</button>
-                    <span id="reviews-count" style="margin-left: 15px; color: #888;"></span>
-                </div>
-                <div id="reviews-container">Chargement des avis...</div>
-            </div>
-            
-            <!-- MONITORING PANEL -->
-            <div id="monitoring-panel" class="tab-panel">
-                <div style="margin-bottom: 20px;">
-                    <button class="refresh" onclick="loadStats()">🔄 Actualiser Stats</button>
-                    <button class="refresh" onclick="loadLogs()">📋 Recharger Logs</button>
-                    <button class="refresh" onclick="testLog()">🧪 Test Log</button>
-                </div>
-                
+            <!-- DASHBOARD PANEL -->
+            <div id="dashboard-panel" class="tab-panel active">
                 <div class="dashboard">
                     <div class="stat-card">
-                        <h3>📈 Statistiques Générales</h3>
-                        <div>Visites: <span class="stat-number" id="total-visits">0</span></div>
-                        <div>Erreurs: <span class="stat-number" id="total-errors">0</span></div>
-                        <div>Sécurité: <span class="stat-number" id="total-security">0</span></div>
+                        <h4>📝 Total Avis</h4>
+                        <div class="stat-number" id="stat-total-reviews">0</div>
+                        <div class="stat-label">avis reçus</div>
                     </div>
-                    
                     <div class="stat-card">
-                        <h3>📅 Aujourd'hui</h3>
-                        <div>Visites: <span class="stat-number" id="today-visits">0</span></div>
-                        <div>Erreurs: <span class="stat-number" id="today-errors">0</span></div>
+                        <h4>✅ Approuvés</h4>
+                        <div class="stat-number" id="stat-approved">0</div>
+                        <div class="stat-label">publiés sur le site</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>⏳ En attente</h4>
+                        <div class="stat-number" id="stat-pending">0</div>
+                        <div class="stat-label">à modérer</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>⭐ Note moyenne</h4>
+                        <div class="stat-number" id="stat-avg-rating">5.0</div>
+                        <div class="stat-label">sur 5 étoiles</div>
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <h3>📋 Logs Récents</h3>
-                    <div id="logs-container" style="max-height: 400px; overflow-y: auto;">Chargement...</div>
+
+                <div class="recent-activity">
+                    <h3>📋 Derniers avis reçus</h3>
+                    <div id="recent-reviews">Chargement...</div>
                 </div>
             </div>
-            
+
+            <!-- REVIEWS PANEL -->
+            <div id="reviews-panel" class="tab-panel">
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <button class="refresh" onclick="loadReviews()">🔄 Actualiser</button>
+                        <span id="reviews-count" style="margin-left: 15px; color: #888;"></span>
+                    </div>
+                    <select id="reviews-filter" onchange="filterReviews()" style="width: auto; padding: 10px 20px;">
+                        <option value="all">Tous les avis</option>
+                        <option value="pending">En attente</option>
+                        <option value="approved">Approuvés</option>
+                    </select>
+                </div>
+                <div id="reviews-container" class="reviews-grid">Chargement des avis...</div>
+            </div>
+
             <!-- SETTINGS PANEL -->
             <div id="settings-panel" class="tab-panel">
-                <div class="stat-card">
-                    <h3>⚙️ Configuration Système</h3>
-                    <p><strong>Version:</strong> 1.0.0</p>
+                <h3 style="margin-bottom: 20px;">📊 Statistiques affichées sur le site</h3>
+                <p style="color: #888; margin-bottom: 20px;">Ces valeurs sont affichées dans la section statistiques de votre site.</p>
+
+                <div class="stats-editor">
+                    <div class="stat-input-group">
+                        <h4>🖥️ PC Montés</h4>
+                        <input type="number" id="input-pc-built" placeholder="Nombre de PC montés" min="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <h4>😊 Clients Satisfaits</h4>
+                        <input type="number" id="input-happy-clients" placeholder="Nombre de clients" min="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <h4>⏱️ Temps de réponse (h)</h4>
+                        <input type="number" id="input-response-time" placeholder="Heures" min="1" max="72">
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn-save" onclick="saveStats()">💾 Sauvegarder les statistiques</button>
+                    <span id="save-status" style="margin-left: 15px;"></span>
+                </div>
+
+                <hr style="border-color: #333; margin: 40px 0;">
+
+                <h3 style="margin-bottom: 20px;">ℹ️ Informations système</h3>
+                <div class="stat-card" style="max-width: 400px;">
+                    <p><strong>Version:</strong> 2.0.0</p>
                     <p><strong>Dernière connexion:</strong> <span id="last-login">-</span></p>
                     <p><strong>Statut:</strong> <span style="color: #00ff88;">✅ Opérationnel</span></p>
-                    
-                    <h4>🔧 Actions Rapides</h4>
-                    <button class="refresh" onclick="exportData()">📥 Exporter Données</button>
-                    <button class="refresh" onclick="clearLogs()">🗑️ Vider Logs</button>
                 </div>
             </div>
         </div>
@@ -135,13 +187,13 @@
 
     <script>
         let authToken = localStorage.getItem('admin-token');
-        let currentTab = 'reviews';
-        
+        let currentTab = 'dashboard';
+        let allReviews = [];
+
         // Vérifier si déjà connecté
         if (authToken) {
             showAdminHub();
-            loadReviews();
-            loadStats();
+            loadDashboard();
         }
 
         // ============================================
@@ -150,23 +202,22 @@
         async function login() {
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('login-error');
-            
+
             try {
                 const response = await fetch('/.netlify/functions/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     authToken = result.token;
                     localStorage.setItem('admin-token', authToken);
                     localStorage.setItem('last-login', new Date().toLocaleString('fr-FR'));
                     showAdminHub();
-                    loadReviews();
-                    loadStats();
+                    loadDashboard();
                     errorDiv.textContent = '';
                 } else {
                     errorDiv.textContent = result.error;
@@ -197,16 +248,74 @@
             // Update tab buttons
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             // Update panels
             document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
             document.getElementById(tabName + '-panel').classList.add('active');
-            
+
             currentTab = tabName;
-            
+
             // Load data for the active tab
+            if (tabName === 'dashboard') loadDashboard();
             if (tabName === 'reviews') loadReviews();
-            if (tabName === 'monitoring') { loadStats(); loadLogs(); }
+            if (tabName === 'settings') loadSiteStats();
+        }
+
+        // ============================================
+        // DASHBOARD
+        // ============================================
+        async function loadDashboard() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch('/.netlify/functions/admin-stats', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const stats = await response.json();
+
+                // Update stats cards
+                document.getElementById('stat-total-reviews').textContent = stats.reviews.total;
+                document.getElementById('stat-approved').textContent = stats.reviews.approved;
+                document.getElementById('stat-pending').textContent = stats.reviews.pending;
+                document.getElementById('stat-avg-rating').textContent = stats.reviews.avgRating || '5.0';
+
+                // Update recent reviews
+                displayRecentReviews(stats.recent);
+
+                // Store site stats for settings
+                if (stats.site) {
+                    document.getElementById('input-pc-built').value = stats.site.pcBuilt;
+                    document.getElementById('input-happy-clients').value = stats.site.happyClients;
+                    document.getElementById('input-response-time').value = stats.site.responseTime;
+                }
+
+            } catch (error) {
+                console.error('Erreur dashboard:', error);
+            }
+        }
+
+        function displayRecentReviews(reviews) {
+            const container = document.getElementById('recent-reviews');
+
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = '<p style="color: #666;">Aucun avis récent</p>';
+                return;
+            }
+
+            container.innerHTML = reviews.map(r => `
+                <div class="activity-item">
+                    <span class="name">${r.name}</span>
+                    <span class="rating">${'⭐'.repeat(r.rating)}</span>
+                    <span class="date">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
+                    <span style="color: ${r.approved ? '#00ff88' : '#ffaa00'};">${r.approved ? '✅' : '⏳'}</span>
+                </div>
+            `).join('');
         }
 
         // ============================================
@@ -214,56 +323,65 @@
         // ============================================
         async function loadReviews() {
             if (!authToken) return;
-            
-            console.log('🔄 Admin: Rechargement des avis...');
-            
+
             try {
                 const response = await fetch('/.netlify/functions/admin-reviews', {
                     method: 'GET',
-                    headers: { 
+                    headers: {
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 if (response.ok) {
-                    const reviews = await response.json();
-                    console.log(`📋 Admin: ${reviews.length} avis chargés`);
-                    displayAdminReviews(reviews);
+                    allReviews = await response.json();
+                    filterReviews();
                 } else if (response.status === 401) {
-                    console.log('🚨 Token expiré, déconnexion');
                     logout();
                 } else {
-                    console.error('❌ Erreur chargement:', response.status);
-                    document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur lors du chargement</p>';
+                    document.getElementById('reviews-container').innerHTML = '<p style="color: #ff4444;">Erreur lors du chargement</p>';
                 }
             } catch (error) {
-                console.error('❌ Erreur réseau:', error);
-                document.getElementById('reviews-container').innerHTML = '<p style="color: red;">Erreur de connexion</p>';
+                document.getElementById('reviews-container').innerHTML = '<p style="color: #ff4444;">Erreur de connexion</p>';
             }
+        }
+
+        function filterReviews() {
+            const filter = document.getElementById('reviews-filter').value;
+            let filtered = allReviews;
+
+            if (filter === 'pending') {
+                filtered = allReviews.filter(r => !r.approved);
+            } else if (filter === 'approved') {
+                filtered = allReviews.filter(r => r.approved);
+            }
+
+            displayAdminReviews(filtered);
         }
 
         function displayAdminReviews(reviews) {
             const container = document.getElementById('reviews-container');
             const countSpan = document.getElementById('reviews-count');
-            
-            const pending = reviews.filter(r => !r.approved).length;
-            const approved = reviews.filter(r => r.approved).length;
-            countSpan.textContent = `${reviews.length} total (${pending} en attente, ${approved} approuvés)`;
-            
+
+            const pending = allReviews.filter(r => !r.approved).length;
+            const approved = allReviews.filter(r => r.approved).length;
+            countSpan.textContent = `${allReviews.length} total • ${pending} en attente • ${approved} approuvés`;
+
             if (reviews.length === 0) {
-                container.innerHTML = '<p>Aucun avis pour le moment.</p>';
+                container.innerHTML = '<p style="color: #666;">Aucun avis correspondant.</p>';
                 return;
             }
-            
+
             container.innerHTML = reviews.map(review => `
                 <div class="review ${review.approved ? 'approved' : 'pending'} ${review.isDefault ? 'default' : ''}">
-                    <h3>${review.name} - ${review.rating}⭐ ${review.isDefault ? '(Par défaut)' : ''}</h3>
-                    <p><strong>Service:</strong> ${review.service}</p>
-                    <p>"${review.text}"</p>
-                    <p><small>${review.date} - ${review.approved ? '✅ Approuvé' : '⏳ En attente'}</small></p>
-                    ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">✅ Approuver</button>` : ''}
-                    <button class="delete" onclick="deleteReview(${review.id}, '${review.name}')">🗑️ Supprimer</button>
+                    <h3>${review.name} ${'⭐'.repeat(review.rating)} ${review.isDefault ? '<span style="color: #0088ff;">(Par défaut)</span>' : ''}</h3>
+                    <p><strong>Service:</strong> ${review.service || 'Non spécifié'}</p>
+                    <p style="font-style: italic; color: #ccc;">"${review.text}"</p>
+                    <p><small style="color: #666;">${review.date || new Date(review.created_at).toLocaleDateString('fr-FR')} • ${review.approved ? '<span style="color: #00ff88;">✅ Approuvé</span>' : '<span style="color: #ffaa00;">⏳ En attente</span>'}</small></p>
+                    <div style="margin-top: 10px;">
+                        ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">✅ Approuver</button>` : ''}
+                        <button class="delete" onclick="deleteReview(${review.id}, '${review.name}')">🗑️ Supprimer</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -302,77 +420,60 @@
         }
 
         // ============================================
-        // MONITORING
+        // SETTINGS - SITE STATS
         // ============================================
-        async function loadStats() {
-            try {
-                const response = await fetch('/.netlify/functions/monitoring?type=stats');
-                const stats = await response.json();
-                
-                document.getElementById('total-visits').textContent = stats.totalVisits || 0;
-                document.getElementById('total-errors').textContent = stats.totalErrors || 0;
-                document.getElementById('total-security').textContent = stats.totalSecurity || 0;
-                
-                const today = new Date().toISOString().split('T')[0];
-                const todayStats = stats.dailyStats?.[today] || { visits: 0, errors: 0 };
-                document.getElementById('today-visits').textContent = todayStats.visits;
-                document.getElementById('today-errors').textContent = todayStats.errors;
-                
-            } catch (error) {
-                console.error('Erreur stats:', error);
-            }
-        }
+        async function loadSiteStats() {
+            if (!authToken) return;
 
-        async function loadLogs() {
             try {
-                const response = await fetch('/.netlify/functions/monitoring');
-                const logs = await response.json();
-                
-                const container = document.getElementById('logs-container');
-                container.innerHTML = logs.map(log => `
-                    <div class="log-entry ${log.type.toLowerCase()}">
-                        <strong>[${log.type}]</strong> ${new Date(log.timestamp).toLocaleString('fr-FR')}
-                        <br>${log.message}
-                        ${log.data?.ip ? `<br><small>IP: ${log.data.ip}</small>` : ''}
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Erreur logs:', error);
-                document.getElementById('logs-container').innerHTML = '<p style="color: red;">Erreur de chargement des logs</p>';
-            }
-        }
-
-        async function testLog() {
-            try {
-                await fetch('/.netlify/functions/monitoring', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'INFO',
-                        message: 'Test du système de monitoring depuis le hub admin',
-                        data: { source: 'admin-hub' }
-                    })
+                const response = await fetch('/.netlify/functions/admin-stats', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                
-                alert('✅ Log de test créé !');
-                loadLogs();
-                loadStats();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.site) {
+                        document.getElementById('input-pc-built').value = data.site.pcBuilt || 50;
+                        document.getElementById('input-happy-clients').value = data.site.happyClients || 100;
+                        document.getElementById('input-response-time').value = data.site.responseTime || 24;
+                    }
+                }
             } catch (error) {
-                alert('❌ Erreur test log');
+                console.error('Erreur chargement stats:', error);
             }
         }
 
-        // ============================================
-        // SETTINGS
-        // ============================================
-        function exportData() {
-            alert('🚧 Fonction d\'export en développement');
-        }
+        async function saveStats() {
+            if (!authToken) return;
 
-        function clearLogs() {
-            if (confirm('⚠️ Vider tous les logs ? Cette action est irréversible.')) {
-                alert('🚧 Fonction de nettoyage en développement');
+            const statusSpan = document.getElementById('save-status');
+            statusSpan.textContent = '⏳ Sauvegarde...';
+            statusSpan.style.color = '#ffaa00';
+
+            const pcBuilt = parseInt(document.getElementById('input-pc-built').value) || 50;
+            const happyClients = parseInt(document.getElementById('input-happy-clients').value) || 100;
+            const responseTime = parseInt(document.getElementById('input-response-time').value) || 24;
+
+            try {
+                const response = await fetch('/.netlify/functions/admin-stats', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pcBuilt, happyClients, responseTime })
+                });
+
+                if (response.ok) {
+                    statusSpan.textContent = '✅ Sauvegardé !';
+                    statusSpan.style.color = '#00ff88';
+                    setTimeout(() => { statusSpan.textContent = ''; }, 3000);
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                statusSpan.textContent = '❌ Erreur de sauvegarde';
+                statusSpan.style.color = '#ff4444';
             }
         }
 
@@ -380,8 +481,8 @@
         // AUTO-REFRESH
         // ============================================
         setInterval(() => {
+            if (currentTab === 'dashboard') loadDashboard();
             if (currentTab === 'reviews') loadReviews();
-            if (currentTab === 'monitoring') { loadStats(); loadLogs(); }
         }, 30000); // Refresh toutes les 30 secondes
 
         // Connexion avec Enter
