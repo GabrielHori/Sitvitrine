@@ -444,17 +444,25 @@ async function displayReviews() {
     const reviewsList = document.getElementById('reviews-list');
     if (!reviewsList) return;
 
-    reviewsList.innerHTML = reviews.map(review => `
-        <div class="review-card animate-on-scroll">
-            <div class="review-header">
-                <div class="review-client">${review.name}</div>
-                <div class="review-rating">${getStarsHTML(review.rating)}</div>
+    reviewsList.innerHTML = reviews.map(review => {
+        // Supabase utilise created_at, fallback sur date pour compatibilité
+        const reviewDate = review.created_at || review.date;
+        const formattedDate = reviewDate
+            ? new Date(reviewDate).toLocaleDateString('fr-FR')
+            : '';
+
+        return `
+            <div class="review-card animate-on-scroll">
+                <div class="review-header">
+                    <div class="review-client">${review.name}</div>
+                    <div class="review-rating">${getStarsHTML(review.rating)}</div>
+                </div>
+                <div class="review-service">Service: ${review.service}</div>
+                <div class="review-text">"${review.text}"</div>
+                <div class="review-date">${formattedDate}</div>
             </div>
-            <div class="review-service">Service: ${review.service}</div>
-            <div class="review-text">"${review.text}"</div>
-            <div class="review-date">${new Date(review.date).toLocaleDateString('fr-FR')}</div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     // Réappliquer l'observer pour les animations
     const newCards = reviewsList.querySelectorAll('.animate-on-scroll');

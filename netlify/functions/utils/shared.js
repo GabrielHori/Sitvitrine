@@ -10,7 +10,7 @@
 // CONFIGURATION & CONSTANTES
 // ============================================
 
-const SITE_URL = process.env.URL || 'https://horizonit.netlify.app';
+const SITE_URL = process.env.URL || 'https://ithorizon.netlify.app';
 
 // Avis par défaut (utilisés si la BDD est vide)
 const DEFAULT_REVIEWS = [
