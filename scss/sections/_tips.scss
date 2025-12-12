@@ -1,0 +1,22 @@
+// ============================================
+// SECTION TIPS / ASTUCES
+// ============================================
+@use '../globals' as *;
+
+#tips {
+  padding: 60px $spacing-lg;
+  text-align: center;
+  
+  h2 {
+    font-size: 2.4rem;
+    margin-bottom: 35px;
+  }
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  justify-items: center;
+}
+

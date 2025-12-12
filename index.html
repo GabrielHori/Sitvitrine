@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+    <!-- ============================================
+         META TAGS ESSENTIELS
+    ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Horizon IT - Expert en montage PC sur mesure, dépannage informatique et optimisation. Gaming, Workstation, Bureautique. Service professionnel et rapide.">
@@ -8,89 +12,119 @@
     <meta name="author" content="Horizon IT">
     <meta name="theme-color" content="#00f0ff">
 
-    <!-- Open Graph / Facebook -->
+    <!-- ============================================
+         OPEN GRAPH / FACEBOOK
+    ============================================ -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Horizon IT - Montage & Dépannage PC">
     <meta property="og:description" content="Expert en montage PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.">
     <meta property="og:image" content="images/build1.jpg">
 
-    <!-- Twitter -->
+    <!-- ============================================
+         TWITTER CARDS
+    ============================================ -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Horizon IT - Montage & Dépannage PC">
     <meta name="twitter:description" content="Expert en montage PC sur mesure, dépannage et optimisation.">
 
     <title>Horizon IT - Montage & Dépannage PC | Expert Gaming & Workstation</title>
 
-    <!-- Preconnect for performance -->
+    <!-- ============================================
+         PRECONNECT & FONTS (Performance)
+    ============================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.instagram.com">
-
-    <!-- Optimized font loading with display=swap -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
 
+    <!-- ============================================
+         STYLES
+    ============================================ -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<body>
+    <!-- ============================================
+         ANIMATION MATRIX (Intro)
+    ============================================ -->
     <canvas id="matrix-canvas" aria-hidden="true"></canvas>
 
+    <!-- ============================================
+         CONTENU PRINCIPAL DU SITE
+    ============================================ -->
     <div id="site-content" style="opacity: 0;">
 
+        <!-- Background Glow Effect -->
         <div class="background-glow" aria-hidden="true"></div>
 
+        <!-- ========================================
+             NAVIGATION
+        ======================================== -->
         <nav>
-    <div class="logo">HORIZON <span class="text-accent">IT</span></div>
-    
-    <ul class="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#tarifs">Tarifs</a></li>
-        <li><a href="#tips">Astuces</a></li>
-        <li><a href="#galerie">Setup & Builds</a></li>
-        <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
-        <li><a href="#avis">Avis</a></li>
-    </ul>
+            <div class="logo">HORIZON <span class="text-accent">IT</span></div>
 
-    <div class="burger">
-        <div class="line1"></div>
-        <div class="line2"></div>
-        <div class="line3"></div>
-    </div>
-</nav>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#tarifs">Tarifs</a></li>
+                <li><a href="#tips">Astuces</a></li>
+                <li><a href="#galerie">Setup & Builds</a></li>
+                <li><a href="#contact" class="btn-nav">Devis Gratuit</a></li>
+                <li><a href="#avis">Avis</a></li>
+            </ul>
 
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
 
+        <!-- ========================================
+             SECTION HERO
+        ======================================== -->
         <header id="hero">
             <div class="hero-content">
                 <p class="subtitle animate-on-scroll">PASSIONNÉ D'INFORMATIQUE 🚀</p>
                 <h1 class="typing-effect">PC REPAIR & <br><span class="text-outline">ASSEMBLY</span></h1>
-                <p class="description animate-on-scroll">Montage de PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.</p>
+                <p class="description animate-on-scroll">
+                    Montage de PC sur mesure, dépannage et optimisation.
+                    Transforme ton expérience informatique avec un setup unique.
+                </p>
                 <div class="cta-group animate-on-scroll">
                     <a href="#contact" class="btn-primary">Lancer mon projet</a>
                     <a href="#galerie" class="btn-secondary">Voir mes montages</a>
                 </div>
             </div>
-            
-            <!-- Indicateur de scroll - Repositionné correctement -->
+
+            <!-- Indicateur de scroll -->
             <div class="scroll-indicator">
                 <div class="scroll-arrow">↓</div>
                 <span>Découvrir</span>
             </div>
         </header>
 
-        <!-- SECTION SERVICES -->
+        <!-- ========================================
+             SECTION SERVICES
+        ======================================== -->
         <section id="services">
             <h2 class="section-title">MES <span class="text-accent">SERVICES</span></h2>
+
             <div class="cards-grid">
+                <!-- Carte Montage Custom -->
                 <div class="card">
                     <div class="icon">🛠️</div>
                     <h3>Montage Custom</h3>
                     <p>Gaming, Workstation ou Bureautique. Cable management impeccable et optimisation du flux d'air.</p>
                 </div>
+
+                <!-- Carte Optimisation -->
                 <div class="card">
                     <div class="icon">🚀</div>
                     <h3>Optimisation</h3>
                     <p>Overclocking, mise à jour BIOS, installation Windows & Drivers pour des perfs maximales.</p>
                 </div>
+
+                <!-- Carte Dépannage -->
                 <div class="card">
                     <div class="icon">🚑</div>
                     <h3>Dépannage</h3>
@@ -99,19 +133,22 @@
             </div>
         </section>
 
-        <!-- SECTION TARIFS - Après Services -->
+        <!-- ========================================
+             SECTION TARIFS
+        ======================================== -->
         <section id="tarifs">
             <h2 class="section-title">MES <span class="text-accent">TARIFS</span></h2>
-            
+
             <div class="pricing-grid">
-                <!-- Montage PC -->
+
+                <!-- Catégorie: Montage PC -->
                 <div class="pricing-category">
                     <div class="category-header">
                         <div class="icon">🛠️</div>
                         <h3>Montage PC sur mesure</h3>
                         <p>Configuration et assemblage selon tes besoins</p>
                     </div>
-                    
+
                     <div class="pricing-cards">
                         <div class="price-card">
                             <h4>Pack Starter</h4>
@@ -121,7 +158,7 @@
                                 <li>Cable management</li>
                             </ul>
                         </div>
-                        
+
                         <div class="price-card featured">
                             <h4>Pack Performance</h4>
                             <div class="price">80€</div>
@@ -131,7 +168,7 @@
                                 <li>Drivers + optimisation</li>
                             </ul>
                         </div>
-                        
+
                         <div class="price-card">
                             <h4>Pack Pro Gamer</h4>
                             <div class="price">100€</div>
@@ -145,14 +182,14 @@
                     </div>
                 </div>
 
-                <!-- Optimisation -->
+                <!-- Catégorie: Optimisation -->
                 <div class="pricing-category">
                     <div class="category-header">
                         <div class="icon">🧠</div>
                         <h3>Optimisation & Performance</h3>
                         <p>Boost des performances et réglages avancés</p>
                     </div>
-                    
+
                     <div class="services-list">
                         <div class="service-item">
                             <span>Nettoyage & optimisation système</span>
@@ -169,14 +206,14 @@
                     </div>
                 </div>
 
-                <!-- Dépannage -->
+                <!-- Catégorie: Dépannage -->
                 <div class="pricing-category">
                     <div class="category-header">
                         <div class="icon">🔧</div>
                         <h3>Dépannage & Réparation</h3>
                         <p>Diagnostic rapide et remise en état</p>
                     </div>
-                    
+
                     <div class="services-list">
                         <div class="service-item">
                             <span>Diagnostic panne</span>
@@ -198,14 +235,14 @@
                     <p class="note">*Selon pièces remplacées (prix pièces en sus)</p>
                 </div>
 
-                <!-- Services complémentaires -->
+                <!-- Catégorie: Services complémentaires -->
                 <div class="pricing-category">
                     <div class="category-header">
                         <div class="icon">📦</div>
                         <h3>Services complémentaires</h3>
                         <p>Options et services additionnels</p>
                     </div>
-                    
+
                     <div class="services-list">
                         <div class="service-item">
                             <span>Configuration réseau & Wi-Fi</span>
@@ -221,15 +258,19 @@
                         </div>
                     </div>
                 </div>
+
             </div>
-            
+
+            <!-- CTA Devis -->
             <div class="pricing-cta">
                 <p>💡 <strong>Devis gratuit</strong> - Les prix peuvent varier selon la complexité</p>
                 <a href="#contact" class="btn-primary">Demander un devis</a>
             </div>
         </section>
 
-        <!-- Section Stats après Services -->
+        <!-- ========================================
+             SECTION STATISTIQUES
+        ======================================== -->
         <section id="stats" class="stats-section">
             <div class="stats-container">
                 <div class="stat-item animate-on-scroll">
@@ -251,10 +292,14 @@
             </div>
         </section>
 
-        <!-- Section Processus après Stats -->
+        <!-- ========================================
+             SECTION PROCESSUS
+        ======================================== -->
         <section id="process">
             <h2 class="section-title">MON <span class="text-accent">PROCESSUS</span></h2>
+
             <div class="process-timeline">
+                <!-- Étape 1 -->
                 <div class="process-step animate-on-scroll">
                     <div class="step-number">01</div>
                     <div class="step-content">
@@ -262,6 +307,8 @@
                         <p>Analyse de tes besoins et budget pour définir la config parfaite</p>
                     </div>
                 </div>
+
+                <!-- Étape 2 -->
                 <div class="process-step animate-on-scroll">
                     <div class="step-number">02</div>
                     <div class="step-content">
@@ -269,6 +316,8 @@
                         <p>Sélection des composants optimaux et commande groupée</p>
                     </div>
                 </div>
+
+                <!-- Étape 3 -->
                 <div class="process-step animate-on-scroll">
                     <div class="step-number">03</div>
                     <div class="step-content">
@@ -276,6 +325,8 @@
                         <p>Assemblage professionnel avec cable management impeccable</p>
                     </div>
                 </div>
+
+                <!-- Étape 4 -->
                 <div class="process-step animate-on-scroll">
                     <div class="step-number">04</div>
                     <div class="step-content">
@@ -286,10 +337,14 @@
             </div>
         </section>
 
+        <!-- ========================================
+             SECTION CONSEILS & ASTUCES
+        ======================================== -->
         <section id="tips">
             <h2 class="section-title">CONSEILS <span class="text-accent">ASTUCES</span></h2>
-            <div class="tips-grid">
 
+            <div class="tips-grid">
+                <!-- Vidéo Instagram 1 -->
                 <div class="tip-card">
                     <div class="video-wrapper">
                         <iframe src="https://www.instagram.com/reel/DRekB8oCNkA/embed"
@@ -301,6 +356,7 @@
                     </div>
                 </div>
 
+                <!-- Vidéo Instagram 2 -->
                 <div class="tip-card">
                     <div class="video-wrapper">
                         <iframe src="https://www.instagram.com/reel/DRhiIfkjFbM/embed"
@@ -311,14 +367,12 @@
                                 scrolling="no"></iframe>
                     </div>
                 </div>
-
             </div>
         </section>
 
-
-
-
-        <!--  SECTION MES MONTAGES / BUILDS -->
+        <!-- ========================================
+             SECTION GALERIE / BUILDS
+        ======================================== -->
         <section id="galerie">
             <h2 class="section-title">MES <span class="text-accent">MONTAGES</span></h2>
 
@@ -336,15 +390,17 @@
                          height="600">
                     <p>PC Gaming - RTX 2070 Super</p>
                 </div>
-
             </div>
         </section>
 
-        <!-- SECTION CONTACT -->
+        <!-- ========================================
+             SECTION CONTACT
+        ======================================== -->
         <section id="contact">
             <div class="contact-box">
                 <h2>Contactez <span class="text-accent">Horizon IT</span></h2>
                 <p>Un projet ? Une panne ? Remplissez ce formulaire.</p>
+
                 <form id="contact-form" aria-label="Formulaire de contact">
                     <div class="input-group">
                         <input type="text"
@@ -358,36 +414,42 @@
                                aria-label="Votre email"
                                required>
                     </div>
+
                     <select name="service" aria-label="Type de service" required>
                         <option value="">Sélectionnez un service</option>
                         <option value="PC Gaming">Je veux un PC Gamer</option>
                         <option value="Dépannage">J'ai une panne</option>
                         <option value="Autre">Autre demande</option>
                     </select>
+
                     <textarea name="message"
                               placeholder="Détails de votre demande..."
                               aria-label="Détails de votre demande"
                               rows="5"
                               required></textarea>
+
                     <button type="submit" class="btn-primary">Envoyer le message</button>
                 </form>
             </div>
         </section>
 
-        <!-- SECTION AVIS -->
+        <!-- ========================================
+             SECTION AVIS CLIENTS
+        ======================================== -->
         <section id="avis">
             <h2 class="section-title">AVIS <span class="text-accent">CLIENTS</span></h2>
-            
-            <!-- Affichage des avis -->
+
+            <!-- Affichage des avis (chargés via JS) -->
             <div class="reviews-container">
                 <div class="reviews-grid" id="reviews-list">
                     <!-- Les avis seront chargés ici par JavaScript -->
                 </div>
             </div>
-            
+
             <!-- Formulaire d'ajout d'avis -->
             <div class="review-form-container">
                 <h3>Laissez votre avis</h3>
+
                 <form id="review-form">
                     <div class="input-group">
                         <input type="text" name="client_name" placeholder="Votre nom" required>
@@ -400,28 +462,45 @@
                             <option value="1">⭐ (1/5)</option>
                         </select>
                     </div>
-                    <input type="text" name="service_type" placeholder="Service utilisé (ex: Montage PC Gaming)" required>
-                    <textarea name="review_text" placeholder="Votre avis détaillé..." rows="4" required></textarea>
+
+                    <input type="text"
+                           name="service_type"
+                           placeholder="Service utilisé (ex: Montage PC Gaming)"
+                           required>
+
+                    <textarea name="review_text"
+                              placeholder="Votre avis détaillé..."
+                              rows="4"
+                              required></textarea>
+
                     <button type="submit" class="btn-primary">Publier mon avis</button>
                 </form>
             </div>
         </section>
 
+        <!-- ========================================
+             FOOTER
+        ======================================== -->
         <footer role="contentinfo">
             <p>© 2025 Horizon IT. Tous droits réservés.</p>
         </footer>
 
     </div>
+    <!-- Fin #site-content -->
 
+    <!-- ============================================
+         SCRIPTS
+    ============================================ -->
     <script src="script.js" defer></script>
 
-    <!-- Add EmailJS SDK before closing </body> tag -->
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
-        (function(){
-            emailjs.init("0JKz6zDmh95CbSknI"); // Your actual public key
+        (function() {
+            emailjs.init("0JKz6zDmh95CbSknI");
         })();
     </script>
 
 </body>
+
 </html>

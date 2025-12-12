@@ -1,0 +1,63 @@
+// ============================================
+// SECTION PROCESSUS
+// ============================================
+@use '../globals' as *;
+
+#process {
+  padding: $spacing-section 5%;
+  background: $bg-color;
+}
+
+.process-timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-xl;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.process-step {
+  @include glass-effect;
+  padding: $spacing-xl;
+  border-radius: $border-radius-md;
+  @include transition;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    @include gradient-line;
+  }
+  
+  &:hover {
+    @include card-hover;
+    
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.step-number {
+  font-family: $font-heading;
+  font-size: 3rem;
+  font-weight: 900;
+  color: $primary;
+  margin-bottom: $spacing-md;
+  display: block;
+}
+
+.step-content {
+  h3 {
+    font-family: $font-heading;
+    font-size: $font-size-h3;
+    margin-bottom: $spacing-sm;
+    color: $text-white;
+  }
+  
+  p {
+    color: $text-gray;
+    line-height: 1.6;
+    font-size: $font-size-base;
+  }
+}
+

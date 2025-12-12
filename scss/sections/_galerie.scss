@@ -1,0 +1,72 @@
+// ============================================
+// SECTION GALERIE / BUILDS
+// ============================================
+@use '../globals' as *;
+
+.builds-grid {
+  @include flex-column;
+  align-items: center;
+  padding: $spacing-xxl $spacing-lg;
+}
+
+.build {
+  background: rgba($primary, 0.05);
+  border: 1px solid rgba($primary, 0.27);
+  padding: $spacing-lg;
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 10px rgba($primary, 0.2);
+  max-width: 900px;
+  width: 100%;
+  
+  // Responsive grid pour desktop
+  @media (min-width: 700px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    
+    p {
+      grid-column: 1 / -1;
+      margin-top: 0;
+      padding-top: $spacing-md;
+    }
+  }
+  
+  // Images
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-md;
+    @include transition(transform);
+    cursor: pointer;
+    will-change: transform;
+    
+    &:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba($primary, 0.67);
+    }
+  }
+  
+  // Description du build
+  p {
+    text-align: center;
+    margin-top: $spacing-sm;
+    font-size: $font-size-large;
+    color: $primary;
+    font-weight: 500;
+  }
+  
+  @include respond-to('sm') {
+    padding: $spacing-md;
+    
+    img {
+      margin-bottom: $spacing-sm;
+    }
+    
+    p {
+      font-size: $font-size-base;
+    }
+  }
+}
+

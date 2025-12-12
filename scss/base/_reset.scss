@@ -1,0 +1,43 @@
+// ============================================
+// RESET & BASE STYLES
+// ============================================
+@use '../globals' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: $bg-color;
+  color: $text-white;
+  font-family: $font-body;
+  overflow-x: hidden;
+}
+
+// Content principal
+#site-content {
+  width: 100%;
+  min-height: 100vh;
+  will-change: opacity;
+}
+
+// Liens globaux
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// Images responsive
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Liste sans style
+ul {
+  list-style: none;
+}
+

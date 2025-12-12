@@ -1,50 +1,71 @@
+/**
+ * ============================================
+ * HORIZON IT - SCRIPT PRINCIPAL
+ * ============================================
+ *
+ * Table des matières:
+ * 1. Animation Matrix (Intro)
+ * 2. Gestion du Resize
+ * 3. Menu Burger (Navigation mobile)
+ * 4. Formulaire de Contact (EmailJS)
+ * 5. Animations au Scroll & Compteurs
+ * 6. Smooth Scroll amélioré
+ * 7. Effet Parallax
+ * 8. Système d'Avis Clients
+ *
+ * ============================================
+ */
+
+
 // ============================================
-// OPTIMIZED MATRIX ANIMATION
+// 1. ANIMATION MATRIX (INTRO)
 // ============================================
 
-// Cache DOM elements
+// Cache des éléments DOM
 const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for better performance
+const ctx = canvas.getContext('2d', { alpha: false });
 const siteContent = document.getElementById('site-content');
 
-// Initialize canvas
+// Initialisation du canvas
 let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
-// Constants
-const CHARACTERS = ['0', '1']; // Pre-split array
+// Constantes de configuration
+const CHARACTERS = ['0', '1'];
 const FONT_SIZE = 16;
 const ANIMATION_DURATION = 1400;
 const FADE_OUT_DURATION = 800;
 
-// Calculate columns and initialize drops
+// Calcul des colonnes et initialisation des gouttes
 let columns = Math.floor(canvasWidth / FONT_SIZE);
 const drops = Array.from({ length: columns }, () => 1);
 
-// Pre-set static styles
+// Styles pré-définis pour le canvas
 ctx.fillStyle = "#00f0ff";
 ctx.shadowColor = "#00f0ff";
 ctx.shadowBlur = 5;
 ctx.font = `${FONT_SIZE}px 'Rajdhani', monospace`;
 
-// Animation state
+// État de l'animation
 let animationId = null;
 let isAnimating = true;
 
-// Optimized draw function using requestAnimationFrame
+/**
+ * Fonction de dessin optimisée avec requestAnimationFrame
+ */
 function draw() {
     if (!isAnimating) return;
 
-    // Clear with trail effect
+    // Effet de traînée
     ctx.fillStyle = "rgba(5, 5, 5, 0.1)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Reset fill style for characters
+    // Couleur des caractères
     ctx.fillStyle = "#00f0ff";
 
-    // Draw characters
+    // Dessiner les caractères
     for (let i = 0; i < drops.length; i++) {
         const char = CHARACTERS[Math.random() < 0.5 ? 0 : 1];
         const x = i * FONT_SIZE;
@@ -52,7 +73,7 @@ function draw() {
 
         ctx.fillText(char, x, y);
 
-        // Reset drop randomly when it goes off screen
+        // Reset aléatoire quand la goutte sort de l'écran
         if (y > canvasHeight && Math.random() > 0.95) {
             drops[i] = 0;
         }
@@ -63,25 +84,25 @@ function draw() {
     animationId = requestAnimationFrame(draw);
 }
 
-// Start animation
+// Démarrage de l'animation
 animationId = requestAnimationFrame(draw);
 
-// Stop animation and fade out
+// Arrêt et fondu après la durée définie
 setTimeout(() => {
     isAnimating = false;
     if (animationId) {
         cancelAnimationFrame(animationId);
     }
 
-    // Fade out canvas
+    // Fondu du canvas
     canvas.style.transition = `opacity ${FADE_OUT_DURATION}ms ease-in`;
     canvas.style.opacity = '0';
 
-    // Fade in site content
+    // Apparition du contenu du site
     siteContent.style.transition = 'opacity 0.9s ease-in 0.2s';
     siteContent.style.opacity = '1';
 
-    // Remove canvas from DOM after fade
+    // Suppression du canvas du DOM
     setTimeout(() => {
         canvas.remove();
     }, FADE_OUT_DURATION);
@@ -89,10 +110,14 @@ setTimeout(() => {
 }, ANIMATION_DURATION);
 
 // ============================================
-// DEBOUNCED RESIZE HANDLER
+// 2. GESTION DU RESIZE (Debounced)
 // ============================================
 
 let resizeTimeout;
+
+/**
+ * Gestion du redimensionnement avec debounce pour les performances
+ */
 function handleResize() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -103,31 +128,33 @@ function handleResize() {
             canvas.height = canvasHeight;
             columns = Math.floor(canvasWidth / FONT_SIZE);
 
-            // Adjust drops array
+            // Ajuster le tableau des gouttes
             drops.length = columns;
             for (let i = 0; i < columns; i++) {
                 if (drops[i] === undefined) drops[i] = 1;
             }
         }
-    }, 150); // Debounce delay
+    }, 150);
 }
 
 window.addEventListener('resize', handleResize, { passive: true });
 
+
 // ============================================
-// BURGER MENU
+// 3. MENU BURGER (Navigation mobile)
 // ============================================
 
 const burger = document.querySelector('.burger');
 const nav = document.querySelector('nav ul');
 const navLinks = document.querySelectorAll('nav ul li a');
 
+// Toggle du menu burger
 burger.addEventListener('click', () => {
     nav.classList.toggle('nav-active');
     burger.classList.toggle('toggle');
 });
 
-// Auto-close menu when clicking on a link
+// Fermeture auto du menu au clic sur un lien
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
         nav.classList.remove('nav-active');
@@ -135,32 +162,36 @@ navLinks.forEach(link => {
     });
 });
 
-// EmailJS Contact Form Handler
+
+// ============================================
+// 4. FORMULAIRE DE CONTACT (EmailJS)
+// ============================================
+
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
-    
+
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
-    
-    // Show loading state
+
+    // État de chargement
     submitBtn.textContent = 'Envoi en cours...';
     submitBtn.disabled = true;
     submitBtn.style.opacity = '0.7';
-    
-    // Send email using EmailJS
+
+    // Envoi via EmailJS
     emailjs.sendForm('service_yb6h9t7', 'template_idokhq6', this)
         .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
-            
-            // Success feedback
+
+            // Feedback succès
             submitBtn.textContent = '✅ Message envoyé !';
             submitBtn.style.backgroundColor = '#00ff88';
             submitBtn.style.color = '#000';
-            
-            // Reset form
+
+            // Reset du formulaire
             document.getElementById('contact-form').reset();
-            
-            // Reset button after 3 seconds
+
+            // Reset du bouton après 3 secondes
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
@@ -168,16 +199,16 @@ document.getElementById('contact-form').addEventListener('submit', function(even
                 submitBtn.style.backgroundColor = '';
                 submitBtn.style.color = '';
             }, 3000);
-            
+
         }, function(error) {
             console.log('FAILED...', error);
-            
-            // Error feedback
+
+            // Feedback erreur
             submitBtn.textContent = '❌ Erreur - Réessayer';
             submitBtn.style.backgroundColor = '#ff4444';
             submitBtn.style.color = '#fff';
-            
-            // Reset button after 3 seconds
+
+            // Reset du bouton après 3 secondes
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
@@ -189,10 +220,10 @@ document.getElementById('contact-form').addEventListener('submit', function(even
 });
 
 // ============================================
-// SCROLL ANIMATIONS & COUNTERS
+// 5. ANIMATIONS AU SCROLL & COMPTEURS
 // ============================================
 
-// Intersection Observer pour les animations au scroll
+// Configuration de l'Intersection Observer
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -202,8 +233,8 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            
-            // Animation des compteurs
+
+            // Animation des compteurs statistiques
             if (entry.target.classList.contains('stat-item')) {
                 animateCounter(entry.target.querySelector('.stat-number'));
             }
@@ -211,12 +242,12 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observer tous les éléments à animer
+// Initialisation des éléments animés au chargement
 document.addEventListener('DOMContentLoaded', () => {
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     animatedElements.forEach(el => observer.observe(el));
-    
-    // Ajouter la classe animate-on-scroll aux sections
+
+    // Ajout automatique de l'animation aux cartes et étapes
     const sections = document.querySelectorAll('.card, .process-step, .stat-item');
     sections.forEach(section => {
         section.classList.add('animate-on-scroll');
@@ -224,13 +255,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Animation des compteurs
+/**
+ * Animation des compteurs de statistiques
+ * @param {HTMLElement} element - L'élément contenant le compteur
+ */
 function animateCounter(element) {
     const target = parseInt(element.getAttribute('data-target'));
     const duration = 2000;
     const step = target / (duration / 16);
     let current = 0;
-    
+
     const timer = setInterval(() => {
         current += step;
         if (current >= target) {
@@ -241,50 +275,56 @@ function animateCounter(element) {
     }, 16);
 }
 
+
 // ============================================
-// SMOOTH SCROLL AMÉLIORÉ
+// 6. SMOOTH SCROLL AMÉLIORÉ
 // ============================================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
+
         if (target) {
             // Calcul de la distance pour ajuster la durée
-            const targetPosition = target.offsetTop - 80; // -80px pour la nav fixe
+            const targetPosition = target.offsetTop - 80; // Offset pour la nav fixe
             const startPosition = window.pageYOffset;
             const distance = Math.abs(targetPosition - startPosition);
-            const duration = Math.min(Math.max(distance / 3, 800), 2000); // Entre 800ms et 2s
-            
-            // Animation personnalisée plus fluide
+            const duration = Math.min(Math.max(distance / 3, 800), 2000);
+
             const startTime = performance.now();
-            
+
+            /**
+             * Animation du scroll avec easing cubic
+             */
             function animateScroll(currentTime) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                
-                // Fonction d'easing pour un mouvement plus naturel
-                const easeInOutCubic = progress < 0.5 
-                    ? 4 * progress * progress * progress 
+
+                // Fonction d'easing pour un mouvement naturel
+                const easeInOutCubic = progress < 0.5
+                    ? 4 * progress * progress * progress
                     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                
+
                 const currentPosition = startPosition + (targetPosition - startPosition) * easeInOutCubic;
                 window.scrollTo(0, currentPosition);
-                
+
                 if (progress < 1) {
                     requestAnimationFrame(animateScroll);
                 }
             }
-            
+
             requestAnimationFrame(animateScroll);
         }
     });
 });
 
+
 // ============================================
-// PARALLAX EFFECT SUR LE BACKGROUND GLOW
+// 7. EFFET PARALLAX & INTERACTIONS
 // ============================================
 
+// Parallax sur le background glow
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const backgroundGlow = document.querySelector('.background-glow');
@@ -293,7 +333,7 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Scroll indicator click handler - Refait au propre
+// Clic sur l'indicateur de scroll (flèche du hero)
 document.addEventListener('DOMContentLoaded', () => {
     const scrollIndicator = document.querySelector('.scroll-indicator');
     if (scrollIndicator) {
@@ -310,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Logo click handler - Scroll to top
+// Clic sur le logo pour remonter en haut
 document.addEventListener('DOMContentLoaded', () => {
     const logo = document.querySelector('.logo');
     if (logo) {
@@ -321,19 +361,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
         });
-        
-        // Add cursor pointer to show it's clickable
         logo.style.cursor = 'pointer';
     }
 });
 
 // ============================================
-// SYSTÈME D'AVIS CLIENTS AVEC BACKEND
+// 8. SYSTÈME D'AVIS CLIENTS (API Netlify)
 // ============================================
 
 const API_URL = '/.netlify/functions/reviews';
 
-// Charger les avis depuis l'API
+/**
+ * Charge les avis depuis l'API
+ * @returns {Promise<Array>} Liste des avis
+ */
 async function loadReviews() {
     try {
         const response = await fetch(API_URL);
@@ -343,8 +384,8 @@ async function loadReviews() {
     } catch (error) {
         console.error('Erreur lors du chargement des avis:', error);
     }
-    
-    // Fallback vers les avis par défaut
+
+    // Fallback vers un avis par défaut
     return [
         {
             name: "Thomas M.",
@@ -356,11 +397,15 @@ async function loadReviews() {
     ];
 }
 
-// Sauvegarder un nouvel avis
+/**
+ * Sauvegarde un nouvel avis via l'API
+ * @param {Object} reviewData - Les données de l'avis
+ * @returns {Promise<Object>} Résultat de la sauvegarde
+ */
 async function saveNewReview(reviewData) {
     try {
         console.log('📤 Envoi avis:', reviewData);
-        
+
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -368,10 +413,10 @@ async function saveNewReview(reviewData) {
             },
             body: JSON.stringify(reviewData)
         });
-        
+
         const result = await response.json();
         console.log('📥 Réponse serveur:', result);
-        
+
         return { success: response.ok, data: result };
     } catch (error) {
         console.error('❌ Erreur lors de la sauvegarde:', error);
@@ -379,21 +424,26 @@ async function saveNewReview(reviewData) {
     }
 }
 
-// Afficher les étoiles
+/**
+ * Génère le HTML des étoiles pour une note donnée
+ * @param {number} rating - Note de 1 à 5
+ * @returns {string} HTML des étoiles
+ */
 function getStarsHTML(rating) {
     return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
 }
 
-// Afficher les avis
+/**
+ * Affiche les avis dans le DOM
+ */
 async function displayReviews() {
     console.log('🔄 Rechargement des avis...');
     const reviews = await loadReviews();
     console.log(`📋 ${reviews.length} avis chargés`);
-    
+
     const reviewsList = document.getElementById('reviews-list');
-    
     if (!reviewsList) return;
-    
+
     reviewsList.innerHTML = reviews.map(review => `
         <div class="review-card animate-on-scroll">
             <div class="review-header">
@@ -405,27 +455,49 @@ async function displayReviews() {
             <div class="review-date">${new Date(review.date).toLocaleDateString('fr-FR')}</div>
         </div>
     `).join('');
-    
-    // Réappliquer l'observer pour les nouvelles cartes
+
+    // Réappliquer l'observer pour les animations
     const newCards = reviewsList.querySelectorAll('.animate-on-scroll');
     newCards.forEach(card => observer.observe(card));
 }
 
-// Gérer l'ajout d'un nouvel avis (VERSION CORRIGÉE)
+/**
+ * Validation des données du formulaire d'avis
+ * @param {Object} data - Données à valider
+ * @returns {string|null} Message d'erreur ou null si valide
+ */
+function validateReviewData(data) {
+    if (!data.name || data.name.length < 2) {
+        return '❌ Le nom doit contenir au moins 2 caractères';
+    }
+    if (!data.rating || data.rating < 1 || data.rating > 5) {
+        return '❌ Veuillez sélectionner une note';
+    }
+    if (!data.service || data.service.length < 3) {
+        return '❌ Le service doit contenir au moins 3 caractères';
+    }
+    if (!data.text || data.text.length < 10) {
+        return '❌ Le commentaire doit contenir au moins 10 caractères';
+    }
+    return null;
+}
+
+// Gestion du formulaire d'ajout d'avis
 document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
-    
+
     if (reviewForm) {
         reviewForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            
-            // Loading state
+
+            // État de chargement
             submitBtn.textContent = 'Publication...';
             submitBtn.disabled = true;
-            
+
+            // Récupération des données
             const formData = new FormData(this);
             const reviewData = {
                 name: formData.get('client_name')?.trim(),
@@ -433,47 +505,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 service: formData.get('service_type')?.trim(),
                 text: formData.get('review_text')?.trim()
             };
-            
+
             console.log('📤 Envoi des données:', reviewData);
-            
+
             // Validation côté client
-            if (!reviewData.name || reviewData.name.length < 2) {
-                alert('❌ Le nom doit contenir au moins 2 caractères');
+            const validationError = validateReviewData(reviewData);
+            if (validationError) {
+                alert(validationError);
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
                 return;
             }
-            
-            if (!reviewData.rating || reviewData.rating < 1 || reviewData.rating > 5) {
-                alert('❌ Veuillez sélectionner une note');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
-            if (!reviewData.service || reviewData.service.length < 3) {
-                alert('❌ Le service doit contenir au moins 3 caractères');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
-            if (!reviewData.text || reviewData.text.length < 10) {
-                alert('❌ Le commentaire doit contenir au moins 10 caractères');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
+
+            // Envoi à l'API
             const result = await saveNewReview(reviewData);
-            
+
             if (result.success) {
                 // Succès
                 submitBtn.textContent = '✅ Avis publié !';
                 submitBtn.style.backgroundColor = '#00ff88';
                 this.reset();
-                
-                // Recharger les avis
+
+                // Recharger les avis après 1 seconde
                 setTimeout(() => {
                     displayReviews();
                 }, 1000);
@@ -482,14 +535,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('❌ Erreur:', result);
                 submitBtn.textContent = '❌ Erreur - Réessayer';
                 submitBtn.style.backgroundColor = '#ff4444';
-                
-                // Afficher l'erreur détaillée
+
                 if (result.data?.error) {
                     alert(`Erreur: ${result.data.error}`);
                 }
             }
-            
-            // Reset button
+
+            // Reset du bouton après 3 secondes
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
@@ -497,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000);
         });
     }
-    
+
     // Charger les avis au démarrage
     displayReviews();
 });

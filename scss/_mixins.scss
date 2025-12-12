@@ -1,0 +1,129 @@
+// ============================================
+// MIXINS SASS - HORIZON IT
+// ============================================
+@use 'variables' as *;
+
+// Breakpoints responsive
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media screen and (max-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media screen and (max-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media screen and (max-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' {
+    @media screen and (min-width: $breakpoint-xl) {
+      @content;
+    }
+  }
+}
+
+// Flexbox center
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flexbox space between
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Flexbox column
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Transition standard
+@mixin transition($property: all) {
+  transition: $property $transition-fast;
+}
+
+// Glass effect
+@mixin glass-effect {
+  background: $card-bg-transparent;
+  border: 1px solid $card-border;
+  backdrop-filter: blur(10px);
+}
+
+// Card hover effect
+@mixin card-hover {
+  transform: translateY(-5px);
+  border-color: rgba($primary, 0.3);
+  box-shadow: 0 10px 30px rgba($primary, 0.1);
+}
+
+// Glow text
+@mixin glow-text($color: $primary) {
+  text-shadow: 0 0 10px $color;
+}
+
+// Neon border
+@mixin neon-border($color: $primary) {
+  border: 1px solid rgba($color, 0.1);
+  
+  &:hover {
+    border-color: rgba($color, 0.3);
+    box-shadow: 0 0 30px rgba($color, 0.1);
+  }
+}
+
+// Button base
+@mixin button-base {
+  padding: 15px 30px;
+  border-radius: $border-radius-sm;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  @include transition;
+  display: inline-block;
+  font-size: $font-size-small;
+  cursor: pointer;
+  border: none;
+}
+
+// Animation pulse
+@mixin pulse-animation {
+  animation: glowPulse 2s infinite;
+}
+
+// Ligne gradient
+@mixin gradient-line {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $primary, transparent);
+  transform: scaleX(0);
+  @include transition(transform);
+}
+
+// Scrollbar personnalisée
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $bg-color;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $primary;
+    border-radius: 4px;
+  }
+}
+

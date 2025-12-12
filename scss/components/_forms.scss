@@ -1,0 +1,112 @@
+// ============================================
+// FORMULAIRES
+// ============================================
+@use '../globals' as *;
+
+// Groupe d'inputs
+.input-group {
+  display: flex;
+  gap: $spacing-md;
+  
+  input {
+    flex: 1;
+    width: 50%;
+  }
+  
+  @include respond-to('md') {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+// Styles de base des inputs
+form {
+  input,
+  select,
+  textarea {
+    width: 100%;
+    background: $bg-color;
+    border: 1px solid #333;
+    padding: $spacing-md;
+    margin-bottom: $spacing-md;
+    color: $text-white;
+    font-family: $font-body;
+    box-sizing: border-box;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
+}
+
+// Boîte de contact
+.contact-box {
+  background: #111;
+  padding: $spacing-xxl;
+  border-radius: $border-radius-xl;
+  border: 1px solid #222;
+  width: 100%;
+  max-width: 600px;
+  
+  h2 {
+    margin-bottom: $spacing-lg;
+  }
+  
+  > p {
+    margin-bottom: $spacing-xl;
+    color: $text-gray;
+  }
+  
+  @include respond-to('md') {
+    padding: $spacing-xl $spacing-lg;
+  }
+}
+
+// Section contact
+#contact {
+  display: flex;
+  justify-content: center;
+}
+
+// Formulaire d'avis
+.review-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  @include glass-effect;
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+  
+  h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: $primary;
+    font-family: $font-heading;
+  }
+}
+
+#review-form {
+  .input-group {
+    margin-bottom: $spacing-md;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    background: rgba($bg-color, 0.5);
+    border: 1px solid rgba($text-white, 0.1);
+    padding: 12px;
+    color: $text-white;
+    border-radius: 8px;
+    font-family: $font-body;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 10px rgba($primary, 0.2);
+    }
+  }
+}
+

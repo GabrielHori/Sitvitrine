@@ -1,0 +1,73 @@
+// ============================================
+// SECTION AVIS CLIENTS
+// ============================================
+@use '../globals' as *;
+
+#avis {
+  padding: $spacing-section 5%;
+  background: linear-gradient(135deg, rgba($bg-color, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%);
+}
+
+.reviews-container {
+  margin-bottom: 60px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-bottom: $spacing-xxl;
+  
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.review-card {
+  @include glass-effect;
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: $border-radius-lg;
+  padding: 25px;
+  @include transition;
+  position: relative;
+  
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 0 25px rgba($primary, 0.1);
+  }
+}
+
+.review-header {
+  @include flex-between;
+  margin-bottom: $spacing-md;
+}
+
+.review-client {
+  font-weight: 700;
+  color: $primary;
+  font-size: 1.1rem;
+}
+
+.review-rating {
+  font-size: $font-size-large;
+}
+
+.review-service {
+  font-size: $font-size-small;
+  color: $text-gray;
+  margin-bottom: $spacing-md;
+  font-style: italic;
+}
+
+.review-text {
+  line-height: 1.6;
+  color: $text-white;
+  margin-bottom: $spacing-md;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: $text-gray;
+  text-align: right;
+}
+

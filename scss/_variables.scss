@@ -1,0 +1,78 @@
+// ============================================
+// VARIABLES SASS - HORIZON IT
+// ============================================
+
+// Couleurs principales
+$bg-color: #050505;          // Noir très profond
+$card-bg: #121212;           // Gris foncé pour les cartes
+$primary: #00f0ff;           // Cyan Néon
+$text-white: #ffffff;
+$text-gray: #a0a0a0;
+
+// Couleurs dérivées
+$primary-light: rgba(0, 240, 255, 0.5);
+$primary-dark: rgba(0, 240, 255, 0.1);
+$primary-glow: rgba(0, 240, 255, 0.3);
+$card-border: rgba(255, 255, 255, 0.05);
+$card-bg-transparent: rgba(255, 255, 255, 0.03);
+
+// Couleurs d'état
+$success-color: #00ff88;
+$error-color: #ff4444;
+$warning-color: #ffaa00;
+
+// Typographies
+$font-heading: 'Orbitron', sans-serif;
+$font-body: 'Rajdhani', sans-serif;
+
+// Tailles de police
+$font-size-base: 1rem;
+$font-size-small: 0.9rem;
+$font-size-large: 1.2rem;
+$font-size-h1: 4rem;
+$font-size-h1-tablet: 3rem;
+$font-size-h1-mobile: 2.5rem;
+$font-size-h2: 2.5rem;
+$font-size-h2-mobile: 2rem;
+$font-size-h3: 1.5rem;
+
+// Espacements
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing-md: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 30px;
+$spacing-xxl: 40px;
+$spacing-section: 80px;
+$spacing-section-mobile: 50px;
+
+// Bordures
+$border-radius-sm: 5px;
+$border-radius-md: 10px;
+$border-radius-lg: 15px;
+$border-radius-xl: 20px;
+
+// Transitions
+$transition-fast: 0.3s ease;
+$transition-medium: 0.5s ease;
+$transition-slow: 0.6s ease-out;
+
+// Breakpoints
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1200px;
+
+// Ombres
+$shadow-card: 0 15px 40px rgba(0, 240, 255, 0.2);
+$shadow-primary: 0 0 20px rgba(0, 240, 255, 0.5);
+$shadow-glow: 0 0 30px rgba(0, 240, 255, 0.6);
+$shadow-nav: 0 0 15px rgba(0, 255, 255, 0.2);
+
+// Z-index
+$z-index-canvas: 9999;
+$z-index-nav: 100;
+$z-index-modal: 200;
+$z-index-hero: 2;
+$z-index-scroll: 10;
+

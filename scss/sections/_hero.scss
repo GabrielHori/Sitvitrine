@@ -1,0 +1,76 @@
+// ============================================
+// SECTION HERO
+// ============================================
+@use '../globals' as *;
+
+#hero {
+  position: relative;
+  min-height: 100vh;
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5%;
+  text-align: center;
+  
+  @include respond-to('md') {
+    padding: 0 5%;
+    min-height: 100vh;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: $z-index-hero;
+  max-width: 800px;
+  margin: 0 auto;
+  
+  @include respond-to('md') {
+    text-align: center;
+  }
+}
+
+// Indicateur de scroll
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: $primary;
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  font-size: $font-size-small;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  z-index: $z-index-scroll;
+  @include transition;
+  
+  &:hover {
+    color: $text-white;
+    @include glow-text($primary);
+    
+    .scroll-arrow {
+      transform: scale(1.2);
+    }
+  }
+  
+  @include respond-to('md') {
+    bottom: 30px;
+    font-size: 0.8rem;
+    
+    .scroll-arrow {
+      font-size: 1.5rem;
+      margin-bottom: $spacing-xs;
+    }
+  }
+}
+
+.scroll-arrow {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  display: block;
+  line-height: 1;
+  @include transition(transform);
+}
+

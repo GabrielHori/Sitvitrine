@@ -1,0 +1,110 @@
+// ============================================
+// SECTION BOUTIQUE
+// ============================================
+@use '../globals' as *;
+@use 'sass:color';
+
+#boutique {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, $bg-color 0%, rgba($text-gray, 0.1) 100%);
+}
+
+.boutique-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+  
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.boutique-card {
+  background: rgba($text-gray, 0.1);
+  padding: 2rem;
+  border-radius: $border-radius-lg;
+  text-align: center;
+  border: 2px solid transparent;
+  @include transition;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($primary, 0.1), transparent);
+    transition: left $transition-medium;
+  }
+  
+  &:hover {
+    border-color: $primary;
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba($primary, 0.2);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  @include respond-to('md') {
+    padding: 1.5rem;
+  }
+}
+
+.boutique-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.boutique-card h3 {
+  color: $primary;
+  margin-bottom: 1rem;
+  font-size: $font-size-h3;
+}
+
+.boutique-card p {
+  color: rgba($text-white, 0.7);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.price-range {
+  background: $primary;
+  color: $bg-color;
+  padding: 0.5rem 1rem;
+  border-radius: $border-radius-xl;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.boutique-cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.boutique-note {
+  margin-top: 1rem;
+  color: $primary;
+  font-style: italic;
+}
+
+.shop-link {
+  background: linear-gradient(45deg, $primary, color.adjust($primary, $lightness: 15%));
+  color: $bg-color !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: $border-radius-xl !important;
+  font-weight: bold;
+  @include transition;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba($primary, 0.3);
+  }
+}
+

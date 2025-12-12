@@ -1,0 +1,162 @@
+// ============================================
+// SECTION TARIFS
+// ============================================
+@use '../globals' as *;
+
+#tarifs {
+  background: linear-gradient(135deg, rgba($bg-color, 0.9) 0%, rgba(5, 5, 5, 0.95) 100%);
+  padding: $spacing-section 5%;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-xxl;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+  }
+}
+
+.pricing-category {
+  @include glass-effect;
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+  @include transition;
+  
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 0 30px rgba($primary, 0.1);
+  }
+}
+
+.category-header {
+  text-align: center;
+  margin-bottom: 25px;
+  
+  .icon {
+    font-size: 2.5rem;
+    margin-bottom: $spacing-md;
+  }
+  
+  h3 {
+    font-family: $font-heading;
+    font-size: 1.4rem;
+    margin-bottom: $spacing-sm;
+    color: $primary;
+  }
+  
+  p {
+    color: $text-gray;
+    font-size: $font-size-small;
+  }
+}
+
+// Cartes de prix
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-md;
+  
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.price-card {
+  background: rgba($primary, 0.05);
+  border: 1px solid rgba($primary, 0.2);
+  border-radius: $border-radius-md;
+  padding: $spacing-lg;
+  text-align: center;
+  @include transition;
+  
+  &.featured {
+    border-color: $primary;
+    box-shadow: 0 0 20px rgba($primary, 0.2);
+    transform: scale(1.05);
+    
+    @include respond-to('md') {
+      transform: none;
+    }
+  }
+  
+  h4 {
+    font-family: $font-heading;
+    margin-bottom: $spacing-md;
+    color: $text-white;
+  }
+  
+  .price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: $primary;
+    margin-bottom: $spacing-md;
+  }
+  
+  ul {
+    padding: 0;
+    
+    li {
+      padding: $spacing-xs 0;
+      color: $text-gray;
+      font-size: $font-size-small;
+      
+      &::before {
+        content: "✓ ";
+        color: $primary;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Liste de services
+.services-list {
+  @include flex-column;
+  gap: 12px;
+}
+
+.service-item {
+  @include flex-between;
+  padding: 12px 0;
+  border-bottom: 1px solid $card-border;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .price {
+    color: $primary;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+}
+
+.note {
+  font-size: 0.8rem;
+  color: $text-gray;
+  font-style: italic;
+  margin-top: $spacing-md;
+  text-align: center;
+}
+
+// CTA Tarifs
+.pricing-cta {
+  text-align: center;
+  margin-top: $spacing-section-mobile;
+  padding: $spacing-xl;
+  background: rgba($primary, 0.05);
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba($primary, 0.1);
+  
+  p {
+    margin-bottom: $spacing-lg;
+    color: $text-gray;
+  }
+}
+
