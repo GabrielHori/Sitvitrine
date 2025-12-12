@@ -17,26 +17,20 @@ const { DEFAULT_REVIEWS } = require('./shared');
 // INITIALISATION SUPABASE
 // ============================================
 
-let supabase = null;
-
 function getSupabaseClient() {
-    if (supabase) return supabase;
-
     const supabaseUrl = process.env.SUPABASE_URL;
-    // Utiliser service_role pour bypass RLS, sinon fallback sur anon
+    // Utiliser service_role pour bypass RLS
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
         console.error('❌ Variables Supabase manquantes!');
         console.error('   SUPABASE_URL:', supabaseUrl ? '✓' : '✗');
         console.error('   SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓' : '✗');
-        console.error('   SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY ? '✓' : '✗');
         return null;
     }
 
-    supabase = createClient(supabaseUrl, supabaseKey);
-    console.log('✅ Client Supabase initialisé (service_role:', !!process.env.SUPABASE_SERVICE_ROLE_KEY, ')');
-    return supabase;
+    console.log('🔑 Supabase: utilisation de', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE' : 'ANON');
+    return createClient(supabaseUrl, supabaseKey);
 }
 
 // ============================================
