@@ -4,7 +4,8 @@
   "description": "Site web Horizon IT avec système d'avis",
   "main": "index.html",
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
     "sass": "^1.69.5"
@@ -18,7 +19,7 @@
     "sass:prod": "sass scss/main.scss style.css --style=compressed --no-source-map",
     "build": "npm run sass:prod"
   },
-  "keywords": ["netlify", "functions", "reviews", "jwt", "sass"],
+  "keywords": ["netlify", "functions", "reviews", "jwt", "sass", "supabase"],
   "author": "Horizon IT",
   "license": "MIT"
 }

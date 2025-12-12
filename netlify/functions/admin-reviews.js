@@ -1,69 +1,37 @@
+/**
+ * ============================================
+ * HORIZON IT - API ADMIN AVIS
+ * ============================================
+ *
+ * Endpoints protégés par JWT:
+ * - GET  /api/admin-reviews     → Liste tous les avis (même non approuvés)
+ * - POST /api/admin-reviews     → Approuver ou supprimer un avis
+ */
+
 const jwt = require('jsonwebtoken');
 
-// Fonction pour lire les avis depuis le stockage
-async function getReviews() {
-    try {
-        const fs = require('fs').promises;
-        const path = require('path');
-        const filePath = path.join('/tmp', 'reviews.json');
-        
-        const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.log('📁 Fichier avis non trouvé, retour aux avis par défaut');
-        return [
-            {
-                id: 999,
-                name: "Thomas M.",
-                rating: 5,
-                service: "Montage PC Gaming",
-                text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
-                date: "2024-12-15",
-                approved: true,
-                isDefault: true
-            },
-            {
-                id: 998,
-                name: "Sarah L.",
-                rating: 5,
-                service: "Dépannage PC",
-                text: "Intervention rapide pour un écran bleu. Problème résolu en 1h, très professionnel !",
-                date: "2024-12-10",
-                approved: true,
-                isDefault: true
-            },
-            {
-                id: 997,
-                name: "Kevin R.",
-                rating: 4,
-                service: "Optimisation PC",
-                text: "PC beaucoup plus rapide après optimisation. Bon rapport qualité/prix.",
-                date: "2024-12-08",
-                approved: true,
-                isDefault: true
-            }
-        ];
-    }
-}
+const {
+    successResponse,
+    errorResponse,
+    optionsResponse
+} = require('./utils/shared');
 
-// Fonction pour sauvegarder les avis
-async function saveReviews(reviews) {
-    try {
-        const fs = require('fs').promises;
-        const path = require('path');
-        const filePath = path.join('/tmp', 'reviews.json');
-        
-        await fs.writeFile(filePath, JSON.stringify(reviews, null, 2));
-        console.log(`💾 ${reviews.length} avis sauvegardés`);
-    } catch (error) {
-        console.error('❌ Erreur sauvegarde:', error);
-        throw error;
-    }
-}
+const {
+    getReviews,
+    updateReviewStatus,
+    deleteReview
+} = require('./utils/supabase');
 
-// Vérifier le token JWT
+// ============================================
+// VÉRIFICATION JWT
+// ============================================
+
 function verifyToken(token) {
     try {
+        if (!process.env.JWT_SECRET) {
+            console.error('❌ JWT_SECRET non configuré');
+            return null;
+        }
         return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
         console.error('❌ Token invalide:', error.message);
@@ -71,99 +39,107 @@ function verifyToken(token) {
     }
 }
 
-exports.handler = async (event, context) => {
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-    };
+function extractToken(authHeader) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
+    }
+    return authHeader.split(' ')[1];
+}
 
+// ============================================
+// HANDLER PRINCIPAL
+// ============================================
+
+exports.handler = async (event) => {
+    // Preflight CORS
     if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
+        return optionsResponse();
     }
 
     try {
-        // Vérifier l'authentification
-        const authHeader = event.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        // ========================================
+        // Vérification de l'authentification
+        // ========================================
+        const token = extractToken(event.headers.authorization);
+
+        if (!token) {
             console.log('❌ Token manquant');
-            return {
-                statusCode: 401,
-                headers,
-                body: JSON.stringify({ error: 'Token manquant' })
-            };
+            return errorResponse('Token d\'authentification requis', 401);
         }
 
-        const token = authHeader.split(' ')[1];
         const decoded = verifyToken(token);
-        
-        if (!decoded) {
-            console.log('❌ Token invalide');
-            return {
-                statusCode: 401,
-                headers,
-                body: JSON.stringify({ error: 'Token invalide' })
-            };
+
+        if (!decoded || !decoded.admin) {
+            console.log('❌ Token invalide ou non-admin');
+            return errorResponse('Token invalide ou expiré', 401);
         }
 
-        console.log('✅ Admin authentifié:', decoded.admin);
+        console.log('✅ Admin authentifié');
 
-        const reviews = await getReviews();
-
-        // GET - Voir tous les avis
+        // ========================================
+        // GET - Récupérer TOUS les avis
+        // ========================================
         if (event.httpMethod === 'GET') {
-            console.log(`📋 Admin récupère ${reviews.length} avis`);
-            return {
-                statusCode: 200,
-                headers: { ...headers, 'Content-Type': 'application/json' },
-                body: JSON.stringify(reviews)
-            };
+            const reviews = await getReviews(false); // false = tous les avis
+
+            console.log(`📋 Admin: ${reviews.length} avis récupérés`);
+            return successResponse(reviews);
         }
 
-        // POST - Approuver ou supprimer
+        // ========================================
+        // POST - Actions admin (approuver/supprimer)
+        // ========================================
         if (event.httpMethod === 'POST') {
-            const { action, reviewId } = JSON.parse(event.body);
-            
-            const reviewIndex = reviews.findIndex(r => r.id === parseInt(reviewId));
-            
-            if (reviewIndex === -1) {
-                return {
-                    statusCode: 404,
-                    headers,
-                    body: JSON.stringify({ error: 'Avis non trouvé' })
-                };
+            let body;
+            try {
+                body = JSON.parse(event.body);
+            } catch (e) {
+                return errorResponse('Format JSON invalide', 400);
             }
 
+            const { action, reviewId } = body;
+
+            if (!action || !reviewId) {
+                return errorResponse('Action et reviewId requis', 400);
+            }
+
+            // Action: Approuver
             if (action === 'approve') {
-                reviews[reviewIndex].approved = true;
-                console.log(`✅ Avis ${reviewId} approuvé par admin`);
-            } else if (action === 'delete') {
-                reviews.splice(reviewIndex, 1);
-                console.log(`🗑️ Avis ${reviewId} supprimé par admin`);
+                await updateReviewStatus(parseInt(reviewId), true);
+                console.log(`✅ Avis ${reviewId} approuvé`);
+                return successResponse({
+                    message: 'Avis approuvé avec succès',
+                    reviewId
+                });
             }
 
-            await saveReviews(reviews);
+            // Action: Rejeter (désapprouver)
+            if (action === 'reject') {
+                await updateReviewStatus(parseInt(reviewId), false);
+                console.log(`⛔ Avis ${reviewId} rejeté`);
+                return successResponse({
+                    message: 'Avis rejeté',
+                    reviewId
+                });
+            }
 
-            return {
-                statusCode: 200,
-                headers: { ...headers, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: 'Action effectuée avec succès' })
-            };
+            // Action: Supprimer
+            if (action === 'delete') {
+                await deleteReview(parseInt(reviewId));
+                console.log(`🗑️ Avis ${reviewId} supprimé`);
+                return successResponse({
+                    message: 'Avis supprimé définitivement',
+                    reviewId
+                });
+            }
+
+            return errorResponse('Action non reconnue (approve/reject/delete)', 400);
         }
 
-        return {
-            statusCode: 405,
-            headers,
-            body: JSON.stringify({ error: 'Méthode non autorisée' })
-        };
+        return errorResponse('Méthode non autorisée', 405);
 
     } catch (error) {
-        console.error('🚨 Erreur admin:', error);
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: 'Erreur serveur' })
-        };
+        console.error('🚨 Erreur admin-reviews:', error);
+        return errorResponse('Erreur serveur interne', 500);
     }
 };
-
