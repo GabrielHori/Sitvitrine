@@ -91,15 +91,15 @@ async function getStatsFromDB(client) {
         }
 
         // Combiner les stats
-        if (!statsError && siteStats) {
-            return {
-                pcBuilt: siteStats.pc_built || DEFAULT_STATS.pcBuilt,
-                happyClients: siteStats.happy_clients || DEFAULT_STATS.happyClients,
-                responseTime: siteStats.response_time || DEFAULT_STATS.responseTime,
-                avgRating,
-                totalReviews
-            };
-        }
+        return {
+            pcBuilt: siteStats.pc_built || DEFAULT_STATS.pcBuilt,
+            happyClients: siteStats.happy_clients || DEFAULT_STATS.happyClients,
+            responseTime: siteStats.response_time || DEFAULT_STATS.responseTime,
+            successRate: siteStats.success_rate ?? DEFAULT_STATS.successRate, // 👈
+            avgRating,
+            totalReviews
+        };
+
 
         // Fallback si pas de table site_stats
         return {

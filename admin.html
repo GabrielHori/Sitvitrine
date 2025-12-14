@@ -293,6 +293,7 @@
                     document.getElementById('input-pc-built').value = stats.site.pcBuilt;
                     document.getElementById('input-happy-clients').value = stats.site.happyClients;
                     document.getElementById('input-response-time').value = stats.site.responseTime;
+                    document.getElementById('success-rate').textContent =`${stats.successRate}%`;
                 }
 
             } catch (error) {
