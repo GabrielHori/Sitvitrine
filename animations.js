@@ -20,6 +20,13 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Forcer les animations : l'intro matrix reste affichée pour tout le monde
+const motionSafe = true;
+
+ScrollTrigger.config({
+    limitCallbacks: true
+});
+
 // Configuration globale
 gsap.config({
     nullTargetWarn: false
@@ -28,7 +35,7 @@ gsap.config({
 // Defaults pour des animations fluides
 gsap.defaults({
     ease: "power2.out",
-    duration: 0.8
+    duration: motionSafe ? 0.8 : 0.5
 });
 
 // ============================================
@@ -39,12 +46,21 @@ function initHeroAnimations() {
     const hero = document.querySelector('.hero, #accueil, #hero, header');
     if (!hero) return;
 
-    // S'assurer que tous les éléments sont visibles par défaut
+    // S'assurer que tous les éléments clés sont visibles même sans animations
     const logo = document.querySelector('.logo');
     const heroTitle = hero.querySelector('h1, .hero-title');
     const heroSubtitles = hero.querySelectorAll('p, .hero-subtitle, .hero-description, .subtitle, .description');
     const heroCTAs = hero.querySelectorAll('.btn-primary, .btn-secondary, .cta-button, .hero-cta');
     const scrollIndicator = hero.querySelector('.scroll-indicator');
+
+    if (!motionSafe) {
+        [logo, heroTitle, scrollIndicator].forEach(el => {
+            if (el) el.style.opacity = '1';
+        });
+        heroSubtitles.forEach(el => el.style.opacity = '1');
+        heroCTAs.forEach(el => el.style.opacity = '1');
+        return;
+    }
 
     // Garantir visibilité avant animation
     [logo, heroTitle, scrollIndicator].forEach(el => {
@@ -100,6 +116,10 @@ function initScrollAnimations() {
         section.style.opacity = '1';
         section.style.visibility = 'visible';
 
+        if (!motionSafe) {
+            return;
+        }
+
         // Titre de section
         const title = section.querySelector('.section-title, h2');
         if (title) {
@@ -141,10 +161,14 @@ function initCardAnimations() {
             card.style.visibility = 'visible';
         });
 
+        if (!motionSafe || !cards.length) {
+            return;
+        }
+
         if (cards.length) {
             // Animation subtile sans cacher les éléments
             gsap.fromTo(cards,
-                { y: 30, scale: 0.98 },
+                { y: 18, scale: 0.99 },
                 {
                     scrollTrigger: {
                         trigger: container,
@@ -279,6 +303,8 @@ function initMicroInteractions() {
 // ============================================
 
 function initParticles() {
+    if (!motionSafe) return;
+
     const canvas = document.createElement('canvas');
     canvas.id = 'particles-canvas';
     canvas.style.cssText = `
@@ -302,7 +328,15 @@ function initParticles() {
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const particleCount = 50;
+    let animationId = null;
+    let isActive = true;
+
+    const getParticleCount = () => {
+        if (window.innerWidth >= 1440) return 36;
+        if (window.innerWidth >= 1024) return 26;
+        if (window.innerWidth >= 768) return 18;
+        return 12;
+    };
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -313,22 +347,24 @@ function initParticles() {
         return {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 2 + 0.5,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
-            opacity: Math.random() * 0.5 + 0.1
+            size: Math.random() * 1.8 + 0.6,
+            speedX: (Math.random() - 0.5) * 0.22,
+            speedY: (Math.random() - 0.5) * 0.22,
+            opacity: Math.random() * 0.4 + 0.15
         };
     }
 
     function init() {
         resize();
         particles = [];
+        const particleCount = getParticleCount();
         for (let i = 0; i < particleCount; i++) {
             particles.push(createParticle());
         }
     }
 
     function animate() {
+        if (!isActive) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         particles.forEach(p => {
@@ -347,10 +383,27 @@ function initParticles() {
             ctx.fill();
         });
 
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
     }
 
-    window.addEventListener('resize', resize);
+    let resizeRaf;
+    window.addEventListener('resize', () => {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+            init();
+        });
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            isActive = false;
+            if (animationId) cancelAnimationFrame(animationId);
+        } else {
+            isActive = true;
+            animationId = requestAnimationFrame(animate);
+        }
+    });
+
     init();
     animate();
 }
@@ -495,7 +548,9 @@ function initAllAnimations() {
     initNavbarAnimations();
     initMicroInteractions();
     initFormAnimations();
-    initParticles();
+    if (motionSafe) {
+        initParticles();
+    }
 
     console.log('✅ Animations initialisées !');
 }

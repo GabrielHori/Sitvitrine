@@ -21,6 +21,9 @@
 // 1. ANIMATION MATRIX (INTRO)
 // ============================================
 
+// Forcer l'animation d'intro même si l'utilisateur demande moins d'animations
+const motionSafe = true;
+
 // Cache des éléments DOM
 const canvas = document.getElementById('matrix-canvas');
 const siteContent = document.getElementById('site-content');
@@ -381,14 +384,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // 7. EFFET PARALLAX & INTERACTIONS
 // ============================================
 
-// Parallax sur le background glow
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const backgroundGlow = document.querySelector('.background-glow');
-    if (backgroundGlow) {
-        backgroundGlow.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
+// Parallax sur le background glow (throttlé + désactivé si réduction d'animations)
+const backgroundGlow = document.querySelector('.background-glow');
+if (backgroundGlow && motionSafe) {
+    let parallaxPending = false;
+    const updateParallax = () => {
+        const scrolled = window.pageYOffset;
+        backgroundGlow.style.transform = `translateY(${scrolled * 0.35}px)`;
+        parallaxPending = false;
+    };
+
+    window.addEventListener('scroll', () => {
+        if (!parallaxPending) {
+            parallaxPending = true;
+            requestAnimationFrame(updateParallax);
+        }
+    }, { passive: true });
+}
 
 // Clic sur l'indicateur de scroll (flèche du hero)
 document.addEventListener('DOMContentLoaded', () => {

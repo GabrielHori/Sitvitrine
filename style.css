@@ -757,6 +757,7 @@ form textarea:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
+  align-items: stretch;
 }
 @media screen and (max-width: 768px) {
   .pricing-cards {
@@ -771,6 +772,9 @@ form textarea:focus {
   padding: 20px;
   text-align: center;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .price-card.featured {
   border-color: #00f0ff;
@@ -795,6 +799,8 @@ form textarea:focus {
 }
 .price-card ul {
   padding: 0;
+  flex: 1;
+  width: 100%;
 }
 .price-card ul li {
   padding: 5px 0;
