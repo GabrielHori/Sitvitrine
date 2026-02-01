@@ -118,6 +118,7 @@ exports.handler = async (event) => {
 async function getAdminStats(client) {
     const stats = {
         reviews: { total: 0, approved: 0, pending: 0, avgRating: 0 },
+        leads: { total: 0, new: 0, contacted: 0, done: 0 },
         site: { pcBuilt: 50, happyClients: 100, responseTime: 24 },
         recent: []
     };
@@ -143,6 +144,20 @@ async function getAdminStats(client) {
             }
             
             stats.recent = reviews.slice(0, 5);
+        }
+
+        // Stats des leads (demandes)
+        const { data: leads } = await client
+            .from('leads')
+            .select('id, status, name, email, service, created_at')
+            .order('created_at', { ascending: false });
+
+        if (leads) {
+            stats.leads.total = leads.length;
+            stats.leads.new = leads.filter(l => l.status === 'new').length;
+            stats.leads.contacted = leads.filter(l => l.status === 'contacted').length;
+            stats.leads.done = leads.filter(l => l.status === 'done').length;
+            stats.recentLeads = leads.slice(0, 5);
         }
 
         // Stats du site

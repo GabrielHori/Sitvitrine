@@ -41,6 +41,16 @@
         .approved { border-left: 4px solid #00ff88; }
         .default { border-left: 4px solid #0088ff; }
 
+        /* Leads */
+        .lead { background: linear-gradient(135deg, #1e1e1e, #252525); padding: 16px; border-radius: 12px; border: 1px solid #333; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; }
+        .lead .meta { color: #888; font-size: 0.9rem; }
+        .lead .message { color: #ccc; margin: 8px 0; white-space: pre-line; }
+        .lead .actions { display: flex; gap: 8px; }
+        .lead .status-pill { padding: 6px 10px; border-radius: 20px; font-size: 0.85rem; color: #000; font-weight: 600; }
+        .status-new { background: #ffaa00; }
+        .status-contacted { background: #00d0ff; }
+        .status-done { background: #00ff88; color: #003300; }
+
         /* Buttons */
         button { padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
         button:hover { transform: translateY(-2px); }
@@ -96,6 +106,7 @@
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('dashboard')">🏠 Dashboard</button>
             <button class="nav-tab" onclick="switchTab('reviews')">📝 Avis</button>
+            <button class="nav-tab" onclick="switchTab('leads')">📩 Leads</button>
             <button class="nav-tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
         </div>
 
@@ -126,6 +137,18 @@
                     </div>
                 </div>
 
+                    <div class="stat-card">
+                        <h4>ðŸ“© Demandes</h4>
+                        <div class="stat-number" id="stat-leads-total">0</div>
+                        <div class="stat-label">devis reÃ§us</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>ðŸ–‘ï¸ Ã traiter</h4>
+                        <div class="stat-number" id="stat-leads-new">0</div>
+                        <div class="stat-label">nouveaux leads</div>
+                    </div>
+                </div>
+
                 <div class="recent-activity">
                     <h3>📋 Derniers avis reçus</h3>
                     <div id="recent-reviews">Chargement...</div>
@@ -146,6 +169,23 @@
                     </select>
                 </div>
                 <div id="reviews-container" class="reviews-grid">Chargement des avis...</div>
+            </div>
+
+            <!-- LEADS PANEL -->
+            <div id="leads-panel" class="tab-panel">
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <button class="refresh" onclick="loadLeads()">🔄 Actualiser</button>
+                        <span id="leads-count" style="margin-left: 15px; color: #888;"></span>
+                    </div>
+                    <select id="leads-filter" onchange="filterLeads()" style="width: auto; padding: 10px 20px;">
+                        <option value="all">Tous</option>
+                        <option value="new">Nouveaux</option>
+                        <option value="contacted">Contacté</option>
+                        <option value="done">Clôturé</option>
+                    </select>
+                </div>
+                <div id="leads-container" class="reviews-grid">Chargement des demandes...</div>
             </div>
 
             <!-- SETTINGS PANEL -->
@@ -189,6 +229,7 @@
         let authToken = localStorage.getItem('admin-token');
         let currentTab = 'dashboard';
         let allReviews = [];
+        let allLeads = [];
 
         // Vérifier si déjà connecté
         if (authToken) {
@@ -258,6 +299,7 @@
             // Load data for the active tab
             if (tabName === 'dashboard') loadDashboard();
             if (tabName === 'reviews') loadReviews();
+            if (tabName === 'leads') loadLeads();
             if (tabName === 'settings') loadSiteStats();
         }
 
@@ -284,6 +326,10 @@
                 document.getElementById('stat-approved').textContent = stats.reviews.approved;
                 document.getElementById('stat-pending').textContent = stats.reviews.pending;
                 document.getElementById('stat-avg-rating').textContent = stats.reviews.avgRating || '5.0';
+                if (stats.leads) {
+                    document.getElementById('stat-leads-total').textContent = stats.leads.total ?? 0;
+                    document.getElementById('stat-leads-new').textContent = stats.leads.new ?? 0;
+                }
 
                 // Update recent reviews
                 displayRecentReviews(stats.recent);
@@ -421,6 +467,111 @@
         }
 
         // ============================================
+        // LEADS MANAGEMENT
+        // ============================================
+        async function loadLeads() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch('/.netlify/functions/admin-leads', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    allLeads = await response.json();
+                    filterLeads();
+                } else if (response.status === 401) {
+                    logout();
+                } else {
+                    document.getElementById('leads-container').innerHTML = '<p style="color: #ff4444;">Erreur lors du chargement</p>';
+                }
+            } catch (error) {
+                document.getElementById('leads-container').innerHTML = '<p style="color: #ff4444;">Erreur de connexion</p>';
+            }
+        }
+
+        function filterLeads() {
+            const filter = document.getElementById('leads-filter').value;
+            let filtered = allLeads;
+
+            if (filter !== 'all') {
+                filtered = allLeads.filter(l => l.status === filter);
+            }
+
+            displayLeads(filtered);
+        }
+
+        function displayLeads(leads) {
+            const container = document.getElementById('leads-container');
+            const countSpan = document.getElementById('leads-count');
+
+            const countNew = allLeads.filter(l => l.status === 'new').length;
+            const countContacted = allLeads.filter(l => l.status === 'contacted').length;
+            const countDone = allLeads.filter(l => l.status === 'done').length;
+            countSpan.textContent = `${allLeads.length} total • ${countNew} nouveaux • ${countContacted} contactés • ${countDone} clôturés`;
+
+            if (!leads || leads.length === 0) {
+                container.innerHTML = '<p style="color: #666;">Aucune demande.</p>';
+                return;
+            }
+
+            container.innerHTML = leads.map(lead => {
+                const statusClass = lead.status ? `status-${lead.status}` : 'status-new';
+                const statusLabel = lead.status === 'done' ? 'Clôturé' : lead.status === 'contacted' ? 'Contacté' : 'Nouveau';
+                const date = lead.created_at ? new Date(lead.created_at).toLocaleString('fr-FR') : '';
+                return `
+                    <div class="lead">
+                        <div>
+                            <div><strong>${lead.name || 'Sans nom'}</strong> • <span class="meta">${lead.email || 'N/A'}</span></div>
+                            <div class="meta">Service: ${lead.service || 'Non spécifié'} • ${date}</div>
+                            <div class="message">${lead.message || ''}</div>
+                        </div>
+                        <div class="actions">
+                            <span class="status-pill ${statusClass}">${statusLabel}</span>
+                            ${lead.status !== 'contacted' ? `<button class="approve" onclick="updateLead(${lead.id}, 'contacted')">📞 Contacté</button>` : ''}
+                            ${lead.status !== 'done' ? `<button class="approve" onclick="updateLead(${lead.id}, 'done')">✅ Clôturer</button>` : ''}
+                            <button class="delete" onclick="deleteLead(${lead.id}, '${lead.name || ''}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function updateLead(id, status) {
+            await leadAction('update', id, status);
+        }
+
+        async function deleteLead(id, name) {
+            if (confirm(`Supprimer la demande de ${name || 'ce contact'} ?`)) {
+                await leadAction('delete', id);
+            }
+        }
+
+        async function leadAction(action, leadId, status = null) {
+            try {
+                const response = await fetch('/.netlify/functions/admin-leads', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action, leadId, status })
+                });
+
+                if (response.ok) {
+                    loadLeads();
+                } else if (response.status === 401) {
+                    logout();
+                } else {
+                    alert('Erreur lors de l\'action lead');
+                }
+            } catch (error) {
+                alert('Erreur de connexion');
+            }
+        }
+
+        // ============================================
         // SETTINGS - SITE STATS
         // ============================================
         async function loadSiteStats() {
@@ -484,6 +635,7 @@
         setInterval(() => {
             if (currentTab === 'dashboard') loadDashboard();
             if (currentTab === 'reviews') loadReviews();
+            if (currentTab === 'leads') loadLeads();
         }, 30000); // Refresh toutes les 30 secondes
 
         // Connexion avec Enter

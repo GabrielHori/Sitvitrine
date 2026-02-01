@@ -193,6 +193,80 @@ async function addLead(leadData) {
 }
 
 /**
+ * Récupère les demandes de devis
+ */
+async function getLeads(status = 'all') {
+    const client = getSupabaseClient();
+
+    if (!client) {
+        console.warn('⚠️ Supabase non configuré, aucun lead retourné');
+        return [];
+    }
+
+    let query = client.from('leads').select('*').order('created_at', { ascending: false });
+    if (status && status !== 'all') {
+        query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.error('❌ Erreur Supabase getLeads:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+/**
+ * Met à jour le statut d'un lead
+ */
+async function updateLeadStatus(leadId, status) {
+    const client = getSupabaseClient();
+
+    if (!client) {
+        throw new Error('Base de données non configurée');
+    }
+
+    const { data, error } = await client
+        .from('leads')
+        .update({ status })
+        .eq('id', leadId)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('❌ Erreur Supabase updateLeadStatus:', error);
+        throw new Error('Erreur lors de la mise à jour du lead');
+    }
+
+    return data;
+}
+
+/**
+ * Supprime un lead
+ */
+async function deleteLead(leadId) {
+    const client = getSupabaseClient();
+
+    if (!client) {
+        throw new Error('Base de données non configurée');
+    }
+
+    const { error } = await client
+        .from('leads')
+        .delete()
+        .eq('id', leadId);
+
+    if (error) {
+        console.error('❌ Erreur Supabase deleteLead:', error);
+        throw new Error('Erreur lors de la suppression du lead');
+    }
+
+    return true;
+}
+
+/**
  * Hash simple de l'IP pour le rate limiting (sans stocker l'IP complète)
  */
 function hashIP(ip) {
@@ -218,5 +292,8 @@ module.exports = {
     updateReviewStatus,
     deleteReview,
     hashIP,
-    addLead
+    addLead,
+    getLeads,
+    updateLeadStatus,
+    deleteLead
 };
