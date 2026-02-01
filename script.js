@@ -176,10 +176,10 @@ navLinks.forEach(link => {
 
 
 // ============================================
-// 4. FORMULAIRE DE CONTACT (EmailJS)
+// 4. FORMULAIRE DE CONTACT (API Netlify + Supabase)
 // ============================================
 
-document.getElementById('contact-form').addEventListener('submit', function(event) {
+document.getElementById('contact-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const submitBtn = this.querySelector('button[type="submit"]');
@@ -190,45 +190,50 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     submitBtn.disabled = true;
     submitBtn.style.opacity = '0.7';
 
-    // Envoi via EmailJS
-    emailjs.sendForm('service_yb6h9t7', 'template_idokhq6', this)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
+    const formData = new FormData(this);
+    const payload = {
+        name: formData.get('user_name'),
+        email: formData.get('user_email'),
+        service: formData.get('service'),
+        message: formData.get('message')
+    };
 
-            // Feedback succès
-            submitBtn.textContent = '✅ Message envoyé !';
-            submitBtn.style.backgroundColor = '#00ff88';
-            submitBtn.style.color = '#000';
-
-            // Reset du formulaire
-            document.getElementById('contact-form').reset();
-
-            // Reset du bouton après 3 secondes
-            setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                submitBtn.style.backgroundColor = '';
-                submitBtn.style.color = '';
-            }, 3000);
-
-        }, function(error) {
-            console.log('FAILED...', error);
-
-            // Feedback erreur
-            submitBtn.textContent = '❌ Erreur - Réessayer';
-            submitBtn.style.backgroundColor = '#ff4444';
-            submitBtn.style.color = '#fff';
-
-            // Reset du bouton après 3 secondes
-            setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                submitBtn.style.backgroundColor = '';
-                submitBtn.style.color = '';
-            }, 3000);
+    try {
+        const response = await fetch('/.netlify/functions/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Erreur inconnue');
+        }
+
+        console.log('✅ Demande enregistrée', result);
+
+        submitBtn.textContent = '✅ Demande envoyée !';
+        submitBtn.style.backgroundColor = '#00ff88';
+        submitBtn.style.color = '#000';
+
+        this.reset();
+
+    } catch (error) {
+        console.error('❌ Erreur envoi contact:', error);
+        submitBtn.textContent = '❌ Erreur - Réessayer';
+        submitBtn.style.backgroundColor = '#ff4444';
+        submitBtn.style.color = '#fff';
+        alert(error.message || 'Impossible d\'envoyer la demande pour le moment.');
+    } finally {
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.backgroundColor = '';
+            submitBtn.style.color = '';
+        }, 2500);
+    }
 });
 
 // ============================================

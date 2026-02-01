@@ -154,6 +154,44 @@ async function deleteReview(reviewId) {
     return true;
 }
 
+// ============================================
+// OPÉRATIONS SUR LES DEMANDES DE CONTACT / DEVIS
+// ============================================
+
+/**
+ * Ajoute une demande de devis/contact
+ */
+async function addLead(leadData) {
+    const client = getSupabaseClient();
+
+    if (!client) {
+        throw new Error('Base de données non configurée');
+    }
+
+    const newLead = {
+        name: leadData.name,
+        email: leadData.email,
+        service: leadData.service,
+        message: leadData.message,
+        status: 'new',
+        created_at: new Date().toISOString()
+    };
+
+    const { data, error } = await client
+        .from('leads')
+        .insert([newLead])
+        .select()
+        .single();
+
+    if (error) {
+        console.error('❌ Erreur Supabase addLead:', error);
+        throw new Error('Erreur lors de l\'ajout de la demande');
+    }
+
+    console.log(`✅ Lead ajouté: ID ${data.id}`);
+    return data;
+}
+
 /**
  * Hash simple de l'IP pour le rate limiting (sans stocker l'IP complète)
  */
@@ -179,6 +217,6 @@ module.exports = {
     addReview,
     updateReviewStatus,
     deleteReview,
-    hashIP
+    hashIP,
+    addLead
 };
-
