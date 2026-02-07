@@ -6,51 +6,82 @@
 // Grille de cartes
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: $spacing-xl;
-  
-  @include respond-to('md') {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @include respond-to('sm') {
     grid-template-columns: 1fr;
+    gap: 15px;
+    max-width: 400px;
   }
 }
 
 // Carte standard (glassmorphism)
 .card {
   @include glass-effect;
-  padding: $spacing-xl;
-  border-radius: $border-radius-md;
+  border: 1px solid rgba($text-white, 0.08);
+  padding: 28px 25px;
+  border-radius: 12px;
   @include transition;
   position: relative;
   overflow: hidden;
   will-change: transform;
-  
+
   // Ligne gradient en haut
   &::before {
     @include gradient-line;
   }
-  
+
   // Icône
   .icon {
     font-size: 2rem;
-    margin-bottom: $spacing-sm;
+    margin-bottom: 8px;
   }
-  
+
   // Titre
   h3 {
     font-family: $font-heading;
-    margin: $spacing-md 0 $spacing-sm 0;
-    font-size: $font-size-h3;
+    margin: 12px 0 10px 0;
+    font-size: 1.35rem;
   }
-  
-  // Hover effect
+
+  // Description
+  p {
+    color: $text-gray;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+
+  // Hover effect - plus subtil
   &:hover {
-    transform: translateY(-10px) scale(1.02);
-    border-color: $primary;
-    box-shadow: $shadow-card;
-    @include pulse-animation;
-    
+    transform: translateY(-5px);
+    border-color: rgba($primary, 0.5);
+    box-shadow: 0 12px 35px rgba($primary, 0.15);
+
     &::before {
       transform: scaleX(1);
+    }
+  }
+
+  // Désactiver les animations sur appareils tactiles
+  @media (hover: none) {
+    &:hover {
+      transform: none;
+    }
+  }
+
+  @include respond-to('sm') {
+    padding: 22px 18px;
+
+    h3 {
+      font-size: 1.2rem;
     }
   }
 }
@@ -66,10 +97,16 @@
   @include transition(transform);
   will-change: transform;
   contain: layout style paint;
-  
+
   &:hover {
     transform: translateY(-6px);
     box-shadow: 0 0 35px rgba(0, 180, 255, 0.45);
+  }
+
+  @media (hover: none) {
+    &:hover {
+      transform: none;
+    }
   }
 }
 
@@ -79,11 +116,10 @@
   aspect-ratio: 9/16;
   overflow: hidden;
   border-radius: $border-radius-lg;
-  
+
   iframe {
     width: 100%;
     height: 100%;
     border: none;
   }
 }
-

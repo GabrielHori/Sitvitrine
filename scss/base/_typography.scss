@@ -10,18 +10,19 @@ h1 {
   line-height: 1.1;
   margin-bottom: $spacing-xl;
   text-transform: uppercase;
-  
+
   @include respond-to('md') {
     font-size: $font-size-h1-tablet;
     text-align: center;
   }
-  
+
   @include respond-to('sm') {
     font-size: $font-size-h1-mobile;
   }
 }
 
-h2, h3 {
+h2,
+h3 {
   font-family: $font-heading;
 }
 
@@ -34,7 +35,7 @@ h2, h3 {
 .text-outline {
   -webkit-text-stroke: 2px $text-white;
   color: transparent;
-  
+
   @include respond-to('md') {
     -webkit-text-stroke: 1px $text-white;
   }
@@ -46,7 +47,7 @@ h2, h3 {
   font-size: $font-size-h2;
   text-align: center;
   margin-bottom: $spacing-section-mobile;
-  
+
   @include respond-to('md') {
     font-size: $font-size-h2-mobile;
     margin-bottom: $spacing-xl;
@@ -61,7 +62,7 @@ h2, h3 {
   margin-bottom: $spacing-lg;
   font-size: $font-size-base;
   text-transform: uppercase;
-  
+
   @include respond-to('sm') {
     font-size: $font-size-small;
     letter-spacing: 2px;
@@ -73,13 +74,15 @@ h2, h3 {
   color: $text-gray;
   font-size: $font-size-large;
   margin-bottom: $spacing-xxl;
-  line-height: 1.6;
+  line-height: 1.7; // Espacement lignes amélioré
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  
+  padding: 0 15px; // Espacement latéral sur mobile
+
   @include respond-to('sm') {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    padding: 0 10px;
   }
 }
-

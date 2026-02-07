@@ -10,11 +10,67 @@
   scroll-behavior: smooth;
 }
 
+// Amélioration du touch sur mobile
+@media (hover: none) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 body {
   background-color: $bg-color;
   color: $text-white;
   font-family: $font-body;
   overflow-x: hidden;
+  // Amélioration de la lisibilité texte
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// Scrollbar personnalisée - Desktop uniquement
+@media (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $primary, #0080a0);
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, $primary, #00c0e0);
+  }
+
+  // Firefox
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: $primary #0a0a0a;
+  }
+}
+
+// Focus visible pour accessibilité
+*:focus-visible {
+  outline: 2px solid $primary;
+  outline-offset: 2px;
+}
+
+// Réduction des animations si préférence utilisateur
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 // Content principal
@@ -40,4 +96,3 @@ img {
 ul {
   list-style: none;
 }
-

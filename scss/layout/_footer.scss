@@ -5,12 +5,13 @@
 
 footer {
   text-align: center;
-  padding: $spacing-lg;
+  padding: 25px $spacing-md;
   color: $text-gray;
-  border-top: 1px solid $card-border;
-  
+  border-top: 1px solid rgba($text-white, 0.08);
+  background: rgba($bg-color, 0.95);
+
   p {
-    font-size: $font-size-small;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 }
-

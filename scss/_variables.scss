@@ -3,11 +3,12 @@
 // ============================================
 
 // Couleurs principales
-$bg-color: #050505;          // Noir très profond
-$card-bg: #121212;           // Gris foncé pour les cartes
-$primary: #00f0ff;           // Cyan Néon
+$bg-color: #050505; // Noir très profond
+$card-bg: #121212; // Gris foncé pour les cartes
+$primary: #00f0ff; // Cyan Néon
 $text-white: #ffffff;
-$text-gray: #a0a0a0;
+$text-gray: #b8b8b8; // Gris plus clair pour meilleur contraste WCAG
+$text-gray-light: #c8c8c8; // Gris encore plus clair pour textes importants
 
 // Couleurs dérivées
 $primary-light: rgba(0, 240, 255, 0.5);
@@ -75,4 +76,3 @@ $z-index-nav: 100;
 $z-index-modal: 200;
 $z-index-hero: 2;
 $z-index-scroll: 10;
-

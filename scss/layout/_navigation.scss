@@ -12,34 +12,34 @@ nav {
   background: rgba($bg-color, 0.85);
   z-index: $z-index-nav;
   box-shadow: $shadow-nav;
-  
+
   // Logo
   .logo {
     font-size: 1.8rem;
     font-weight: 700;
     color: $text-white;
     cursor: pointer;
-    
+
     @include respond-to('sm') {
       font-size: 1.5rem;
     }
   }
-  
+
   // Liens de navigation
   ul {
     display: flex;
-    
+
     li {
       margin-left: 25px;
       position: relative;
-      
+
       a {
         text-decoration: none;
         color: $text-white;
         font-weight: 500;
         @include transition;
         position: relative;
-        
+
         // Ligne sous le lien au hover
         &::after {
           content: "";
@@ -51,13 +51,13 @@ nav {
           background: $primary;
           transition: width $transition-fast;
         }
-        
+
         &:hover::after {
           width: 100%;
         }
       }
     }
-    
+
     // Animation glow pour menu mobile actif
     &.nav-active li a {
       animation: glowFade 1s ease-in-out infinite alternate;
@@ -87,9 +87,11 @@ nav {
     .line1 {
       transform: rotate(-45deg) translate(-5px, 6px);
     }
+
     .line2 {
       opacity: 0;
     }
+
     .line3 {
       transform: rotate(45deg) translate(-5px, -6px);
     }
@@ -103,14 +105,15 @@ nav {
 
 // Navigation responsive
 @include respond-to('md') {
+
   nav ul,
   .nav-links {
     position: fixed;
     right: 0;
     top: 0;
     height: 100vh;
-    width: 250px;
-    background: rgba($bg-color, 0.95);
+    width: 280px; // Plus large pour faciliter la lecture
+    background: rgba($bg-color, 0.98); // Plus opaque pour meilleure lisibilité
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -118,14 +121,23 @@ nav {
     transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
     box-shadow: inset 0 0 30px rgba($primary, 0.2), 0 0 50px rgba($primary, 0.27);
     will-change: transform;
-    
+    padding: 20px 0;
+
     &.nav-active {
       transform: translateX(0);
     }
-    
+
     li {
-      margin: 25px 0;
+      margin: 18px 0; // Espacement optimisé
+      width: 100%;
+      text-align: center;
+
+      a {
+        font-size: 1.1rem; // Taille de police plus grande sur mobile
+        padding: 12px 20px; // Zone de touch plus grande
+        display: block;
+        width: 100%;
+      }
     }
   }
 }
-

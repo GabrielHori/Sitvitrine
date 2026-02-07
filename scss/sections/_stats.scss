@@ -5,45 +5,70 @@
 
 .stats-section {
   background: $bg-color;
-  padding: $spacing-section 5%;
+  padding: 70px 5%;
   border-top: 1px solid rgba($primary, 0.1);
   border-bottom: 1px solid rgba($primary, 0.1);
+
+  @include respond-to('sm') {
+    padding: 50px 4%;
+  }
 }
 
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: $spacing-xxl;
-  max-width: 1200px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  max-width: 1000px;
   margin: 0 auto;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @include respond-to('sm') {
+    gap: 15px;
+  }
 }
 
 .stat-item {
   text-align: center;
-  padding: $spacing-xl;
+  padding: 25px 15px;
   @include glass-effect;
-  border-radius: $border-radius-md;
+  border-radius: 12px;
   @include transition;
-  
+
   &:hover {
-    @include card-hover;
+    transform: translateY(-3px);
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 8px 25px rgba($primary, 0.1);
+  }
+
+  @media (hover: none) {
+    &:hover {
+      transform: none;
+    }
   }
 }
 
 .stat-number {
   font-family: $font-heading;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 900;
   color: $primary;
-  margin-bottom: $spacing-sm;
+  margin-bottom: 8px;
   display: block;
+
+  @include respond-to('sm') {
+    font-size: 2rem;
+  }
 }
 
 .stat-label {
-  font-size: $font-size-base;
+  font-size: 0.9rem;
   color: $text-gray;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   font-weight: 500;
+  line-height: 1.3;
 }
-

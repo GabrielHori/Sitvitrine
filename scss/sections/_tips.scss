@@ -4,19 +4,35 @@
 @use '../globals' as *;
 
 #tips {
-  padding: 60px $spacing-lg;
+  padding: 60px 5%;
   text-align: center;
-  
+
+  @include respond-to('md') {
+    padding: 50px 4%;
+  }
+
   h2 {
-    font-size: 2.4rem;
-    margin-bottom: 35px;
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+
+    @include respond-to('sm') {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+    }
   }
 }
 
 .tips-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 25px;
   justify-items: center;
-}
+  max-width: 800px;
+  margin: 0 auto;
 
+  @media screen and (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 350px;
+  }
+}

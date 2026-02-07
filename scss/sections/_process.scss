@@ -4,60 +4,81 @@
 @use '../globals' as *;
 
 #process {
-  padding: $spacing-section 5%;
+  padding: 70px 5%;
   background: $bg-color;
+
+  @include respond-to('md') {
+    padding: 50px 4%;
+  }
 }
 
 .process-timeline {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $spacing-xl;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
   max-width: 1200px;
   margin: 0 auto;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @include respond-to('sm') {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
 }
 
 .process-step {
   @include glass-effect;
-  padding: $spacing-xl;
-  border-radius: $border-radius-md;
+  padding: 25px 20px;
+  border-radius: 12px;
   @include transition;
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     @include gradient-line;
   }
-  
+
   &:hover {
-    @include card-hover;
-    
+    transform: translateY(-3px);
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 8px 25px rgba($primary, 0.1);
+
     &::before {
       transform: scaleX(1);
+    }
+  }
+
+  @media (hover: none) {
+    &:hover {
+      transform: none;
     }
   }
 }
 
 .step-number {
   font-family: $font-heading;
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 900;
   color: $primary;
-  margin-bottom: $spacing-md;
+  margin-bottom: 12px;
   display: block;
 }
 
 .step-content {
   h3 {
     font-family: $font-heading;
-    font-size: $font-size-h3;
+    font-size: 1.2rem;
     margin-bottom: $spacing-sm;
     color: $text-white;
   }
-  
+
   p {
     color: $text-gray;
-    line-height: 1.6;
-    font-size: $font-size-base;
+    line-height: 1.5;
+    font-size: 0.95rem;
   }
 }
-
