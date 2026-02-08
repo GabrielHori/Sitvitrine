@@ -21,103 +21,109 @@
 // 1. ANIMATION MATRIX (INTRO)
 // ============================================
 
-// Forcer l'animation d'intro même si l'utilisateur demande moins d'animations
-const motionSafe = true;
+// Respect de la préférence utilisateur pour les animations réduites
+const motionSafe = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Cache des éléments DOM
 const canvas = document.getElementById('matrix-canvas');
 const siteContent = document.getElementById('site-content');
 
+// Si l'utilisateur préfère les animations réduites, skip l'animation Matrix
+if (!motionSafe) {
+    console.log('🎭 Animations réduites demandées, skip Matrix');
+    if (canvas) canvas.remove();
+    if (siteContent) siteContent.style.opacity = '1';
+}
 // Vérification de sécurité - afficher le contenu si le canvas n'existe pas
-if (!canvas || !siteContent) {
+else if (!canvas || !siteContent) {
     console.warn('⚠️ Canvas ou site-content non trouvé, affichage direct');
     if (siteContent) siteContent.style.opacity = '1';
 } else {
 
-const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: false });
 
-// Initialisation du canvas
-let canvasWidth = window.innerWidth;
-let canvasHeight = window.innerHeight;
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+    // Initialisation du canvas
+    let canvasWidth = window.innerWidth;
+    let canvasHeight = window.innerHeight;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
-// Constantes de configuration
-const CHARACTERS = ['0', '1'];
-const FONT_SIZE = 16;
-const ANIMATION_DURATION = 1400;
-const FADE_OUT_DURATION = 800;
+    // Constantes de configuration
+    const CHARACTERS = ['0', '1'];
+    const FONT_SIZE = 16;
+    const ANIMATION_DURATION = 1400;
+    const FADE_OUT_DURATION = 800;
 
-// Calcul des colonnes et initialisation des gouttes
-let columns = Math.floor(canvasWidth / FONT_SIZE);
-const drops = Array.from({ length: columns }, () => 1);
+    // Calcul des colonnes et initialisation des gouttes
+    let columns = Math.floor(canvasWidth / FONT_SIZE);
+    const drops = Array.from({ length: columns }, () => 1);
 
-// Styles pré-définis pour le canvas
-ctx.fillStyle = "#00f0ff";
-ctx.shadowColor = "#00f0ff";
-ctx.shadowBlur = 5;
-ctx.font = `${FONT_SIZE}px 'Rajdhani', monospace`;
-
-// État de l'animation
-let animationId = null;
-let isAnimating = true;
-
-/**
- * Fonction de dessin optimisée avec requestAnimationFrame
- */
-function draw() {
-    if (!isAnimating) return;
-
-    // Effet de traînée
-    ctx.fillStyle = "rgba(5, 5, 5, 0.1)";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    // Couleur des caractères
+    // Styles pré-définis pour le canvas
     ctx.fillStyle = "#00f0ff";
+    ctx.shadowColor = "#00f0ff";
+    ctx.shadowBlur = 5;
+    ctx.font = `${FONT_SIZE}px 'Rajdhani', monospace`;
 
-    // Dessiner les caractères
-    for (let i = 0; i < drops.length; i++) {
-        const char = CHARACTERS[Math.random() < 0.5 ? 0 : 1];
-        const x = i * FONT_SIZE;
-        const y = drops[i] * FONT_SIZE;
+    // État de l'animation
+    let animationId = null;
+    let isAnimating = true;
 
-        ctx.fillText(char, x, y);
+    /**
+     * Fonction de dessin optimisée avec requestAnimationFrame
+     */
+    function draw() {
+        if (!isAnimating) return;
 
-        // Reset aléatoire quand la goutte sort de l'écran
-        if (y > canvasHeight && Math.random() > 0.95) {
-            drops[i] = 0;
+        // Effet de traînée
+        ctx.fillStyle = "rgba(5, 5, 5, 0.1)";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        // Couleur des caractères
+        ctx.fillStyle = "#00f0ff";
+
+        // Dessiner les caractères
+        for (let i = 0; i < drops.length; i++) {
+            const char = CHARACTERS[Math.random() < 0.5 ? 0 : 1];
+            const x = i * FONT_SIZE;
+            const y = drops[i] * FONT_SIZE;
+
+            ctx.fillText(char, x, y);
+
+            // Reset aléatoire quand la goutte sort de l'écran
+            if (y > canvasHeight && Math.random() > 0.95) {
+                drops[i] = 0;
+            }
+
+            drops[i]++;
         }
 
-        drops[i]++;
+        animationId = requestAnimationFrame(draw);
     }
 
+    // Démarrage de l'animation
     animationId = requestAnimationFrame(draw);
-}
 
-// Démarrage de l'animation
-animationId = requestAnimationFrame(draw);
-
-// Arrêt et fondu après la durée définie
-setTimeout(() => {
-    isAnimating = false;
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-    }
-
-    // Fondu du canvas
-    canvas.style.transition = `opacity ${FADE_OUT_DURATION}ms ease-in`;
-    canvas.style.opacity = '0';
-
-    // Apparition du contenu du site
-    siteContent.style.transition = 'opacity 0.9s ease-in 0.2s';
-    siteContent.style.opacity = '1';
-
-    // Suppression du canvas du DOM
+    // Arrêt et fondu après la durée définie
     setTimeout(() => {
-        canvas.remove();
-    }, FADE_OUT_DURATION);
+        isAnimating = false;
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+        }
 
-}, ANIMATION_DURATION);
+        // Fondu du canvas
+        canvas.style.transition = `opacity ${FADE_OUT_DURATION}ms ease-in`;
+        canvas.style.opacity = '0';
+
+        // Apparition du contenu du site
+        siteContent.style.transition = 'opacity 0.9s ease-in 0.2s';
+        siteContent.style.opacity = '1';
+
+        // Suppression du canvas du DOM
+        setTimeout(() => {
+            canvas.remove();
+        }, FADE_OUT_DURATION);
+
+    }, ANIMATION_DURATION);
 
 } // Fin du bloc else (canvas existe)
 
@@ -162,6 +168,9 @@ const navLinks = document.querySelectorAll('nav ul li a');
 
 // Toggle du menu burger
 burger.addEventListener('click', () => {
+    const isExpanded = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', !isExpanded);
+
     nav.classList.toggle('nav-active');
     burger.classList.toggle('toggle');
 });
@@ -171,6 +180,7 @@ navLinks.forEach(link => {
     link.addEventListener('click', () => {
         nav.classList.remove('nav-active');
         burger.classList.remove('toggle');
+        burger.setAttribute('aria-expanded', false);
     });
 });
 
@@ -179,11 +189,44 @@ navLinks.forEach(link => {
 // 4. FORMULAIRE DE CONTACT (API Netlify + Supabase)
 // ============================================
 
-document.getElementById('contact-form').addEventListener('submit', async function(event) {
+// Protection anti-spam pour les formulaires
+const formCooldowns = new Map();
+const FORM_COOLDOWN_MS = 30000; // 30 secondes entre chaque envoi
+
+/**
+ * Vérifie si le formulaire peut être soumis (cooldown expiré)
+ * @param {string} formId - ID du formulaire
+ * @returns {boolean|number} - true si OK, sinon temps restant en secondes
+ */
+function canSubmitForm(formId) {
+    const lastSubmit = formCooldowns.get(formId);
+    if (!lastSubmit) return true;
+
+    const elapsed = Date.now() - lastSubmit;
+    if (elapsed >= FORM_COOLDOWN_MS) {
+        return true;
+    }
+    return Math.ceil((FORM_COOLDOWN_MS - elapsed) / 1000);
+}
+
+document.getElementById('contact-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
+    const formId = 'contact-form';
+
+    // Vérification anti-spam
+    const canSubmit = canSubmitForm(formId);
+    if (canSubmit !== true) {
+        submitBtn.textContent = `⏳ Patientez ${canSubmit}s`;
+        submitBtn.disabled = true;
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+        return;
+    }
 
     // État de chargement
     submitBtn.textContent = 'Envoi en cours...';
@@ -212,6 +255,9 @@ document.getElementById('contact-form').addEventListener('submit', async functio
         }
 
         console.log('✅ Demande enregistrée', result);
+
+        // Enregistrer le timestamp pour le cooldown
+        formCooldowns.set(formId, Date.now());
 
         submitBtn.textContent = '✅ Demande envoyée !';
         submitBtn.style.backgroundColor = '#00ff88';
@@ -282,13 +328,18 @@ function animateCounter(element) {
     const step = target / (duration / 16);
     let current = 0;
 
+    // Détecte si le label contient "%" pour afficher le bon suffixe
+    const statItem = element.closest('.stat-item');
+    const label = statItem?.querySelector('.stat-label')?.textContent || '';
+    const suffix = label.includes('%') ? '%' : '';
+
     const timer = setInterval(() => {
         current += step;
         if (current >= target) {
             current = target;
             clearInterval(timer);
         }
-        element.textContent = Math.floor(current) + (target === 99 ? '%' : '');
+        element.textContent = Math.floor(current) + suffix;
     }, 16);
 }
 
@@ -346,7 +397,7 @@ document.addEventListener('DOMContentLoaded', loadDynamicStats);
 // ============================================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
 
@@ -583,11 +634,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
 
     if (reviewForm) {
-        reviewForm.addEventListener('submit', async function(e) {
+        reviewForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
+            const formId = 'review-form';
+
+            // Vérification anti-spam
+            const canSubmit = canSubmitForm(formId);
+            if (canSubmit !== true) {
+                submitBtn.textContent = `⏳ Patientez ${canSubmit}s`;
+                submitBtn.disabled = true;
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+                return;
+            }
 
             // État de chargement
             submitBtn.textContent = 'Publication...';
@@ -617,6 +681,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await saveNewReview(reviewData);
 
             if (result.success) {
+                // Enregistrer le timestamp pour le cooldown
+                formCooldowns.set(formId, Date.now());
+
                 // Succès
                 submitBtn.textContent = '✅ Avis publié !';
                 submitBtn.style.backgroundColor = '#00ff88';

@@ -134,7 +134,7 @@ function successResponse(data, statusCode = 200) {
 function errorResponse(message, statusCode = 400, details = null) {
     const body = { error: message };
     if (details) body.details = details;
-    
+
     return {
         statusCode,
         headers: getCorsHeaders(),
@@ -151,6 +151,51 @@ function optionsResponse() {
 }
 
 // ============================================
+// LOGGING SÉCURISÉ
+// ============================================
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' ||
+    process.env.CONTEXT === 'production';
+
+/**
+ * Log conditionnel - désactivé en production (sauf erreurs)
+ */
+const logger = {
+    // Info: seulement en développement
+    info: (...args) => {
+        if (!IS_PRODUCTION) {
+            console.log(...args);
+        }
+    },
+
+    // Debug: seulement en développement
+    debug: (...args) => {
+        if (!IS_PRODUCTION) {
+            console.log('🔍', ...args);
+        }
+    },
+
+    // Warn: toujours affiché mais sans détails sensibles en prod
+    warn: (...args) => {
+        if (IS_PRODUCTION) {
+            console.warn('⚠️ Warning occurred');
+        } else {
+            console.warn('⚠️', ...args);
+        }
+    },
+
+    // Error: toujours affiché (nécessaire pour le debugging)
+    error: (...args) => {
+        console.error('🚨', ...args);
+    },
+
+    // Security: alertes de sécurité (toujours loggées)
+    security: (...args) => {
+        console.log('🔒 SECURITY:', ...args);
+    }
+};
+
+// ============================================
 // EXPORTS
 // ============================================
 
@@ -162,6 +207,7 @@ module.exports = {
     validateReviewData,
     successResponse,
     errorResponse,
-    optionsResponse
+    optionsResponse,
+    logger,
+    IS_PRODUCTION
 };
-

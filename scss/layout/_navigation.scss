@@ -71,30 +71,44 @@ nav {
   cursor: pointer;
   flex-direction: column;
   justify-content: space-between;
-  width: 25px;
-  height: 20px;
+  width: 30px; // Légèrement plus large pour l'accessibilité
+  height: 25px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  z-index: $z-index-modal + 1; // Au-dessus du menu mobile
 
-  div {
+  span {
+    display: block; // Important pour les spans
     width: 100%;
     height: 3px;
     background-color: $primary;
     border-radius: 2px;
     @include transition;
+    transform-origin: 1px; // Améliore la rotation
   }
 
-  // État toggle
+  // État toggle (ouvert)
   &.toggle {
-    .line1 {
-      transform: rotate(-45deg) translate(-5px, 6px);
+    span.line1 {
+      transform: rotate(45deg);
     }
 
-    .line2 {
+    span.line2 {
       opacity: 0;
+      transform: translateX(-20px);
     }
 
-    .line3 {
-      transform: rotate(45deg) translate(-5px, -6px);
+    span.line3 {
+      transform: rotate(-45deg);
     }
+  }
+
+  // Focus visible pour accessibilité
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   // Afficher uniquement sur mobile/tablette

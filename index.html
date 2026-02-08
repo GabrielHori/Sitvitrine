@@ -7,8 +7,10 @@
     ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Horizon IT - Expert en montage PC sur mesure, dépannage informatique et optimisation. Gaming, Workstation, Bureautique. Service professionnel et rapide.">
-    <meta name="keywords" content="montage PC, dépannage PC, réparation ordinateur, PC gaming, optimisation PC, overclocking, installation Windows">
+    <meta name="description"
+        content="Horizon IT - Expert en montage PC sur mesure, dépannage informatique et optimisation. Gaming, Workstation, Bureautique. Service professionnel et rapide.">
+    <meta name="keywords"
+        content="montage PC, dépannage PC, réparation ordinateur, PC gaming, optimisation PC, overclocking, installation Windows">
     <meta name="author" content="Horizon IT">
     <meta name="theme-color" content="#00f0ff">
 
@@ -17,7 +19,8 @@
     ============================================ -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Horizon IT - Montage & Dépannage PC">
-    <meta property="og:description" content="Expert en montage PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.">
+    <meta property="og:description"
+        content="Expert en montage PC sur mesure, dépannage et optimisation. Transforme ton expérience informatique avec un setup unique.">
     <meta property="og:image" content="images/build1.jpg">
 
     <!-- ============================================
@@ -34,16 +37,26 @@
     ============================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://www.instagram.com">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+
     <!-- ============================================
         FAVICON  
      ============================================ -->
-    
+
     <link rel="icon" href="images/favicon.png" type="image/favicon">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+
+    <!-- ============================================
+         SEO - Canonical & Sitemap
+    ============================================ -->
+    <link rel="canonical" href="https://ithorizon.netlify.app/">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
     <!-- ============================================
          STYLES
@@ -127,8 +140,8 @@
         <!-- ========================================
              NAVIGATION
         ======================================== -->
-        <nav>
-            <div class="logo">HORIZON <span class="text-accent">IT</span></div>
+        <nav role="navigation" aria-label="Menu principal">
+            <a href="#" class="logo" aria-label="Retour à l'accueil">HORIZON <span class="text-accent">IT</span></a>
 
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
@@ -139,17 +152,17 @@
                 <li><a href="#avis">Avis</a></li>
             </ul>
 
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
+            <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links">
+                <span class="line1" aria-hidden="true"></span>
+                <span class="line2" aria-hidden="true"></span>
+                <span class="line3" aria-hidden="true"></span>
+            </button>
         </nav>
 
         <!-- ========================================
              SECTION HERO
         ======================================== -->
-        <header id="hero">
+        <header id="hero" role="banner">
             <div class="hero-content">
                 <p class="subtitle animate-on-scroll">PASSIONNÉ D'INFORMATIQUE 🚀</p>
                 <h1 class="typing-effect">DÉPANNAGE & <br><span class="text-outline">MONTAGE PC</span></h1>
@@ -163,8 +176,7 @@
                 </div>
             </div>
 
-            <!-- Indicateur de scroll -->
-            <div class="scroll-indicator">
+            <div class="scroll-indicator" aria-hidden="true">
                 <div class="scroll-arrow">↓</div>
                 <span>Découvrir</span>
             </div>
@@ -181,7 +193,8 @@
                 <div class="card">
                     <div class="icon">🛠️</div>
                     <h3>Montage Custom</h3>
-                    <p>Gaming, Workstation ou Bureautique. Cable management impeccable et optimisation du flux d'air.</p>
+                    <p>Gaming, Workstation ou Bureautique. Cable management impeccable et optimisation du flux d'air.
+                    </p>
                 </div>
 
                 <!-- Carte Optimisation -->
@@ -437,7 +450,7 @@
                     <div class="stat-label">Heures Support</div>
                 </div>
                 <div class="stat-item animate-on-scroll">
-                    <div class="stat-number" data-target="99">0</div>
+                    <div class="stat-number" data-target="100">0</div>
                     <div class="stat-label">% Réussite</div>
                 </div>
             </div>
@@ -498,24 +511,16 @@
                 <!-- Vidéo Instagram 1 -->
                 <div class="tip-card">
                     <div class="video-wrapper">
-                        <iframe src="https://www.instagram.com/reel/DRekB8oCNkA/embed"
-                                allowfullscreen
-                                loading="lazy"
-                                title="Astuce PC 1"
-                                frameborder="0"
-                                scrolling="no"></iframe>
+                        <iframe src="https://www.instagram.com/reel/DRekB8oCNkA/embed" allowfullscreen loading="lazy"
+                            title="Astuce PC 1" frameborder="0" scrolling="no"></iframe>
                     </div>
                 </div>
 
                 <!-- Vidéo Instagram 2 -->
                 <div class="tip-card">
                     <div class="video-wrapper">
-                        <iframe src="https://www.instagram.com/reel/DRhiIfkjFbM/embed"
-                                allowfullscreen
-                                loading="lazy"
-                                title="Astuce PC 2"
-                                frameborder="0"
-                                scrolling="no"></iframe>
+                        <iframe src="https://www.instagram.com/reel/DRhiIfkjFbM/embed" allowfullscreen loading="lazy"
+                            title="Astuce PC 2" frameborder="0" scrolling="no"></iframe>
                     </div>
                 </div>
             </div>
@@ -529,16 +534,10 @@
 
             <div class="builds-grid">
                 <div class="build">
-                    <img src="images/build1.jpg"
-                         alt="PC Gaming avec RTX 2070 Super - Vue d'ensemble"
-                         loading="lazy"
-                         width="900"
-                         height="600">
-                    <img src="images/build2.jpg"
-                         alt="PC Gaming avec RTX 2070 Super - Détails internes"
-                         loading="lazy"
-                         width="900"
-                         height="600">
+                    <img src="images/build1.jpg" alt="PC Gaming avec RTX 2070 Super - Vue d'ensemble" loading="lazy"
+                        width="900" height="600">
+                    <img src="images/build2.jpg" alt="PC Gaming avec RTX 2070 Super - Détails internes" loading="lazy"
+                        width="900" height="600">
                     <p>PC Gaming - RTX 2070 Super</p>
                 </div>
             </div>
@@ -554,30 +553,21 @@
 
                 <form id="contact-form" aria-label="Formulaire de contact">
                     <div class="input-group">
-                        <input type="text"
-                               name="user_name"
-                               placeholder="Votre Nom"
-                               aria-label="Votre nom"
-                               required>
-                        <input type="email"
-                               name="user_email"
-                               placeholder="Votre Email"
-                               aria-label="Votre email"
-                               required>
+                        <input type="text" name="user_name" id="contact-name" placeholder="Votre Nom"
+                            autocomplete="name" aria-label="Votre nom" required>
+                        <input type="email" name="user_email" id="contact-email" placeholder="Votre Email"
+                            autocomplete="email" aria-label="Votre email" required>
                     </div>
 
-                    <select name="service" aria-label="Type de service" required>
+                    <select name="service" id="contact-service" aria-label="Type de service" required>
                         <option value="">Sélectionnez un service</option>
                         <option value="PC Gaming">Je veux un PC Gamer</option>
                         <option value="Dépannage">J'ai une panne</option>
                         <option value="Autre">Autre demande</option>
                     </select>
 
-                    <textarea name="message"
-                              placeholder="Détails de votre demande..."
-                              aria-label="Détails de votre demande"
-                              rows="5"
-                              required></textarea>
+                    <textarea name="message" id="contact-message" placeholder="Détails de votre demande..."
+                        aria-label="Détails de votre demande" rows="5" required></textarea>
 
                     <button type="submit" class="btn-primary">Envoyer le message</button>
                 </form>
@@ -591,7 +581,7 @@
             <h2 class="section-title">AVIS <span class="text-accent">CLIENTS</span></h2>
 
             <!-- Affichage des avis (chargés via JS) -->
-            <div class="reviews-container">
+            <div class="reviews-container" aria-live="polite">
                 <div class="reviews-grid" id="reviews-list">
                     <!-- Les avis seront chargés ici par JavaScript -->
                 </div>
@@ -601,10 +591,11 @@
             <div class="review-form-container">
                 <h3>Laissez votre avis</h3>
 
-                <form id="review-form">
+                <form id="review-form" aria-label="Formulaire d'avis">
                     <div class="input-group">
-                        <input type="text" name="client_name" placeholder="Votre nom" required>
-                        <select name="rating" required>
+                        <input type="text" name="client_name" id="review-name" placeholder="Votre nom"
+                            autocomplete="name" aria-label="Votre nom" required>
+                        <select name="rating" id="review-rating" aria-label="Note sur 5" required>
                             <option value="">Note</option>
                             <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
                             <option value="4">⭐⭐⭐⭐ (4/5)</option>
@@ -614,15 +605,11 @@
                         </select>
                     </div>
 
-                    <input type="text"
-                           name="service_type"
-                           placeholder="Service utilisé (ex: Montage PC Gaming)"
-                           required>
+                    <input type="text" name="service_type" id="review-service"
+                        placeholder="Service utilisé (ex: Montage PC Gaming)" aria-label="Service utilisé" required>
 
-                    <textarea name="review_text"
-                              placeholder="Votre avis détaillé..."
-                              rows="4"
-                              required></textarea>
+                    <textarea name="review_text" id="review-text" placeholder="Votre avis détaillé..."
+                        aria-label="Votre avis" rows="4" required></textarea>
 
                     <button type="submit" class="btn-primary">Publier mon avis</button>
                 </form>
@@ -650,7 +637,7 @@
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
-        (function() {
+        (function () {
             emailjs.init("0JKz6zDmh95CbSknI");
         })();
     </script>

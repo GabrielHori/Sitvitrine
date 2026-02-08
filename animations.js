@@ -20,8 +20,8 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Forcer les animations : l'intro matrix reste affichée pour tout le monde
-const motionSafe = true;
+// Respect de la préférence utilisateur pour les animations réduites
+const motionSafe = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 ScrollTrigger.config({
     limitCallbacks: true
@@ -80,10 +80,10 @@ function initHeroAnimations() {
             { scale: 0.9, filter: "blur(5px)" },
             { scale: 1, filter: "blur(0px)", duration: 0.8 }
         )
-        .to(logo, {
-            textShadow: "0 0 30px rgba(0, 240, 255, 0.8), 0 0 60px rgba(0, 240, 255, 0.4)",
-            duration: 0.5
-        }, "-=0.3");
+            .to(logo, {
+                textShadow: "0 0 30px rgba(0, 240, 255, 0.8), 0 0 60px rgba(0, 240, 255, 0.4)",
+                duration: 0.5
+            }, "-=0.3");
     }
 
     // Animation du titre hero
@@ -91,7 +91,7 @@ function initHeroAnimations() {
         heroTL.fromTo(heroTitle,
             { y: 20 },
             { y: 0, duration: 0.6 }
-        , "-=0.5");
+            , "-=0.5");
     }
 
     // Animation des boutons CTA
@@ -99,7 +99,7 @@ function initHeroAnimations() {
         heroTL.fromTo(heroCTAs,
             { y: 10 },
             { y: 0, stagger: 0.1, duration: 0.4 }
-        , "-=0.3");
+            , "-=0.3");
     }
 }
 

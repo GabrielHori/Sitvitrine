@@ -15,7 +15,8 @@ const {
     sanitizeString,
     successResponse,
     errorResponse,
-    optionsResponse
+    optionsResponse,
+    logger
 } = require('./utils/shared');
 
 const { addLead } = require('./utils/supabase');
@@ -98,7 +99,7 @@ exports.handler = async (event) => {
         }, 201);
 
     } catch (error) {
-        console.error('🚨 Erreur contact:', error);
+        logger.error('Erreur contact:', error);
         return errorResponse('Erreur serveur', 500);
     }
 };

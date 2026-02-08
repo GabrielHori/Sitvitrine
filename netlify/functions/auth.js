@@ -16,7 +16,8 @@ const jwt = require('jsonwebtoken');
 const {
     successResponse,
     errorResponse,
-    optionsResponse
+    optionsResponse,
+    logger
 } = require('./utils/shared');
 
 // ============================================
@@ -70,7 +71,7 @@ function recordFailedAttempt(clientIP) {
     // Si trop de tentatives, bloquer
     if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
         attempts.lockedUntil = now + LOCKOUT_DURATION;
-        console.log(`🔒 IP ${clientIP} bloquée pour 15 minutes après ${attempts.count} tentatives`);
+        logger.security(`IP ${clientIP} bloquée pour 15 minutes après ${attempts.count} tentatives`);
     }
 
     loginAttempts.set(clientIP, attempts);
@@ -96,8 +97,8 @@ exports.handler = async (event) => {
     }
 
     const clientIP = event.headers['x-forwarded-for'] ||
-                     event.headers['client-ip'] ||
-                     'unknown';
+        event.headers['client-ip'] ||
+        'unknown';
 
     try {
         // ========================================
@@ -105,7 +106,7 @@ exports.handler = async (event) => {
         // ========================================
         const bruteCheck = checkBruteForce(clientIP);
         if (bruteCheck.blocked) {
-            console.log(`🚨 Tentative bloquée pour IP: ${clientIP}`);
+            logger.security(`Tentative bloquée pour IP: ${clientIP}`);
             return errorResponse(bruteCheck.message, 429);
         }
 
@@ -129,16 +130,16 @@ exports.handler = async (event) => {
         // Vérification des variables d'environnement
         // ========================================
         if (!process.env.ADMIN_PASSWORD || !process.env.JWT_SECRET) {
-            console.error('🚨 Variables d\'environnement manquantes!');
-            console.error('   ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD ? '✓' : '✗');
-            console.error('   JWT_SECRET:', process.env.JWT_SECRET ? '✓' : '✗');
+            logger.error('Variables d\'environnement manquantes!');
+            logger.error('   ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD ? '✓' : '✗');
+            logger.error('   JWT_SECRET:', process.env.JWT_SECRET ? '✓' : '✗');
             return errorResponse('Configuration serveur incorrecte', 500);
         }
 
         // ========================================
         // Vérification du mot de passe
         // ========================================
-        console.log(`🔐 Tentative de connexion depuis IP: ${clientIP.substring(0, 10)}...`);
+        logger.info(`🔐 Tentative de connexion depuis IP: ${clientIP.substring(0, 10)}...`);
 
         if (password === process.env.ADMIN_PASSWORD) {
             // Succès - Reset les tentatives et créer le token
@@ -154,7 +155,7 @@ exports.handler = async (event) => {
                 { expiresIn: TOKEN_EXPIRY }
             );
 
-            console.log('✅ Connexion admin réussie');
+            logger.security('Connexion admin réussie');
 
             return successResponse({
                 token,
@@ -168,12 +169,12 @@ exports.handler = async (event) => {
         // ========================================
         recordFailedAttempt(clientIP);
 
-        console.log(`🚨 SECURITY ALERT: Tentative échouée depuis IP: ${clientIP}`);
+        logger.security(`Tentative échouée depuis IP: ${clientIP}`);
 
         return errorResponse('Mot de passe incorrect', 401);
 
     } catch (error) {
-        console.error('🚨 Erreur auth:', error);
+        logger.error('Erreur auth:', error);
         return errorResponse('Erreur serveur', 500);
     }
 };

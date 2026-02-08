@@ -1,0 +1,18 @@
+# ============================================
+# HORIZON IT - ROBOTS.TXT
+# ============================================
+# Contrôle l'indexation par les moteurs de recherche
+
+User-agent: *
+Allow: /
+
+# Fichiers à ne pas indexer
+Disallow: /admin.html
+Disallow: /.netlify/
+Disallow: /netlify/
+
+# Sitemap
+Sitemap: https://ithorizon.netlify.app/sitemap.xml
+
+# Délai entre les requêtes (optionnel, pour réduire la charge serveur)
+Crawl-delay: 1

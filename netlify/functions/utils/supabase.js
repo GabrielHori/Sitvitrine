@@ -11,7 +11,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
-const { DEFAULT_REVIEWS } = require('./shared');
+const { DEFAULT_REVIEWS, logger } = require('./shared');
 
 // ============================================
 // INITIALISATION SUPABASE
@@ -23,13 +23,13 @@ function getSupabaseClient() {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        console.error('❌ Variables Supabase manquantes!');
-        console.error('   SUPABASE_URL:', supabaseUrl ? '✓' : '✗');
-        console.error('   SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓' : '✗');
+        logger.error('Variables Supabase manquantes!');
+        logger.error('   SUPABASE_URL:', supabaseUrl ? '✓' : '✗');
+        logger.error('   SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓' : '✗');
         return null;
     }
 
-    console.log('🔑 Supabase: utilisation de', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE' : 'ANON');
+    logger.debug('Supabase: utilisation de', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE' : 'ANON');
     return createClient(supabaseUrl, supabaseKey);
 }
 
@@ -42,31 +42,31 @@ function getSupabaseClient() {
  */
 async function getReviews(approvedOnly = true) {
     const client = getSupabaseClient();
-    
+
     if (!client) {
-        console.log('⚠️ Supabase non configuré, retour aux avis par défaut');
+        logger.warn('Supabase non configuré, retour aux avis par défaut');
         return DEFAULT_REVIEWS;
     }
 
     try {
         let query = client.from('reviews').select('*');
-        
+
         if (approvedOnly) {
             query = query.eq('approved', true);
         }
-        
+
         const { data, error } = await query.order('created_at', { ascending: false });
 
         if (error) {
-            console.error('❌ Erreur Supabase getReviews:', error);
+            logger.error('Erreur Supabase getReviews:', error);
             return DEFAULT_REVIEWS;
         }
 
-        console.log(`📋 ${data.length} avis récupérés depuis Supabase`);
+        logger.info(`📋 ${data.length} avis récupérés depuis Supabase`);
         return data.length > 0 ? data : DEFAULT_REVIEWS;
 
     } catch (error) {
-        console.error('❌ Exception getReviews:', error);
+        logger.error('Exception getReviews:', error);
         return DEFAULT_REVIEWS;
     }
 }
@@ -76,7 +76,7 @@ async function getReviews(approvedOnly = true) {
  */
 async function addReview(reviewData, clientIP = 'unknown') {
     const client = getSupabaseClient();
-    
+
     if (!client) {
         throw new Error('Base de données non configurée');
     }
@@ -98,11 +98,11 @@ async function addReview(reviewData, clientIP = 'unknown') {
         .single();
 
     if (error) {
-        console.error('❌ Erreur Supabase addReview:', error);
+        logger.error('Erreur Supabase addReview:', error);
         throw new Error('Erreur lors de l\'ajout de l\'avis');
     }
 
-    console.log(`✅ Nouvel avis ajouté: ID ${data.id}`);
+    logger.info(`✅ Nouvel avis ajouté: ID ${data.id}`);
     return data;
 }
 
@@ -111,7 +111,7 @@ async function addReview(reviewData, clientIP = 'unknown') {
  */
 async function updateReviewStatus(reviewId, approved) {
     const client = getSupabaseClient();
-    
+
     if (!client) {
         throw new Error('Base de données non configurée');
     }
@@ -124,7 +124,7 @@ async function updateReviewStatus(reviewId, approved) {
         .single();
 
     if (error) {
-        console.error('❌ Erreur Supabase updateReviewStatus:', error);
+        logger.error('Erreur Supabase updateReviewStatus:', error);
         throw new Error('Erreur lors de la mise à jour');
     }
 
@@ -136,7 +136,7 @@ async function updateReviewStatus(reviewId, approved) {
  */
 async function deleteReview(reviewId) {
     const client = getSupabaseClient();
-    
+
     if (!client) {
         throw new Error('Base de données non configurée');
     }
@@ -147,7 +147,7 @@ async function deleteReview(reviewId) {
         .eq('id', reviewId);
 
     if (error) {
-        console.error('❌ Erreur Supabase deleteReview:', error);
+        logger.error('Erreur Supabase deleteReview:', error);
         throw new Error('Erreur lors de la suppression');
     }
 
@@ -184,11 +184,11 @@ async function addLead(leadData) {
         .single();
 
     if (error) {
-        console.error('❌ Erreur Supabase addLead:', error);
+        logger.error('Erreur Supabase addLead:', error);
         throw new Error('Erreur lors de l\'ajout de la demande');
     }
 
-    console.log(`✅ Lead ajouté: ID ${data.id}`);
+    logger.info(`✅ Lead ajouté: ID ${data.id}`);
     return data;
 }
 
@@ -199,7 +199,7 @@ async function getLeads(status = 'all') {
     const client = getSupabaseClient();
 
     if (!client) {
-        console.warn('⚠️ Supabase non configuré, aucun lead retourné');
+        logger.warn('Supabase non configuré, aucun lead retourné');
         return [];
     }
 
@@ -211,7 +211,7 @@ async function getLeads(status = 'all') {
     const { data, error } = await query;
 
     if (error) {
-        console.error('❌ Erreur Supabase getLeads:', error);
+        logger.error('Erreur Supabase getLeads:', error);
         return [];
     }
 
@@ -236,7 +236,7 @@ async function updateLeadStatus(leadId, status) {
         .single();
 
     if (error) {
-        console.error('❌ Erreur Supabase updateLeadStatus:', error);
+        logger.error('Erreur Supabase updateLeadStatus:', error);
         throw new Error('Erreur lors de la mise à jour du lead');
     }
 
@@ -259,7 +259,7 @@ async function deleteLead(leadId) {
         .eq('id', leadId);
 
     if (error) {
-        console.error('❌ Erreur Supabase deleteLead:', error);
+        logger.error('Erreur Supabase deleteLead:', error);
         throw new Error('Erreur lors de la suppression du lead');
     }
 
@@ -267,18 +267,20 @@ async function deleteLead(leadId) {
 }
 
 /**
- * Hash simple de l'IP pour le rate limiting (sans stocker l'IP complète)
+ * Hash sécurisé de l'IP avec SHA-256 et salt
+ * Anonymise l'IP tout en permettant de détecter les doublons
  */
 function hashIP(ip) {
     if (!ip) return 'unknown';
-    // Hash simple pour anonymiser
-    let hash = 0;
-    for (let i = 0; i < ip.length; i++) {
-        const char = ip.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return hash.toString(16);
+
+    const crypto = require('crypto');
+    const salt = process.env.IP_HASH_SALT || 'horizon-it-default-salt-2024';
+
+    return crypto
+        .createHash('sha256')
+        .update(ip + salt)
+        .digest('hex')
+        .slice(0, 16); // Garder 16 caractères pour un hash compact
 }
 
 // ============================================

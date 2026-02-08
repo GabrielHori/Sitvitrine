@@ -12,7 +12,8 @@ const {
     validateReviewData,
     successResponse,
     errorResponse,
-    optionsResponse
+    optionsResponse,
+    logger
 } = require('./utils/shared');
 
 const {
@@ -31,8 +32,8 @@ exports.handler = async (event, context) => {
     }
 
     const clientIP = event.headers['x-forwarded-for'] ||
-                     event.headers['client-ip'] ||
-                     'unknown';
+        event.headers['client-ip'] ||
+        'unknown';
 
     try {
         // ========================================
@@ -41,7 +42,7 @@ exports.handler = async (event, context) => {
         if (event.httpMethod === 'GET') {
             const reviews = await getReviews(true); // true = approuvés uniquement
 
-            console.log(`📋 ${reviews.length} avis approuvés envoyés`);
+            logger.info(`📋 ${reviews.length} avis approuvés envoyés`);
             return successResponse(reviews);
         }
 
@@ -49,21 +50,21 @@ exports.handler = async (event, context) => {
         // POST - Ajouter un nouvel avis
         // ========================================
         if (event.httpMethod === 'POST') {
-            console.log('📝 Nouvelle soumission d\'avis');
+            logger.info('📝 Nouvelle soumission d\'avis');
 
             // Parse du body
             let rawData;
             try {
                 rawData = JSON.parse(event.body);
             } catch (parseError) {
-                console.log('❌ Erreur parsing JSON');
+                logger.warn('Erreur parsing JSON');
                 return errorResponse('Format JSON invalide', 400);
             }
 
             // Validation des données
             const validation = validateReviewData(rawData);
             if (!validation.valid) {
-                console.log('❌ Validation échouée:', validation.errors);
+                logger.warn('Validation échouée:', validation.errors);
                 return errorResponse(
                     'Données invalides',
                     400,
@@ -74,7 +75,7 @@ exports.handler = async (event, context) => {
             // Ajout en base de données
             const newReview = await addReview(validation.data, clientIP);
 
-            console.log(`✅ Avis ajouté: ${validation.data.name} - ${validation.data.rating}⭐`);
+            logger.info(`✅ Avis ajouté: ${validation.data.name} - ${validation.data.rating}⭐`);
 
             return successResponse({
                 message: 'Avis ajouté avec succès ! Il sera visible après modération.',
@@ -90,7 +91,7 @@ exports.handler = async (event, context) => {
         return errorResponse('Méthode non autorisée', 405);
 
     } catch (error) {
-        console.error('🚨 Erreur reviews:', error.message);
+        logger.error('Erreur reviews:', error.message);
 
         // Erreur de validation personnalisée
         if (error.message.includes('invalide')) {
