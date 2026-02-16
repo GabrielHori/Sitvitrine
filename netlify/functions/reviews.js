@@ -25,7 +25,7 @@ const {
 // HANDLER PRINCIPAL
 // ============================================
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
     // Preflight CORS
     if (event.httpMethod === 'OPTIONS') {
         return optionsResponse();

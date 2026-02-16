@@ -76,8 +76,25 @@ exports.handler = async (event) => {
         // POST - Mettre à jour les stats du site
         // ========================================
         if (event.httpMethod === 'POST') {
-            const body = JSON.parse(event.body);
+            let body;
+            try {
+                body = JSON.parse(event.body);
+            } catch (e) {
+                return errorResponse('Format JSON invalide', 400);
+            }
+
             const { pcBuilt, happyClients, responseTime } = body;
+
+            // Validation des données
+            if (pcBuilt !== undefined && (!Number.isInteger(pcBuilt) || pcBuilt < 0)) {
+                return errorResponse('pcBuilt doit être un entier positif', 400);
+            }
+            if (happyClients !== undefined && (!Number.isInteger(happyClients) || happyClients < 0)) {
+                return errorResponse('happyClients doit être un entier positif', 400);
+            }
+            if (responseTime !== undefined && (!Number.isInteger(responseTime) || responseTime < 0)) {
+                return errorResponse('responseTime doit être un entier positif', 400);
+            }
 
             if (!client) {
                 return errorResponse('Base de données non configurée', 500);
@@ -136,13 +153,13 @@ async function getAdminStats(client) {
             stats.reviews.total = reviews.length;
             stats.reviews.approved = reviews.filter(r => r.approved).length;
             stats.reviews.pending = reviews.filter(r => !r.approved).length;
-            
+
             const approvedReviews = reviews.filter(r => r.approved);
             if (approvedReviews.length > 0) {
                 const sum = approvedReviews.reduce((acc, r) => acc + r.rating, 0);
                 stats.reviews.avgRating = Math.round((sum / approvedReviews.length) * 10) / 10;
             }
-            
+
             stats.recent = reviews.slice(0, 5);
         }
 

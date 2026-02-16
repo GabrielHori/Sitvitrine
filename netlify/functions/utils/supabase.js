@@ -274,7 +274,19 @@ function hashIP(ip) {
     if (!ip) return 'unknown';
 
     const crypto = require('crypto');
-    const salt = process.env.IP_HASH_SALT || 'horizon-it-default-salt-2024';
+    const salt = process.env.IP_HASH_SALT;
+
+    // Avertissement si le salt n'est pas configuré
+    if (!salt) {
+        logger.warn('⚠️ IP_HASH_SALT non configuré ! Utilisation d\'un salt par défaut (NON SÉCURISÉ pour la production)');
+        // Utiliser un salt par défaut uniquement en développement
+        const defaultSalt = 'horizon-it-default-salt-2024';
+        return crypto
+            .createHash('sha256')
+            .update(ip + defaultSalt)
+            .digest('hex')
+            .slice(0, 16);
+    }
 
     return crypto
         .createHash('sha256')

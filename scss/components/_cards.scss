@@ -25,7 +25,8 @@
 
 // Carte standard (glassmorphism)
 .card {
-  @include glass-effect;
+  background: $card-bg-transparent;
+  backdrop-filter: blur(10px);
   border: 1px solid rgba($text-white, 0.08);
   padding: 28px 25px;
   border-radius: 12px;

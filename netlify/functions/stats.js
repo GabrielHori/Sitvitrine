@@ -23,6 +23,7 @@ const DEFAULT_STATS = {
     pcBuilt: 50,
     happyClients: 100,
     responseTime: 24,
+    successRate: 100,
     avgRating: 5.0,
     totalReviews: 3
 };
@@ -91,15 +92,17 @@ async function getStatsFromDB(client) {
         }
 
         // Combiner les stats
-        return {
-            pcBuilt: siteStats.pc_built || DEFAULT_STATS.pcBuilt,
-            happyClients: siteStats.happy_clients || DEFAULT_STATS.happyClients,
-            responseTime: siteStats.response_time || DEFAULT_STATS.responseTime,
-            successRate: siteStats.success_rate ?? DEFAULT_STATS.successRate, // 👈
-            avgRating,
-            totalReviews
-        };
-
+        // Si siteStats existe, l'utiliser, sinon utiliser DEFAULT_STATS
+        if (siteStats && !statsError) {
+            return {
+                pcBuilt: siteStats.pc_built || DEFAULT_STATS.pcBuilt,
+                happyClients: siteStats.happy_clients || DEFAULT_STATS.happyClients,
+                responseTime: siteStats.response_time || DEFAULT_STATS.responseTime,
+                successRate: siteStats.success_rate ?? DEFAULT_STATS.successRate,
+                avgRating,
+                totalReviews
+            };
+        }
 
         // Fallback si pas de table site_stats
         return {
