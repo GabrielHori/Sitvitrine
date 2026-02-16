@@ -85,27 +85,43 @@ exports.handler = async (event) => {
 
             const { pcBuilt, happyClients, responseTime } = body;
 
+            // DEBUG: Log des valeurs reçues
+            console.log('📥 Valeurs reçues:', { pcBuilt, happyClients, responseTime });
+            console.log('📊 Types:', {
+                pcBuilt: typeof pcBuilt,
+                happyClients: typeof happyClients,
+                responseTime: typeof responseTime
+            });
+
             // Conversion et validation des données
             let pcBuiltNum, happyClientsNum, responseTimeNum;
 
             if (pcBuilt !== undefined) {
                 pcBuiltNum = parseInt(pcBuilt, 10);
+                console.log('🔢 pcBuiltNum après parseInt:', pcBuiltNum, 'isNaN:', isNaN(pcBuiltNum));
                 if (isNaN(pcBuiltNum) || pcBuiltNum < 0) {
+                    console.error('❌ Validation pcBuilt échouée:', pcBuiltNum);
                     return errorResponse('pcBuilt doit être un entier positif', 400);
                 }
             }
             if (happyClients !== undefined) {
                 happyClientsNum = parseInt(happyClients, 10);
+                console.log('🔢 happyClientsNum après parseInt:', happyClientsNum, 'isNaN:', isNaN(happyClientsNum));
                 if (isNaN(happyClientsNum) || happyClientsNum < 0) {
+                    console.error('❌ Validation happyClients échouée:', happyClientsNum);
                     return errorResponse('happyClients doit être un entier positif', 400);
                 }
             }
             if (responseTime !== undefined) {
                 responseTimeNum = parseInt(responseTime, 10);
+                console.log('🔢 responseTimeNum après parseInt:', responseTimeNum, 'isNaN:', isNaN(responseTimeNum));
                 if (isNaN(responseTimeNum) || responseTimeNum < 0) {
+                    console.error('❌ Validation responseTime échouée:', responseTimeNum);
                     return errorResponse('responseTime doit être un entier positif', 400);
                 }
             }
+
+            console.log('✅ Validation passée, valeurs converties:', { pcBuiltNum, happyClientsNum, responseTimeNum });
 
             if (!client) {
                 return errorResponse('Base de données non configurée', 500);
