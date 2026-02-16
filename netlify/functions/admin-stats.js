@@ -85,15 +85,26 @@ exports.handler = async (event) => {
 
             const { pcBuilt, happyClients, responseTime } = body;
 
-            // Validation des données
-            if (pcBuilt !== undefined && (!Number.isInteger(pcBuilt) || pcBuilt < 0)) {
-                return errorResponse('pcBuilt doit être un entier positif', 400);
+            // Conversion et validation des données
+            let pcBuiltNum, happyClientsNum, responseTimeNum;
+
+            if (pcBuilt !== undefined) {
+                pcBuiltNum = parseInt(pcBuilt, 10);
+                if (isNaN(pcBuiltNum) || pcBuiltNum < 0) {
+                    return errorResponse('pcBuilt doit être un entier positif', 400);
+                }
             }
-            if (happyClients !== undefined && (!Number.isInteger(happyClients) || happyClients < 0)) {
-                return errorResponse('happyClients doit être un entier positif', 400);
+            if (happyClients !== undefined) {
+                happyClientsNum = parseInt(happyClients, 10);
+                if (isNaN(happyClientsNum) || happyClientsNum < 0) {
+                    return errorResponse('happyClients doit être un entier positif', 400);
+                }
             }
-            if (responseTime !== undefined && (!Number.isInteger(responseTime) || responseTime < 0)) {
-                return errorResponse('responseTime doit être un entier positif', 400);
+            if (responseTime !== undefined) {
+                responseTimeNum = parseInt(responseTime, 10);
+                if (isNaN(responseTimeNum) || responseTimeNum < 0) {
+                    return errorResponse('responseTime doit être un entier positif', 400);
+                }
             }
 
             if (!client) {
@@ -105,9 +116,9 @@ exports.handler = async (event) => {
                 .from('site_stats')
                 .upsert({
                     id: 1,
-                    pc_built: pcBuilt,
-                    happy_clients: happyClients,
-                    response_time: responseTime,
+                    pc_built: pcBuiltNum !== undefined ? pcBuiltNum : undefined,
+                    happy_clients: happyClientsNum !== undefined ? happyClientsNum : undefined,
+                    response_time: responseTimeNum !== undefined ? responseTimeNum : undefined,
                     updated_at: new Date().toISOString()
                 });
 
