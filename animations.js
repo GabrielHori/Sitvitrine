@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Check for reduced motion preference
+    // GSAP handles reduced motion through its own config or we check matches directly inside
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        console.log('🔇 Reduced motion detected, skipping GSAP timelines');
         return;
     }
 
