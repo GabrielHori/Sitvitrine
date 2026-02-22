@@ -1,502 +1,175 @@
 // ============================================
-// SECTION TARIFS - Refonte UX
+// TARIFS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-#tarifs {
-  background: linear-gradient(135deg, rgba($bg-color, 0.95) 0%, rgba(8, 8, 12, 0.98) 100%);
-  padding: $spacing-section 5%;
-  position: relative;
-  overflow: hidden;
-
-  // Effet de fond subtil
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba($primary, 0.03) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  @include respond-to('md') {
-    padding: 50px 4%;
-  }
-
-  @include respond-to('sm') {
-    padding: 40px 3%;
-  }
+// ── Tabs ──
+.pricing-tabs {
+  display: flex;
+  justify-content: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+  margin-bottom: $space-10;
 }
 
-// ============================================
-// GRILLE PRINCIPALE
-// ============================================
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-
-  @include respond-to('lg') {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-  }
-
-  @include respond-to('md') {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 500px;
-  }
-}
-
-// ============================================
-// CATÉGORIE DE PRIX
-// ============================================
-.pricing-category {
-  background: linear-gradient(145deg,
-      rgba(18, 18, 22, 0.9) 0%,
-      rgba(12, 12, 16, 0.95) 100%);
-  border: 1px solid rgba($primary, 0.08);
-  border-radius: $border-radius-lg;
-  padding: $spacing-xl;
-  @include transition;
-  position: relative;
-  overflow: hidden;
-
-  // Ligne décorative en haut
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        rgba($primary, 0.4) 50%,
-        transparent 100%);
-    opacity: 0;
-    @include transition;
-  }
+.tab-btn {
+  @include button-base;
+  background: transparent;
+  color: $text-muted;
+  border: 1px solid $card-border;
+  border-radius: $radius-full;
+  padding: $space-3 $space-5;
+  font-size: $fs-sm;
 
   &:hover {
-    border-color: rgba($primary, 0.2);
-    transform: translateY(-3px);
-    box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.3),
-      0 0 40px rgba($primary, 0.05);
-
-    &::before {
-      opacity: 1;
-    }
+    border-color: rgba($accent, 0.3);
+    color: $text-primary;
   }
 
-  @include respond-to('md') {
-    padding: $spacing-lg;
-
-    &:hover {
-      transform: none; // Désactive l'animation de levée sur mobile
-    }
+  &.active {
+    background: rgba($accent, 0.1);
+    border-color: $accent;
+    color: $accent;
   }
 }
 
-// ============================================
-// EN-TÊTE DE CATÉGORIE
-// ============================================
-.category-header {
-  text-align: center;
-  margin-bottom: 25px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba($primary, 0.08);
-  position: relative;
+// ── Panels ──
+.pricing-panels {
+  max-width: $container-max;
+  margin: 0 auto;
+}
 
-  .icon {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-    display: inline-block;
-    filter: drop-shadow(0 0 10px rgba($primary, 0.3));
-    animation: iconFloat 3s ease-in-out infinite;
-  }
+.pricing-panel {
+  display: none;
 
-  h3 {
-    font-family: $font-heading;
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: $text-white;
-    letter-spacing: 0.5px;
-
-    // Gradient text subtil
-    background: linear-gradient(135deg, $text-white 0%, rgba($primary, 0.9) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  p {
-    color: $text-gray;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
-  @include respond-to('md') {
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-
-    .icon {
-      font-size: 2.2rem;
-      animation: none; // Pas d'animation sur mobile
-    }
-
-    h3 {
-      font-size: 1.15rem;
-    }
+  &.active {
+    display: block;
+    animation: fadeInUp 0.4s $ease-out-expo;
   }
 }
 
-@keyframes iconFloat {
+// ── Price Cards ──
+.price-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: $space-6;
+  max-width: 900px;
+  margin: 0 auto;
 
-  0%,
-  100% {
-    transform: translateY(0);
+  @include respond-to('sm') {
+    grid-template-columns: 1fr;
+    gap: $space-4;
   }
-
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-// ============================================
-// CARTES DE PRIX
-// ============================================
-.pricing-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .price-card {
-  background: rgba($bg-color, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  padding: 18px 20px;
-  @include transition;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 8px 15px;
-  align-items: center;
+  @include card-base;
+  @include card-hover-effect;
+  padding: $space-8;
+  text-align: center;
+  position: relative;
 
-  // Titre à gauche
-  h4 {
-    font-family: $font-heading;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: $text-white;
-    margin: 0;
-    grid-column: 1;
-    grid-row: 1;
+  &__header {
+    margin-bottom: $space-6;
+
+    h4 {
+      font-size: $fs-lg;
+      margin-bottom: $space-3;
+    }
   }
 
-  // Prix à droite
   .price {
-    font-size: 1.4rem;
+    font-family: $font-heading;
+    font-size: $fs-4xl;
     font-weight: 800;
-    color: $primary;
-    grid-column: 2;
-    grid-row: 1 / 3;
-    align-self: center;
-    text-shadow: 0 0 20px rgba($primary, 0.3);
-    white-space: nowrap;
+    @include gradient-text;
+    line-height: 1;
+
+    span {
+      font-size: $fs-xl;
+    }
+
+    &--variable {
+      font-size: $fs-xl;
+      @include gradient-text;
+    }
   }
 
-  // Liste des features
   ul {
-    grid-column: 1;
-    grid-row: 2;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 12px;
+    @include flex-column;
+    gap: $space-3;
+    text-align: left;
 
     li {
-      color: $text-gray;
-      font-size: 0.8rem;
-      line-height: 1.3;
+      font-size: $fs-sm;
+      color: $text-secondary;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: $space-3;
 
       &::before {
-        content: "✓";
-        color: $primary;
+        content: '✓';
+        color: $accent;
         font-weight: 700;
-        font-size: 0.7rem;
-        opacity: 0.8;
+        font-size: $fs-sm;
+        flex-shrink: 0;
       }
     }
   }
 
-  // Hover état
-  &:hover {
-    background: rgba($primary, 0.04);
-    border-color: rgba($primary, 0.15);
-    transform: translateX(5px);
-  }
-
-  // Carte mise en avant
-  &.featured {
-    background: linear-gradient(135deg,
-        rgba($primary, 0.08) 0%,
-        rgba($primary, 0.04) 100%);
-    border-color: rgba($primary, 0.25);
+  // ── Featured card ──
+  &--featured {
+    border-color: rgba($accent, 0.25);
+    background: rgba($accent, 0.03);
     position: relative;
-    padding-left: 25px;
 
-    // Badge "Populaire"
     &::before {
-      content: '★';
+      content: '';
       position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.9rem;
-      color: $primary;
-      opacity: 0.7;
-    }
-
-    .price {
-      color: $text-white;
-      text-shadow: 0 0 20px rgba($primary, 0.5);
-    }
-  }
-
-  // Responsive mobile
-  @include respond-to('md') {
-    padding: 15px 16px;
-    gap: 6px 12px;
-
-    &:hover {
-      transform: none; // Pas de décalage sur mobile
-      background: rgba($primary, 0.04);
-    }
-
-    h4 {
-      font-size: 0.9rem;
-    }
-
-    .price {
-      font-size: 1.25rem;
-    }
-
-    ul li {
-      font-size: 0.75rem;
-    }
-
-    &.featured {
-      padding-left: 22px;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: $accent-gradient-h;
     }
   }
 
   @include respond-to('sm') {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    text-align: center;
-    padding: 16px;
-
-    h4 {
-      grid-column: 1;
-      grid-row: 1;
-    }
-
-    .price {
-      grid-column: 1;
-      grid-row: 2;
-      justify-self: center;
-      margin: 5px 0;
-    }
-
-    ul {
-      grid-column: 1;
-      grid-row: 3;
-      justify-content: center;
-    }
-
-    &.featured {
-      padding-left: 16px;
-
-      &::before {
-        left: 50%;
-        top: 8px;
-        transform: translateX(-50%);
-      }
-    }
+    padding: $space-6;
   }
 }
 
-// ============================================
-// LISTE DE SERVICES (alternative)
-// ============================================
-.services-list {
-  @include flex-column;
-  gap: 10px;
+.price-badge {
+  position: absolute;
+  top: $space-4;
+  right: $space-4;
+  font-size: $fs-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: $accent;
+  color: $bg-primary;
+  padding: $space-1 $space-3;
+  border-radius: $radius-full;
 }
 
-.service-item {
-  @include flex-between;
-  padding: 14px 16px;
-  background: rgba($bg-color, 0.4);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  @include transition;
-
-  &:hover {
-    background: rgba($primary, 0.04);
-    border-color: rgba($primary, 0.1);
-  }
-
-  .price {
-    color: $primary;
-    font-weight: 700;
-    font-size: 1.05rem;
-  }
-
-  @include respond-to('md') {
-    padding: 12px 14px;
-
-    .price {
-      font-size: 1rem;
-    }
-  }
-}
-
-// ============================================
-// NOTE / DISCLAIMER
-// ============================================
-.note {
-  font-size: 0.8rem;
-  color: $text-gray;
-  font-style: italic;
-  margin-top: $spacing-md;
-  text-align: center;
-  line-height: 1.5;
-  padding: 12px 16px;
-  background: rgba($bg-color, 0.3);
-  border-radius: 8px;
-  border-left: 2px solid rgba($primary, 0.3);
-
-  @include respond-to('md') {
-    font-size: 0.75rem;
-    padding: 10px 14px;
-  }
-}
-
-// ============================================
-// CTA - APPEL À L'ACTION
-// ============================================
+// ── CTA ──
 .pricing-cta {
   text-align: center;
-  margin-top: 50px;
-  padding: 40px 30px;
-  background: linear-gradient(135deg,
-      rgba($primary, 0.05) 0%,
-      rgba($primary, 0.02) 100%);
-  border-radius: $border-radius-lg;
-  border: 1px solid rgba($primary, 0.1);
-  position: relative;
-  overflow: hidden;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-
-  // Effet glow en arrière-plan
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 200px;
-    background: radial-gradient(circle, rgba($primary, 0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
+  margin-top: $space-12;
 
   p {
-    margin-bottom: $spacing-lg;
-    color: $text-gray-light;
-    font-size: 1.1rem;
-    position: relative;
-    z-index: 1;
-
-    strong {
-      color: $text-white;
-    }
-  }
-
-  .btn-primary {
-    position: relative;
-    z-index: 1;
-  }
-
-  @include respond-to('md') {
-    margin-top: 35px;
-    padding: 30px 20px;
-
-    p {
-      font-size: 1rem;
-    }
-  }
-
-  @include respond-to('sm') {
-    padding: 25px 16px;
-    margin-top: 25px;
-
-    p {
-      font-size: 0.95rem;
-    }
+    font-size: $fs-base;
+    color: $text-secondary;
+    margin-bottom: $space-6;
   }
 }
 
-// ============================================
-// ANIMATION D'APPARITION (optionnel)
-// ============================================
-.pricing-category {
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards;
-
-  @for $i from 1 through 6 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Désactive les animations sur mobile pour les performances
-@include respond-to('md') {
-  .pricing-category {
-    animation: none;
-    opacity: 1;
-  }
+.pricing-note {
+  text-align: center;
+  font-size: $fs-sm;
+  color: $text-muted;
+  margin-top: $space-6;
+  font-style: italic;
 }

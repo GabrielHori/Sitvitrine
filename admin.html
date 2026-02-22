@@ -5,106 +5,272 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Admin Hub - Horizon IT</title>
+    <title>Admin Hub — Horizon IT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+        rel="stylesheet">
     <style>
-        * {
+        :root {
+            --bg: #060611;
+            --bg2: #0a0a1a;
+            --card: #0d0d20;
+            --elevated: #111128;
+            --accent: #00e5ff;
+            --accent2: #7c4dff;
+            --warm: #ff6b6b;
+            --success: #00e676;
+            --warning: #ffab00;
+            --error: #ff5252;
+            --text: #f0f0f8;
+            --text2: #a0a0b8;
+            --text3: #6a6a80;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-h: rgba(0, 229, 255, 0.25);
+            --glass: rgba(13, 13, 32, 0.6);
+            --radius: 12px;
+            --font: 'Inter', sans-serif;
+            --font-h: 'Space Grotesk', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            padding: 20px;
-            background: #0a0a0a;
-            color: #fff;
-            margin: 0;
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .login-form {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
-            background: linear-gradient(135deg, #1a1a1a, #222);
-            border-radius: 15px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        ::selection {
+            background: rgba(0, 229, 255, 0.3);
         }
 
-        .login-form h1 {
-            text-align: center;
-            margin-bottom: 25px;
+        ::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .admin-hub {
-            display: none;
-            max-width: 1400px;
-            margin: 0 auto;
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
         }
 
-        /* Navigation Tabs */
-        .nav-tabs {
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* ── Login ── */
+        .login-wrapper {
+            min-height: 100vh;
             display: flex;
-            background: #1a1a1a;
-            border-radius: 12px 12px 0 0;
-            overflow: hidden;
-            border: 1px solid #333;
-            border-bottom: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .nav-tab {
-            flex: 1;
-            padding: 18px;
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
             text-align: center;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            color: #888;
-            transition: all 0.3s;
+        }
+
+        .login-box h1 {
+            font-family: var(--font-h);
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .login-box .sub {
+            color: var(--text3);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(6, 6, 17, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
             font-size: 1rem;
-            font-weight: 500;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 16px;
         }
 
-        .nav-tab.active {
-            background: linear-gradient(135deg, #00f0ff, #00b4d8);
-            color: #000;
+        .login-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+        }
+
+        .login-box .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
         }
 
-        .nav-tab:hover:not(.active) {
-            background: #252525;
-            color: #fff;
+        .login-box .btn-login:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            transform: translateY(-1px);
         }
 
-        /* Content Panels */
-        .tab-content {
-            background: linear-gradient(135deg, #1a1a1a, #111);
-            padding: 25px;
-            border-radius: 0 0 12px 12px;
-            min-height: 600px;
-            border: 1px solid #333;
-            border-top: none;
+        .login-error {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            min-height: 20px;
         }
 
-        .tab-panel {
+        /* ── Layout ── */
+        .admin-app {
             display: none;
+            min-height: 100vh;
         }
 
-        .tab-panel.active {
-            display: block;
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 240px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: transform 0.3s ease;
         }
 
-        /* Dashboard Grid */
-        .dashboard {
+        .sidebar-logo {
+            padding: 0 24px 24px;
+            font-family: var(--font-h);
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-logo span {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--text2);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: var(--font);
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--accent);
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--warm);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .sidebar-footer {
+            padding: 16px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 24px 32px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-header h2 {
+            font-family: var(--font-h);
+            font-size: 1.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--border-h);
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #1e1e1e, #252525);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #333;
             position: relative;
             overflow: hidden;
         }
@@ -114,843 +280,990 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 4px;
+            width: 3px;
             height: 100%;
-            background: linear-gradient(180deg, #00f0ff, #00b4d8);
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            border-radius: 3px 0 0 3px;
         }
 
         .stat-card h4 {
-            margin: 0 0 10px 0;
-            color: #888;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
+            color: var(--text3);
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00f0ff, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
-
-        /* Reviews Styles */
-        .reviews-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .review {
-            background: linear-gradient(135deg, #1e1e1e, #252525);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            transition: all 0.3s;
-        }
-
-        .review:hover {
-            border-color: #00f0ff;
-            transform: translateY(-2px);
-        }
-
-        .review h3 {
-            margin: 0 0 10px 0;
-            color: #00f0ff;
-        }
-
-        .review p {
-            margin: 8px 0;
-            color: #aaa;
-        }
-
-        .pending {
-            border-left: 4px solid #ffaa00;
-        }
-
-        .approved {
-            border-left: 4px solid #00ff88;
-        }
-
-        .default {
-            border-left: 4px solid #0088ff;
-        }
-
-        /* Leads */
-        .lead {
-            background: linear-gradient(135deg, #1e1e1e, #252525);
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            align-items: start;
-        }
-
-        .lead .meta {
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        .lead .message {
-            color: #ccc;
-            margin: 8px 0;
-            white-space: pre-line;
-        }
-
-        .lead .actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .lead .status-pill {
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #000;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
             font-weight: 600;
         }
 
-        .status-new {
-            background: #ffaa00;
-        }
-
-        .status-contacted {
-            background: #00d0ff;
-        }
-
-        .status-done {
-            background: #00ff88;
-            color: #003300;
-        }
-
-        /* Buttons */
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        .approve {
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
-            color: #000;
-        }
-
-        .delete {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: white;
-        }
-
-        .refresh {
-            background: linear-gradient(135deg, #00f0ff, #00b4d8);
-            color: #000;
-        }
-
-        .logout {
-            background: #333;
-            color: white;
-        }
-
-        .logout:hover {
-            background: #ff4444;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
-            color: #000;
-            padding: 12px 30px;
-            font-size: 1rem;
-        }
-
-        /* Form Styles */
-        input,
-        select {
-            padding: 12px 15px;
-            margin: 8px 0;
-            width: 100%;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #00f0ff;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        .error-msg {
-            color: #ff4444;
-            margin: 10px 0;
-        }
-
-        .success-msg {
-            color: #00ff88;
-            margin: 10px 0;
-        }
-
-        /* Header */
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #333;
-        }
-
-        .admin-header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, #00f0ff, #00ff88);
+        .stat-val {
+            font-family: var(--font-h);
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            line-height: 1;
         }
 
-        /* Stats Editor */
-        .stats-editor {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-top: 4px;
         }
 
-        .stat-input-group {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #333;
-        }
-
-        .stat-input-group h4 {
-            margin: 0 0 15px 0;
-            color: #00f0ff;
-        }
-
-        /* Recent Activity */
-        .recent-activity {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            margin-top: 20px;
-        }
-
-        .recent-activity h3 {
-            margin: 0 0 15px 0;
-            color: #00f0ff;
-        }
-
-        .activity-item {
-            padding: 12px;
-            background: #252525;
+        /* ── Buttons ── */
+        .btn {
+            padding: 8px 16px;
+            border: none;
             border-radius: 8px;
-            margin: 8px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-accent:hover {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #000;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text2);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--border-h);
+            color: var(--text);
+        }
+
+        .btn-warn {
+            background: var(--warning);
+            color: #000;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* ── Tables / Lists ── */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .list-item:hover {
+            border-color: var(--border-h);
+        }
+
+        .list-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .list-item .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .list-item .meta {
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-top: 2px;
+        }
+
+        .list-item .msg {
+            font-size: 0.85rem;
+            color: var(--text2);
+            margin-top: 6px;
+            white-space: pre-line;
+        }
+
+        .list-item .actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .pill-pending {
+            background: rgba(255, 171, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 171, 0, 0.2);
+        }
+
+        .pill-approved {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+
+        .pill-new {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .pill-contacted {
+            background: rgba(124, 77, 255, 0.1);
+            color: var(--accent2);
+            border: 1px solid rgba(124, 77, 255, 0.2);
+        }
+
+        .pill-done {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+
+        .rating {
+            color: #ffcc00;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        /* ── Filter bar ── */
+        .filter-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .activity-item .name {
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .activity-item .rating {
-            color: #ffcc00;
-        }
-
-        .activity-item .date {
-            color: #666;
+        .filter-bar select {
+            padding: 8px 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font);
             font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-bar select:focus {
+            border-color: var(--accent);
+        }
+
+        .count-label {
+            font-size: 0.8rem;
+            color: var(--text3);
+        }
+
+        /* ── Forms ── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(6, 6, 17, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .form-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .form-card h4 {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        .info-box {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            max-width: 400px;
+        }
+
+        .info-box p {
+            font-size: 0.85rem;
+            color: var(--text2);
+            margin: 6px 0;
+        }
+
+        .info-box strong {
+            color: var(--text);
+        }
+
+        /* ── Toast ── */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideIn 0.3s ease;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+            border: 1px solid;
+        }
+
+        .toast-success {
+            background: rgba(0, 230, 118, 0.1);
+            border-color: rgba(0, 230, 118, 0.3);
+            color: var(--success);
+        }
+
+        .toast-error {
+            background: rgba(255, 82, 82, 0.1);
+            border-color: rgba(255, 82, 82, 0.3);
+            color: var(--error);
+        }
+
+        .toast-info {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.3);
+            color: var(--accent);
+        }
+
+        .toast.hide {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* ── Loading ── */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text3);
+        }
+
+        /* ── Panel visibility ── */
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Mobile burger ── */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(6, 6, 17, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 60;
+            padding: 0 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-header h3 {
+            font-family: var(--font-h);
+            font-size: 1rem;
+        }
+
+        .mobile-header h3 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .burger-admin {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 45;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 55;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 72px 16px 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .list-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .list-item .actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 8px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-val {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- LOGIN FORM -->
-    <div id="login-form" class="login-form">
-        <h1>🔐 Connexion Admin</h1>
-        <input type="password" id="password" placeholder="Mot de passe admin">
-        <button onclick="login()">Se connecter</button>
-        <div id="login-error" class="error"></div>
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- LOGIN -->
+    <div class="login-wrapper" id="login-wrapper">
+        <div class="login-box">
+            <h1>🔐 Admin Hub</h1>
+            <p class="sub">Horizon IT — Panneau d'administration</p>
+            <input type="password" id="password" placeholder="Mot de passe" autocomplete="current-password">
+            <button class="btn-login" id="btn-login" onclick="login()">Se connecter</button>
+            <div class="login-error" id="login-error"></div>
+        </div>
     </div>
 
-    <!-- ADMIN HUB -->
-    <div id="admin-hub" class="admin-hub">
-        <div class="admin-header">
-            <h1>🚀 Admin Hub - Horizon IT</h1>
-            <button class="logout" onclick="logout()">Déconnexion</button>
-        </div>
+    <!-- MOBILE HEADER -->
+    <div class="mobile-header" id="mobile-header">
+        <h3>Horizon <span>IT</span></h3>
+        <button class="burger-admin" id="burger-admin" onclick="toggleSidebar()">☰</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-        <!-- NAVIGATION TABS -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('dashboard')">🏠 Dashboard</button>
-            <button class="nav-tab" onclick="switchTab('reviews')">📝 Avis</button>
-            <button class="nav-tab" onclick="switchTab('leads')">📩 Leads</button>
-            <button class="nav-tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
-        </div>
+    <!-- ADMIN APP -->
+    <div class="admin-app" id="admin-app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">Horizon <span>IT</span> Admin</div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-panel="dashboard" onclick="switchPanel('dashboard', this)">📊
+                    Dashboard</button>
+                <button class="nav-item" data-panel="reviews" onclick="switchPanel('reviews', this)">📝 Avis <span
+                        class="badge" id="badge-pending" style="display:none">0</span></button>
+                <button class="nav-item" data-panel="leads" onclick="switchPanel('leads', this)">📩 Leads <span
+                        class="badge" id="badge-leads" style="display:none">0</span></button>
+                <button class="nav-item" data-panel="settings" onclick="switchPanel('settings', this)">⚙️
+                    Paramètres</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="nav-item" onclick="logout()" style="color:var(--error)">🚪 Déconnexion</button>
+            </div>
+        </aside>
 
-        <!-- TAB CONTENT -->
-        <div class="tab-content">
-            <!-- DASHBOARD PANEL -->
-            <div id="dashboard-panel" class="tab-panel active">
-                <div class="dashboard">
-                    <div class="stat-card">
+        <!-- Main -->
+        <main class="main-content">
+            <!-- DASHBOARD -->
+            <div class="panel active" id="panel-dashboard">
+                <div class="page-header">
+                    <h2>📊 Dashboard</h2>
+                    <div class="header-actions"><button class="btn btn-ghost" onclick="loadDashboard()">🔄
+                            Actualiser</button></div>
+                </div>
+                <div class="stats-grid" id="dash-stats">
+                    <div class="card stat-card">
                         <h4>📝 Total Avis</h4>
-                        <div class="stat-number" id="stat-total-reviews">0</div>
+                        <div class="stat-val" id="s-total">0</div>
                         <div class="stat-label">avis reçus</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="card stat-card">
                         <h4>✅ Approuvés</h4>
-                        <div class="stat-number" id="stat-approved">0</div>
-                        <div class="stat-label">publiés sur le site</div>
+                        <div class="stat-val" id="s-approved">0</div>
+                        <div class="stat-label">publiés</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="card stat-card">
                         <h4>⏳ En attente</h4>
-                        <div class="stat-number" id="stat-pending">0</div>
+                        <div class="stat-val" id="s-pending">0</div>
                         <div class="stat-label">à modérer</div>
                     </div>
-                    <div class="stat-card">
-                        <h4>⭐ Note moyenne</h4>
-                        <div class="stat-number" id="stat-avg-rating">5.0</div>
-                        <div class="stat-label">sur 5 étoiles</div>
+                    <div class="card stat-card">
+                        <h4>⭐ Note</h4>
+                        <div class="stat-val" id="s-avg">5.0</div>
+                        <div class="stat-label">sur 5</div>
+                    </div>
+                    <div class="card stat-card">
+                        <h4>📩 Demandes</h4>
+                        <div class="stat-val" id="s-leads">0</div>
+                        <div class="stat-label">devis</div>
+                    </div>
+                    <div class="card stat-card">
+                        <h4>🆕 Nouveaux</h4>
+                        <div class="stat-val" id="s-leads-new">0</div>
+                        <div class="stat-label">à traiter</div>
                     </div>
                 </div>
-
-                <div class="stat-card">
-                    <h4>📩 Demandes</h4>
-                    <div class="stat-number" id="stat-leads-total">0</div>
-                    <div class="stat-label">devis reçus</div>
-                </div>
-                <div class="stat-card">
-                    <h4>🖊️ À traiter</h4>
-                    <div class="stat-number" id="stat-leads-new">0</div>
-                    <div class="stat-label">nouveaux leads</div>
+                <div class="card">
+                    <h4 style="margin-bottom:12px;color:var(--accent)">📋 Derniers avis</h4>
+                    <div id="recent-reviews">
+                        <div class="loading-state">
+                            <div class="spinner"></div> Chargement...
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="recent-activity">
-                <h3>📋 Derniers avis reçus</h3>
-                <div id="recent-reviews">Chargement...</div>
-            </div>
-        </div>
-
-        <!-- REVIEWS PANEL -->
-        <div id="reviews-panel" class="tab-panel">
-            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <button class="refresh" onclick="loadReviews()">🔄 Actualiser</button>
-                    <span id="reviews-count" style="margin-left: 15px; color: #888;"></span>
+            <!-- REVIEWS -->
+            <div class="panel" id="panel-reviews">
+                <div class="page-header">
+                    <h2>📝 Gestion des Avis</h2>
                 </div>
-                <select id="reviews-filter" onchange="filterReviews()" style="width: auto; padding: 10px 20px;">
-                    <option value="all">Tous les avis</option>
-                    <option value="pending">En attente</option>
-                    <option value="approved">Approuvés</option>
-                </select>
-            </div>
-            <div id="reviews-container" class="reviews-grid">Chargement des avis...</div>
-        </div>
-
-        <!-- LEADS PANEL -->
-        <div id="leads-panel" class="tab-panel">
-            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <button class="refresh" onclick="loadLeads()">🔄 Actualiser</button>
-                    <span id="leads-count" style="margin-left: 15px; color: #888;"></span>
+                <div class="filter-bar">
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button class="btn btn-ghost" onclick="loadReviews()">🔄 Actualiser</button>
+                        <span class="count-label" id="reviews-count"></span>
+                    </div>
+                    <select id="reviews-filter" onchange="filterReviews()">
+                        <option value="all">Tous les avis</option>
+                        <option value="pending">En attente</option>
+                        <option value="approved">Approuvés</option>
+                    </select>
                 </div>
-                <select id="leads-filter" onchange="filterLeads()" style="width: auto; padding: 10px 20px;">
-                    <option value="all">Tous</option>
-                    <option value="new">Nouveaux</option>
-                    <option value="contacted">Contacté</option>
-                    <option value="done">Clôturé</option>
-                </select>
-            </div>
-            <div id="leads-container" class="reviews-grid">Chargement des demandes...</div>
-        </div>
-
-        <!-- SETTINGS PANEL -->
-        <div id="settings-panel" class="tab-panel">
-            <h3 style="margin-bottom: 20px;">📊 Statistiques affichées sur le site</h3>
-            <p style="color: #888; margin-bottom: 20px;">Ces valeurs sont affichées dans la section statistiques de
-                votre site.</p>
-
-            <div class="stats-editor">
-                <div class="stat-input-group">
-                    <h4>🖥️ PC Montés</h4>
-                    <input type="number" id="input-pc-built" placeholder="Nombre de PC montés" min="0">
-                </div>
-                <div class="stat-input-group">
-                    <h4>😊 Clients Satisfaits</h4>
-                    <input type="number" id="input-happy-clients" placeholder="Nombre de clients" min="0">
-                </div>
-                <div class="stat-input-group">
-                    <h4>⏱️ Temps de réponse (h)</h4>
-                    <input type="number" id="input-response-time" placeholder="Heures" min="1" max="72">
+                <div id="reviews-container">
+                    <div class="loading-state">
+                        <div class="spinner"></div> Chargement...
+                    </div>
                 </div>
             </div>
 
-            <div style="margin-top: 30px;">
-                <button class="btn-save" onclick="saveStats()">💾 Sauvegarder les statistiques</button>
-                <span id="save-status" style="margin-left: 15px;"></span>
+            <!-- LEADS -->
+            <div class="panel" id="panel-leads">
+                <div class="page-header">
+                    <h2>📩 Gestion des Leads</h2>
+                </div>
+                <div class="filter-bar">
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button class="btn btn-ghost" onclick="loadLeads()">🔄 Actualiser</button>
+                        <span class="count-label" id="leads-count"></span>
+                    </div>
+                    <select id="leads-filter" onchange="filterLeads()">
+                        <option value="all">Tous</option>
+                        <option value="new">Nouveaux</option>
+                        <option value="contacted">Contactés</option>
+                        <option value="done">Clôturés</option>
+                    </select>
+                </div>
+                <div id="leads-container">
+                    <div class="loading-state">
+                        <div class="spinner"></div> Chargement...
+                    </div>
+                </div>
             </div>
 
-            <hr style="border-color: #333; margin: 40px 0;">
-
-            <h3 style="margin-bottom: 20px;">ℹ️ Informations système</h3>
-            <div class="stat-card" style="max-width: 400px;">
-                <p><strong>Version:</strong> 2.0.0</p>
-                <p><strong>Dernière connexion:</strong> <span id="last-login">-</span></p>
-                <p><strong>Statut:</strong> <span style="color: #00ff88;">✅ Opérationnel</span></p>
+            <!-- SETTINGS -->
+            <div class="panel" id="panel-settings">
+                <div class="page-header">
+                    <h2>⚙️ Paramètres</h2>
+                </div>
+                <h3 style="margin-bottom:16px;font-size:1rem">📊 Statistiques du site</h3>
+                <p style="color:var(--text3);margin-bottom:16px;font-size:0.85rem">Ces valeurs s'affichent dans la
+                    section stats de votre site.</p>
+                <div class="form-grid">
+                    <div class="form-card">
+                        <h4>🖥️ PC Montés</h4>
+                        <div class="form-group"><input type="number" id="input-pc" placeholder="Ex: 50" min="0"></div>
+                    </div>
+                    <div class="form-card">
+                        <h4>😊 Clients Satisfaits</h4>
+                        <div class="form-group"><input type="number" id="input-clients" placeholder="Ex: 100" min="0">
+                        </div>
+                    </div>
+                    <div class="form-card">
+                        <h4>⏱️ Réponse (h)</h4>
+                        <div class="form-group"><input type="number" id="input-response" placeholder="Ex: 2" min="1"
+                                max="72"></div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;display:flex;gap:10px;align-items:center">
+                    <button class="btn btn-success" onclick="saveStats()">💾 Sauvegarder</button>
+                    <span id="save-status" style="font-size:0.85rem"></span>
+                </div>
+                <hr class="divider">
+                <h3 style="margin-bottom:16px;font-size:1rem">ℹ️ Système</h3>
+                <div class="info-box">
+                    <p><strong>Version:</strong> 2.0.0</p>
+                    <p><strong>Dernière connexion:</strong> <span id="last-login">—</span></p>
+                    <p><strong>Session:</strong> <span style="color:var(--success)">✅ Active</span></p>
+                </div>
             </div>
-        </div>
-    </div>
+        </main>
     </div>
 
     <script>
+        // ============================================
+        // GLOBALS
+        // ============================================
         let authToken = localStorage.getItem('admin-token');
-        let currentTab = 'dashboard';
+        let currentPanel = 'dashboard';
         let allReviews = [];
         let allLeads = [];
+        const SESSION_TIMEOUT = 4 * 60 * 60 * 1000; // 4h
 
-        // Vérifier si déjà connecté
-        if (authToken) {
-            showAdminHub();
-            loadDashboard();
+        // ── Toast System ──
+        function toast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            el.className = `toast toast-${type}`;
+            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            el.innerHTML = `<span>${icons[type] || ''}</span> ${message}`;
+            container.appendChild(el);
+            setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 300); }, 3500);
         }
 
-        // ============================================
-        // AUTHENTICATION
-        // ============================================
-        async function login() {
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('login-error');
-
-            try {
-                const response = await fetch('/.netlify/functions/auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    authToken = result.token;
-                    localStorage.setItem('admin-token', authToken);
-                    localStorage.setItem('last-login', new Date().toLocaleString('fr-FR'));
-                    showAdminHub();
-                    loadDashboard();
-                    errorDiv.textContent = '';
-                } else {
-                    errorDiv.textContent = result.error;
-                }
-            } catch (error) {
-                errorDiv.textContent = 'Erreur de connexion';
+        // ── Session Check ──
+        function checkSession() {
+            const loginTime = localStorage.getItem('admin-login-time');
+            if (loginTime && Date.now() - parseInt(loginTime) > SESSION_TIMEOUT) {
+                logout();
+                toast('Session expirée, veuillez vous reconnecter', 'error');
+                return false;
             }
+            return true;
         }
 
-        function showAdminHub() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('admin-hub').style.display = 'block';
+        // Init
+        if (authToken && checkSession()) { showAdmin(); loadDashboard(); }
+
+        // ── Auth ──
+        async function login() {
+            const pwd = document.getElementById('password').value;
+            const errDiv = document.getElementById('login-error');
+            const btn = document.getElementById('btn-login');
+            btn.textContent = 'Connexion...'; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
+                const data = await res.json();
+                if (res.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('admin-token', authToken);
+                    localStorage.setItem('admin-login-time', Date.now().toString());
+                    localStorage.setItem('last-login', new Date().toLocaleString('fr-FR'));
+                    showAdmin(); loadDashboard();
+                    toast('Connecté avec succès', 'success');
+                    errDiv.textContent = '';
+                } else { errDiv.textContent = data.error || 'Identifiants invalides'; }
+            } catch (e) { errDiv.textContent = 'Erreur de connexion au serveur'; }
+            btn.textContent = 'Se connecter'; btn.disabled = false;
+        }
+
+        function showAdmin() {
+            document.getElementById('login-wrapper').style.display = 'none';
+            document.getElementById('admin-app').style.display = 'block';
             document.getElementById('last-login').textContent = localStorage.getItem('last-login') || 'Première connexion';
         }
 
         function logout() {
             localStorage.removeItem('admin-token');
+            localStorage.removeItem('admin-login-time');
             authToken = null;
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('admin-hub').style.display = 'none';
+            document.getElementById('login-wrapper').style.display = 'flex';
+            document.getElementById('admin-app').style.display = 'none';
             document.getElementById('password').value = '';
         }
 
-        // ============================================
-        // TAB NAVIGATION
-        // ============================================
-        function switchTab(tabName) {
-            // Update tab buttons
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Update panels
-            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-            document.getElementById(tabName + '-panel').classList.add('active');
-
-            currentTab = tabName;
-
-            // Load data for the active tab
-            if (tabName === 'dashboard') loadDashboard();
-            if (tabName === 'reviews') loadReviews();
-            if (tabName === 'leads') loadLeads();
-            if (tabName === 'settings') loadSiteStats();
+        // ── Sidebar ──
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebar-overlay').classList.toggle('open');
         }
 
-        // ============================================
-        // DASHBOARD
-        // ============================================
+        function switchPanel(name, btn) {
+            if (!checkSession()) return;
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item[data-panel]').forEach(n => n.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+            if (btn) btn.classList.add('active');
+            currentPanel = name;
+            if (name === 'dashboard') loadDashboard();
+            if (name === 'reviews') loadReviews();
+            if (name === 'leads') loadLeads();
+            if (name === 'settings') loadSiteStats();
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('open');
+        }
+
+        // ── Dashboard ──
         async function loadDashboard() {
-            if (!authToken) return;
-
+            if (!authToken || !checkSession()) return;
             try {
-                const response = await fetch('/.netlify/functions/admin-stats', {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-
-                if (response.status === 401) {
-                    logout();
-                    return;
+                const res = await fetch('/.netlify/functions/admin-stats', { headers: { 'Authorization': `Bearer ${authToken}` } });
+                if (res.status === 401) { logout(); return; }
+                const s = await res.json();
+                document.getElementById('s-total').textContent = s.reviews?.total ?? 0;
+                document.getElementById('s-approved').textContent = s.reviews?.approved ?? 0;
+                document.getElementById('s-pending').textContent = s.reviews?.pending ?? 0;
+                document.getElementById('s-avg').textContent = s.reviews?.avgRating || '5.0';
+                document.getElementById('s-leads').textContent = s.leads?.total ?? 0;
+                document.getElementById('s-leads-new').textContent = s.leads?.new ?? 0;
+                // Badges
+                const pending = s.reviews?.pending ?? 0;
+                const newLeads = s.leads?.new ?? 0;
+                const bp = document.getElementById('badge-pending');
+                const bl = document.getElementById('badge-leads');
+                bp.style.display = pending > 0 ? 'inline' : 'none'; bp.textContent = pending;
+                bl.style.display = newLeads > 0 ? 'inline' : 'none'; bl.textContent = newLeads;
+                // Recent reviews
+                displayRecent(s.recent);
+                // Pre-fill settings
+                if (s.site) {
+                    document.getElementById('input-pc').value = s.site.pcBuilt;
+                    document.getElementById('input-clients').value = s.site.happyClients;
+                    document.getElementById('input-response').value = s.site.responseTime;
                 }
-
-                const stats = await response.json();
-
-                // Update stats cards
-                document.getElementById('stat-total-reviews').textContent = stats.reviews.total;
-                document.getElementById('stat-approved').textContent = stats.reviews.approved;
-                document.getElementById('stat-pending').textContent = stats.reviews.pending;
-                document.getElementById('stat-avg-rating').textContent = stats.reviews.avgRating || '5.0';
-                if (stats.leads) {
-                    document.getElementById('stat-leads-total').textContent = stats.leads.total ?? 0;
-                    document.getElementById('stat-leads-new').textContent = stats.leads.new ?? 0;
-                }
-
-                // Update recent reviews
-                displayRecentReviews(stats.recent);
-
-                // Store site stats for settings
-                if (stats.site) {
-                    document.getElementById('input-pc-built').value = stats.site.pcBuilt;
-                    document.getElementById('input-happy-clients').value = stats.site.happyClients;
-                    document.getElementById('input-response-time').value = stats.site.responseTime;
-                }
-
-            } catch (error) {
-                console.error('Erreur dashboard:', error);
-            }
+            } catch (e) { console.error('Dashboard error:', e); }
         }
 
-        function displayRecentReviews(reviews) {
-            const container = document.getElementById('recent-reviews');
-
-            if (!reviews || reviews.length === 0) {
-                container.innerHTML = '<p style="color: #666;">Aucun avis récent</p>';
-                return;
-            }
-
-            container.innerHTML = reviews.map(r => `
-                <div class="activity-item">
+        function displayRecent(reviews) {
+            const c = document.getElementById('recent-reviews');
+            if (!reviews || reviews.length === 0) { c.innerHTML = '<p style="color:var(--text3)">Aucun avis récent</p>'; return; }
+            c.innerHTML = reviews.map(r => `
+            <div class="list-item" style="margin-bottom:6px;padding:12px">
+                <div class="info">
                     <span class="name">${r.name}</span>
-                    <span class="rating">${'⭐'.repeat(r.rating)}</span>
-                    <span class="date">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
-                    <span style="color: ${r.approved ? '#00ff88' : '#ffaa00'};">${r.approved ? '✅' : '⏳'}</span>
+                    <span class="rating" style="margin-left:8px">${'⭐'.repeat(r.rating)}</span>
                 </div>
-            `).join('');
+                <span style="font-size:0.8rem;color:var(--text3)">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
+                <span class="pill ${r.approved ? 'pill-approved' : 'pill-pending'}">${r.approved ? 'Approuvé' : 'En attente'}</span>
+            </div>`).join('');
         }
 
-        // ============================================
-        // REVIEWS MANAGEMENT
-        // ============================================
+        // ── Reviews ──
         async function loadReviews() {
-            if (!authToken) return;
-
+            if (!authToken || !checkSession()) return;
             try {
-                const response = await fetch('/.netlify/functions/admin-reviews', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    allReviews = await response.json();
-                    filterReviews();
-                } else if (response.status === 401) {
-                    logout();
-                } else {
-                    document.getElementById('reviews-container').innerHTML = '<p style="color: #ff4444;">Erreur lors du chargement</p>';
-                }
-            } catch (error) {
-                document.getElementById('reviews-container').innerHTML = '<p style="color: #ff4444;">Erreur de connexion</p>';
-            }
+                const res = await fetch('/.netlify/functions/admin-reviews', { headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } });
+                if (res.ok) { allReviews = await res.json(); filterReviews(); }
+                else if (res.status === 401) logout();
+                else document.getElementById('reviews-container').innerHTML = '<p style="color:var(--error)">Erreur de chargement</p>';
+            } catch (e) { document.getElementById('reviews-container').innerHTML = '<p style="color:var(--error)">Erreur de connexion</p>'; }
         }
 
         function filterReviews() {
-            const filter = document.getElementById('reviews-filter').value;
+            const f = document.getElementById('reviews-filter').value;
             let filtered = allReviews;
-
-            if (filter === 'pending') {
-                filtered = allReviews.filter(r => !r.approved);
-            } else if (filter === 'approved') {
-                filtered = allReviews.filter(r => r.approved);
-            }
-
-            displayAdminReviews(filtered);
+            if (f === 'pending') filtered = allReviews.filter(r => !r.approved);
+            else if (f === 'approved') filtered = allReviews.filter(r => r.approved);
+            const p = allReviews.filter(r => !r.approved).length;
+            const a = allReviews.filter(r => r.approved).length;
+            document.getElementById('reviews-count').textContent = `${allReviews.length} total • ${p} en attente • ${a} approuvés`;
+            displayReviews(filtered);
         }
 
-        function displayAdminReviews(reviews) {
-            const container = document.getElementById('reviews-container');
-            const countSpan = document.getElementById('reviews-count');
-
-            const pending = allReviews.filter(r => !r.approved).length;
-            const approved = allReviews.filter(r => r.approved).length;
-            countSpan.textContent = `${allReviews.length} total • ${pending} en attente • ${approved} approuvés`;
-
-            if (reviews.length === 0) {
-                container.innerHTML = '<p style="color: #666;">Aucun avis correspondant.</p>';
-                return;
-            }
-
-            container.innerHTML = reviews.map(review => `
-                <div class="review ${review.approved ? 'approved' : 'pending'} ${review.isDefault ? 'default' : ''}">
-                    <h3>${review.name} ${'⭐'.repeat(review.rating)} ${review.isDefault ? '<span style="color: #0088ff;">(Par défaut)</span>' : ''}</h3>
-                    <p><strong>Service:</strong> ${review.service || 'Non spécifié'}</p>
-                    <p style="font-style: italic; color: #ccc;">"${review.text}"</p>
-                    <p><small style="color: #666;">${review.date || new Date(review.created_at).toLocaleDateString('fr-FR')} • ${review.approved ? '<span style="color: #00ff88;">✅ Approuvé</span>' : '<span style="color: #ffaa00;">⏳ En attente</span>'}</small></p>
-                    <div style="margin-top: 10px;">
-                        ${!review.approved ? `<button class="approve" onclick="approveReview(${review.id})">✅ Approuver</button>` : ''}
-                        <button class="delete" onclick="deleteReview(${review.id}, '${review.name}')">🗑️ Supprimer</button>
-                    </div>
+        function displayReviews(reviews) {
+            const c = document.getElementById('reviews-container');
+            if (!reviews.length) { c.innerHTML = '<p style="color:var(--text3)">Aucun avis.</p>'; return; }
+            c.innerHTML = reviews.map(r => `
+            <div class="list-item">
+                <div class="info">
+                    <div><span class="name">${r.name}</span> <span class="rating">${'⭐'.repeat(r.rating)}</span> ${r.isDefault ? '<span class="pill pill-new">Défaut</span>' : ''}</div>
+                    <div class="meta">Service: ${r.service || 'N/A'} • ${r.date || new Date(r.created_at).toLocaleDateString('fr-FR')} • <span class="pill ${r.approved ? 'pill-approved' : 'pill-pending'}">${r.approved ? 'Approuvé' : 'En attente'}</span></div>
+                    <div class="msg" style="font-style:italic">"${r.text}"</div>
                 </div>
-            `).join('');
+                <div class="actions">
+                    ${!r.approved ? `<button class="btn btn-success btn-sm" onclick="approveReview(${r.id})">✅ Approuver</button>` : ''}
+                    <button class="btn btn-danger btn-sm" onclick="deleteReview(${r.id}, '${(r.name || '').replace(/'/g, "\\'")}')">🗑️</button>
+                </div>
+            </div>`).join('');
         }
 
-        async function approveReview(id) {
-            await adminAction('approve', id);
-        }
-
-        async function deleteReview(id, name) {
-            if (confirm(`Supprimer l'avis de ${name} ?`)) {
-                await adminAction('delete', id);
-            }
-        }
-
-        async function adminAction(action, reviewId) {
+        async function approveReview(id) { await reviewAction('approve', id); }
+        async function deleteReview(id, name) { if (confirm(`Supprimer l'avis de ${name} ?`)) await reviewAction('delete', id); }
+        async function reviewAction(action, reviewId) {
             try {
-                const response = await fetch('/.netlify/functions/admin-reviews', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ action, reviewId })
-                });
-
-                if (response.ok) {
-                    loadReviews();
-                } else if (response.status === 401) {
-                    logout();
-                } else {
-                    alert('Erreur lors de l\'action');
-                }
-            } catch (error) {
-                alert('Erreur de connexion');
-            }
+                const res = await fetch('/.netlify/functions/admin-reviews', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action, reviewId }) });
+                if (res.ok) { toast(action === 'approve' ? 'Avis approuvé !' : 'Avis supprimé', action === 'approve' ? 'success' : 'info'); loadReviews(); loadDashboard(); }
+                else if (res.status === 401) logout();
+                else toast('Erreur lors de l\'action', 'error');
+            } catch (e) { toast('Erreur de connexion', 'error'); }
         }
 
-        // ============================================
-        // LEADS MANAGEMENT
-        // ============================================
+        // ── Leads ──
         async function loadLeads() {
-            if (!authToken) return;
-
+            if (!authToken || !checkSession()) return;
             try {
-                const response = await fetch('/.netlify/functions/admin-leads', {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-
-                if (response.ok) {
-                    allLeads = await response.json();
-                    filterLeads();
-                } else if (response.status === 401) {
-                    logout();
-                } else {
-                    document.getElementById('leads-container').innerHTML = '<p style="color: #ff4444;">Erreur lors du chargement</p>';
-                }
-            } catch (error) {
-                document.getElementById('leads-container').innerHTML = '<p style="color: #ff4444;">Erreur de connexion</p>';
-            }
+                const res = await fetch('/.netlify/functions/admin-leads', { headers: { 'Authorization': `Bearer ${authToken}` } });
+                if (res.ok) { allLeads = await res.json(); filterLeads(); }
+                else if (res.status === 401) logout();
+                else document.getElementById('leads-container').innerHTML = '<p style="color:var(--error)">Erreur</p>';
+            } catch (e) { document.getElementById('leads-container').innerHTML = '<p style="color:var(--error)">Erreur connexion</p>'; }
         }
 
         function filterLeads() {
-            const filter = document.getElementById('leads-filter').value;
-            let filtered = allLeads;
-
-            if (filter !== 'all') {
-                filtered = allLeads.filter(l => l.status === filter);
-            }
-
+            const f = document.getElementById('leads-filter').value;
+            let filtered = f === 'all' ? allLeads : allLeads.filter(l => l.status === f);
+            const cn = allLeads.filter(l => l.status === 'new').length;
+            const cc = allLeads.filter(l => l.status === 'contacted').length;
+            const cd = allLeads.filter(l => l.status === 'done').length;
+            document.getElementById('leads-count').textContent = `${allLeads.length} total • ${cn} nouveaux • ${cc} contactés • ${cd} clôturés`;
             displayLeads(filtered);
         }
 
         function displayLeads(leads) {
-            const container = document.getElementById('leads-container');
-            const countSpan = document.getElementById('leads-count');
-
-            const countNew = allLeads.filter(l => l.status === 'new').length;
-            const countContacted = allLeads.filter(l => l.status === 'contacted').length;
-            const countDone = allLeads.filter(l => l.status === 'done').length;
-            countSpan.textContent = `${allLeads.length} total • ${countNew} nouveaux • ${countContacted} contactés • ${countDone} clôturés`;
-
-            if (!leads || leads.length === 0) {
-                container.innerHTML = '<p style="color: #666;">Aucune demande.</p>';
-                return;
-            }
-
-            container.innerHTML = leads.map(lead => {
-                const statusClass = lead.status ? `status-${lead.status}` : 'status-new';
-                const statusLabel = lead.status === 'done' ? 'Clôturé' : lead.status === 'contacted' ? 'Contacté' : 'Nouveau';
-                const date = lead.created_at ? new Date(lead.created_at).toLocaleString('fr-FR') : '';
+            const c = document.getElementById('leads-container');
+            if (!leads || !leads.length) { c.innerHTML = '<p style="color:var(--text3)">Aucune demande.</p>'; return; }
+            c.innerHTML = leads.map(l => {
+                const statusMap = { done: ['Clôturé', 'pill-done'], contacted: ['Contacté', 'pill-contacted'], new: ['Nouveau', 'pill-new'] };
+                const [label, cls] = statusMap[l.status] || statusMap.new;
+                const d = l.created_at ? new Date(l.created_at).toLocaleString('fr-FR') : '';
                 return `
-                    <div class="lead">
-                        <div>
-                            <div><strong>${lead.name || 'Sans nom'}</strong> • <span class="meta">${lead.email || 'N/A'}</span></div>
-                            <div class="meta">Service: ${lead.service || 'Non spécifié'} • ${date}</div>
-                            <div class="message">${lead.message || ''}</div>
-                        </div>
-                        <div class="actions">
-                            <span class="status-pill ${statusClass}">${statusLabel}</span>
-                            ${lead.status !== 'contacted' ? `<button class="approve" onclick="updateLead(${lead.id}, 'contacted')">📞 Contacté</button>` : ''}
-                            ${lead.status !== 'done' ? `<button class="approve" onclick="updateLead(${lead.id}, 'done')">✅ Clôturer</button>` : ''}
-                            <button class="delete" onclick="deleteLead(${lead.id}, '${lead.name || ''}')">🗑️</button>
-                        </div>
-                    </div>
-                `;
+            <div class="list-item">
+                <div class="info">
+                    <div><span class="name">${l.name || 'Sans nom'}</span> • <span class="meta">${l.email || 'N/A'}</span></div>
+                    <div class="meta">Service: ${l.service || 'N/A'} • ${d}</div>
+                    ${l.message ? `<div class="msg">${l.message}</div>` : ''}
+                </div>
+                <div class="actions">
+                    <span class="pill ${cls}">${label}</span>
+                    ${l.status !== 'contacted' ? `<button class="btn btn-accent btn-sm" onclick="updateLead(${l.id},'contacted')">📞</button>` : ''}
+                    ${l.status !== 'done' ? `<button class="btn btn-success btn-sm" onclick="updateLead(${l.id},'done')">✅</button>` : ''}
+                    <button class="btn btn-danger btn-sm" onclick="deleteLead(${l.id},'${(l.name || '').replace(/'/g, "\\'")}')">🗑️</button>
+                </div>
+            </div>`;
             }).join('');
         }
 
-        async function updateLead(id, status) {
-            await leadAction('update', id, status);
-        }
-
-        async function deleteLead(id, name) {
-            if (confirm(`Supprimer la demande de ${name || 'ce contact'} ?`)) {
-                await leadAction('delete', id);
-            }
-        }
-
+        async function updateLead(id, status) { await leadAction('update', id, status); }
+        async function deleteLead(id, name) { if (confirm(`Supprimer la demande de ${name || 'ce contact'} ?`)) await leadAction('delete', id); }
         async function leadAction(action, leadId, status = null) {
             try {
-                const response = await fetch('/.netlify/functions/admin-leads', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ action, leadId, status })
-                });
-
-                if (response.ok) {
-                    loadLeads();
-                } else if (response.status === 401) {
-                    logout();
-                } else {
-                    alert('Erreur lors de l\'action lead');
-                }
-            } catch (error) {
-                alert('Erreur de connexion');
-            }
+                const res = await fetch('/.netlify/functions/admin-leads', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action, leadId, status }) });
+                if (res.ok) { toast(action === 'delete' ? 'Lead supprimé' : 'Lead mis à jour', action === 'delete' ? 'info' : 'success'); loadLeads(); loadDashboard(); }
+                else if (res.status === 401) logout();
+                else toast('Erreur action lead', 'error');
+            } catch (e) { toast('Erreur de connexion', 'error'); }
         }
 
-        // ============================================
-        // SETTINGS - SITE STATS
-        // ============================================
+        // ── Settings ──
         async function loadSiteStats() {
-            if (!authToken) return;
-
+            if (!authToken || !checkSession()) return;
             try {
-                const response = await fetch('/.netlify/functions/admin-stats', {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.site) {
-                        document.getElementById('input-pc-built').value = data.site.pcBuilt || 50;
-                        document.getElementById('input-happy-clients').value = data.site.happyClients || 100;
-                        document.getElementById('input-response-time').value = data.site.responseTime || 24;
+                const res = await fetch('/.netlify/functions/admin-stats', { headers: { 'Authorization': `Bearer ${authToken}` } });
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.site) {
+                        document.getElementById('input-pc').value = d.site.pcBuilt || 50;
+                        document.getElementById('input-clients').value = d.site.happyClients || 100;
+                        document.getElementById('input-response').value = d.site.responseTime || 24;
                     }
                 }
-            } catch (error) {
-                console.error('Erreur chargement stats:', error);
-            }
+            } catch (e) { console.error('Stats load error:', e); }
         }
 
         async function saveStats() {
-            if (!authToken) return;
-
-            const statusSpan = document.getElementById('save-status');
-            statusSpan.textContent = '⏳ Sauvegarde...';
-            statusSpan.style.color = '#ffaa00';
-
-            const pcBuilt = parseInt(document.getElementById('input-pc-built').value) || 50;
-            const happyClients = parseInt(document.getElementById('input-happy-clients').value) || 100;
-            const responseTime = parseInt(document.getElementById('input-response-time').value) || 24;
-
+            if (!authToken || !checkSession()) return;
+            const span = document.getElementById('save-status');
+            span.innerHTML = '<span class="spinner"></span> Sauvegarde...'; span.style.color = 'var(--warning)';
+            const pcBuilt = parseInt(document.getElementById('input-pc').value) || 50;
+            const happyClients = parseInt(document.getElementById('input-clients').value) || 100;
+            const responseTime = parseInt(document.getElementById('input-response').value) || 24;
             try {
-                const response = await fetch('/.netlify/functions/admin-stats', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ pcBuilt, happyClients, responseTime })
-                });
-
-                if (response.ok) {
-                    statusSpan.textContent = '✅ Sauvegardé !';
-                    statusSpan.style.color = '#00ff88';
-                    setTimeout(() => { statusSpan.textContent = ''; }, 3000);
-                } else {
-                    throw new Error('Erreur serveur');
-                }
-            } catch (error) {
-                statusSpan.textContent = '❌ Erreur de sauvegarde';
-                statusSpan.style.color = '#ff4444';
-            }
+                const res = await fetch('/.netlify/functions/admin-stats', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ pcBuilt, happyClients, responseTime }) });
+                if (res.ok) { span.textContent = ''; toast('Statistiques sauvegardées !', 'success'); }
+                else { const e = await res.json(); span.textContent = ''; toast(e.error || 'Erreur sauvegarde', 'error'); }
+            } catch (e) { span.textContent = ''; toast('Erreur de connexion', 'error'); }
         }
 
-        // ============================================
-        // AUTO-REFRESH
-        // ============================================
+        // ── Auto-refresh (only active panel) ──
         setInterval(() => {
-            if (currentTab === 'dashboard') loadDashboard();
-            if (currentTab === 'reviews') loadReviews();
-            if (currentTab === 'leads') loadLeads();
-        }, 30000); // Refresh toutes les 30 secondes
+            if (!authToken || !checkSession()) return;
+            if (currentPanel === 'dashboard') loadDashboard();
+            else if (currentPanel === 'reviews') loadReviews();
+            else if (currentPanel === 'leads') loadLeads();
+        }, 30000);
 
-        // Connexion avec Enter
-        document.getElementById('password').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
+        // Enter key login
+        document.getElementById('password').addEventListener('keypress', e => { if (e.key === 'Enter') login(); });
     </script>
 </body>
 

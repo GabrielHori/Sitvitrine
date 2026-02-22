@@ -1,79 +1,246 @@
 // ============================================
-// ANIMATIONS
+// ANIMATIONS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-// Slide in up
-@keyframes slideInUp {
+// ── Keyframes ──
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-// Glow pulse
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba($primary, 0.3);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
   50% {
-    box-shadow: 0 0 30px rgba($primary, 0.6);
+    transform: translateY(-12px);
   }
 }
 
-// Glow fade pour les liens
-@keyframes glowFade {
+@keyframes float-delayed {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-16px) rotate(-2deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px $accent-glow;
+  }
+
+  50% {
+    box-shadow: 0 0 40px $accent-glow-strong;
+  }
+}
+
+@keyframes scroll-wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes rotate-slow {
   from {
-    text-shadow: 0 0 5px $primary, 0 0 15px rgba($primary, 0.2);
+    transform: rotate(0deg);
   }
+
   to {
-    text-shadow: 0 0 15px $primary, 0 0 25px rgba($primary, 0.5);
+    transform: rotate(360deg);
   }
 }
 
-// Typing effect
-@keyframes typing {
-  from {
-    width: 0;
+@keyframes orb-float-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
   }
-  to {
-    width: 100%;
+
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
   }
 }
 
-// Bounce (scroll indicator)
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateX(-50%) translateY(0);
+@keyframes orb-float-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
   }
-  40% {
-    transform: translateX(-50%) translateY(-10px);
+
+  33% {
+    transform: translate(-40px, 20px) scale(1.05);
   }
-  60% {
-    transform: translateX(-50%) translateY(-5px);
+
+  66% {
+    transform: translate(20px, -40px) scale(0.95);
   }
 }
 
-// Animation au scroll - visible par défaut, GSAP gère les animations
+@keyframes orb-float-3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(20px, 40px) scale(0.95);
+  }
+
+  66% {
+    transform: translate(-30px, -20px) scale(1.1);
+  }
+}
+
+// ── Ambient background orbs ──
+.ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+
+  &--1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba($accent, 0.2) 0%, transparent 70%);
+    top: -10%;
+    left: -5%;
+    animation: orb-float-1 20s ease-in-out infinite;
+  }
+
+  &--2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba($accent-secondary, 0.15) 0%, transparent 70%);
+    top: 40%;
+    right: -10%;
+    animation: orb-float-2 25s ease-in-out infinite;
+  }
+
+  &--3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba($accent, 0.1) 0%, transparent 70%);
+    bottom: -5%;
+    left: 30%;
+    animation: orb-float-3 22s ease-in-out infinite;
+  }
+}
+
+// ── Matrix canvas ──
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $z-canvas;
+  background: $bg-primary;
+  will-change: opacity;
+}
+
+// ── Cursor glow ──
+#cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba($accent, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: $z-cursor;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  opacity: 0;
+
+  @media (hover: hover) {
+    opacity: 1;
+  }
+
+  @include respond-to('md') {
+    display: none;
+  }
+}
+
+// ── Scroll-triggered animations ──
 .animate-on-scroll {
-  opacity: 1;
-  transform: translateY(0);
-  transition: all $transition-slow;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s $ease-out-expo, transform 0.6s $ease-out-expo;
 
   &.visible {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
-// Typing effect
-.typing-effect {
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 3s steps(20, end);
-}
-

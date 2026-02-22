@@ -1,88 +1,21 @@
 // ============================================
-// SECTION AVIS CLIENTS
+// AVIS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
-
-#avis {
-  padding: 70px 5%;
-  background: linear-gradient(135deg, rgba($bg-color, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%);
-
-  @include respond-to('md') {
-    padding: 50px 4%;
-  }
-}
+@use '../variables' as *;
+@use '../mixins' as *;
 
 .reviews-container {
-  margin-bottom: 50px;
+  max-width: $container-max;
+  margin: 0 auto;
 }
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  margin-bottom: $spacing-xxl;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $space-6;
 
-  @include respond-to('md') {
+  @include respond-to('sm') {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: $space-4;
   }
-}
-
-.review-card {
-  @include glass-effect;
-  border: 1px solid rgba($primary, 0.1);
-  border-radius: 12px;
-  padding: 22px 20px;
-  @include transition;
-  position: relative;
-
-  &:hover {
-    border-color: rgba($primary, 0.3);
-    box-shadow: 0 0 20px rgba($primary, 0.1);
-  }
-
-  @include respond-to('sm') {
-    padding: 18px 15px;
-  }
-}
-
-.review-header {
-  @include flex-between;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.review-client {
-  font-weight: 700;
-  color: $primary;
-  font-size: 1.05rem;
-}
-
-.review-rating {
-  font-size: 1.1rem;
-}
-
-.review-service {
-  font-size: $font-size-small;
-  color: $text-gray;
-  margin-bottom: 12px;
-  font-style: italic;
-}
-
-.review-text {
-  line-height: 1.6;
-  color: #e8e8e8; // Légèrement plus lisible
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-
-  @include respond-to('sm') {
-    font-size: 0.9rem;
-  }
-}
-
-.review-date {
-  font-size: 0.8rem;
-  color: $text-gray;
-  text-align: right;
 }

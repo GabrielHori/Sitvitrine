@@ -1,66 +1,72 @@
 // ============================================
-// RESET & BASE STYLES
+// RESET - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
 
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 
-// Amélioration du touch sur mobile
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: $bg-primary;
+  color: $text-primary;
+  font-family: $font-body;
+  font-size: $fs-base;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// Scrollbar custom (desktop only)
+@media (min-width: $bp-md + 1) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: $bg-primary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $accent, $accent-secondary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: $accent;
+  }
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: $accent $bg-primary;
+  }
+}
+
+// Tap highlight removal on mobile
 @media (hover: none) {
   * {
     -webkit-tap-highlight-color: transparent;
   }
 }
 
-body {
-  background-color: $bg-color;
-  color: $text-white;
-  font-family: $font-body;
-  overflow-x: hidden;
-  // Amélioration de la lisibilité texte
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-// Scrollbar personnalisée - Desktop uniquement
-@media (min-width: 769px) {
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #0a0a0a;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, $primary, #0080a0);
-    border-radius: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, $primary, #00c0e0);
-  }
-
-  // Firefox
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: $primary #0a0a0a;
-  }
-}
-
-// Focus visible pour accessibilité
+// Focus visible
 *:focus-visible {
-  outline: 2px solid $primary;
-  outline-offset: 2px;
+  outline: 2px solid $accent;
+  outline-offset: 3px;
 }
 
-// Réduction des animations si préférence utilisateur
+// Reduced motion
 @media (prefers-reduced-motion: reduce) {
 
   *,
@@ -73,26 +79,37 @@ body {
   }
 }
 
-// Content principal
+// Base elements
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color $t-fast;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
 #site-content {
   width: 100%;
   min-height: 100vh;
   will-change: opacity;
+  position: relative;
 }
 
-// Liens globaux
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-// Images responsive
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-// Liste sans style
-ul {
-  list-style: none;
+// Selection
+::selection {
+  background: rgba($accent, 0.3);
+  color: $text-primary;
 }

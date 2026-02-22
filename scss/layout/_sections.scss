@@ -1,37 +1,10 @@
 // ============================================
-// LAYOUT SECTIONS DE BASE
+// SECTIONS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-// Style de base pour toutes les sections
 section {
-  padding: $spacing-section 5%;
-  
-  @include respond-to('md') {
-    padding: $spacing-section-mobile 5%;
-  }
+  @include section-padding;
+  position: relative;
 }
-
-// Effet de fond glow
-.background-glow {
-  position: fixed;
-  top: -20%;
-  left: -10%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba($primary, 0.15) 0%, rgba($bg-color, 0) 70%);
-  filter: blur(80px);
-  z-index: -1;
-  pointer-events: none;
-}
-
-// Canvas Matrix animation
-#matrix-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $z-index-canvas;
-  background: $bg-color;
-  will-change: opacity;
-}
-

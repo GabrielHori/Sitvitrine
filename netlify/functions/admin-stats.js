@@ -127,20 +127,24 @@ exports.handler = async (event) => {
                 return errorResponse('Base de données non configurée', 500);
             }
 
-            // Upsert dans site_stats
-            const { error } = await client
-                .from('site_stats')
-                .upsert({
-                    id: 1,
-                    pc_built: pcBuiltNum !== undefined ? pcBuiltNum : undefined,
-                    happy_clients: happyClientsNum !== undefined ? happyClientsNum : undefined,
-                    response_time: responseTimeNum !== undefined ? responseTimeNum : undefined,
-                    updated_at: new Date().toISOString()
-                });
+            // Construction dynamique de l'objet pour l'upsert
+            const updateBody = { id: 1, updated_at: new Date().toISOString() };
 
-            if (error) {
-                console.error('❌ Erreur update stats:', error);
-                return errorResponse('Erreur mise à jour', 500);
+            if (pcBuiltNum !== undefined) updateBody.pc_built = pcBuiltNum;
+            if (happyClientsNum !== undefined) updateBody.happy_clients = happyClientsNum;
+            if (responseTimeNum !== undefined) updateBody.response_time = responseTimeNum;
+
+            console.log('📦 Envoi à Supabase:', updateBody);
+
+            // Upsert dans site_stats
+            const { error: dbError } = await client
+                .from('site_stats')
+                .upsert(updateBody);
+
+            if (dbError) {
+                console.error('❌ Erreur Supabase:', dbError);
+                // Retourner le message d'erreur précis pour le débogage
+                return errorResponse(`Erreur DB: ${dbError.message || JSON.stringify(dbError)}`, 500);
             }
 
             console.log('✅ Stats mises à jour');

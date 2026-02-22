@@ -1,16 +1,17 @@
 // ============================================
-// FORMULAIRES
+// FORMS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-// Groupe d'inputs
-.input-group {
+// ── Form row ──
+.form-row {
   display: flex;
-  gap: $spacing-md;
+  gap: $space-4;
 
-  input {
+  >* {
     flex: 1;
-    width: 50%;
+    min-width: 0;
   }
 
   @include respond-to('md') {
@@ -19,141 +20,134 @@
   }
 }
 
-// Styles de base des inputs
-form {
+// ── Inputs ──
+form input,
+form select,
+form textarea {
+  width: 100%;
+  background: rgba($bg-primary, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: $space-4 $space-5;
+  margin-bottom: $space-4;
+  color: $text-primary;
+  font-family: $font-body;
+  font-size: $fs-base;
+  border-radius: $radius-md;
+  transition: border-color $t-fast, box-shadow $t-fast;
+  outline: none;
 
-  input,
-  select,
-  textarea {
-    width: 100%;
-    background: #0a0a0a;
-    border: 1px solid #444; // Bordure plus visible
-    padding: 16px 18px; // Plus d'espace pour le touch
-    margin-bottom: $spacing-md;
-    color: $text-white;
-    font-family: $font-body;
-    font-size: 1rem; // Taille lisible
-    box-sizing: border-box;
-    border-radius: 8px; // Coins arrondis
-    transition: border-color $transition-fast, box-shadow $transition-fast;
+  &::placeholder {
+    color: $text-muted;
+  }
 
-    &::placeholder {
-      color: #888; // Placeholder plus visible
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $primary;
-      box-shadow: 0 0 10px rgba($primary, 0.15);
-    }
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba($accent, 0.1);
   }
 }
 
-// Boîte de contact
-.contact-box {
-  background: #111;
-  padding: 45px 40px;
-  border-radius: $border-radius-xl;
-  border: 1px solid #333;
-  width: 100%;
-  max-width: 600px;
+form select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300e5ff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right $space-4 center;
+  padding-right: $space-10;
+}
 
-  h2 {
-    margin-bottom: $spacing-md;
-    font-size: 1.8rem;
-  }
+form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
 
-  >p {
-    margin-bottom: $spacing-xl;
-    color: $text-gray;
-    font-size: 1.05rem;
-    line-height: 1.5;
-  }
+// ── Contact form box ──
+.contact-form-box {
+  @include card-base;
+  padding: $space-10;
 
   @include respond-to('md') {
-    padding: $spacing-xl $spacing-lg;
-
-    h2 {
-      font-size: 1.5rem;
-    }
+    padding: $space-6;
   }
 }
 
-// Section contact
-#contact {
-  display: flex;
-  justify-content: center;
-}
-
-// Formulaire d'avis
-.review-form-container {
-  max-width: 600px;
-  margin: 0 auto;
-  @include glass-effect;
-  border: 1px solid rgba($primary, 0.1);
-  border-radius: $border-radius-lg;
-  padding: $spacing-xl;
+// ── Review form wrapper ──
+.review-form-wrapper {
+  max-width: 640px;
+  margin: $space-12 auto 0;
+  @include card-base;
+  padding: $space-8;
 
   h3 {
     text-align: center;
-    margin-bottom: 25px;
-    color: $primary;
-    font-family: $font-heading;
+    margin-bottom: $space-6;
+    color: $accent;
+    font-size: $fs-lg;
+  }
+
+  @include respond-to('md') {
+    padding: $space-6;
+    margin-top: $space-8;
   }
 }
 
-#review-form {
-  .input-group {
-    display: flex;
-    gap: $spacing-md;
-    margin-bottom: $spacing-md;
+// ── FAQ Form ──
+.faq-container {
+  max-width: 720px;
+  margin: 0 auto;
+}
 
-    input,
-    select {
-      flex: 1;
-      min-width: 0; // Permet au flexbox de fonctionner correctement
-    }
+.faq-item {
+  border-bottom: 1px solid $card-border;
 
-    // Sur mobile, empiler verticalement
-    @include respond-to('sm') {
-      flex-direction: column;
+  &:last-child {
+    border-bottom: none;
+  }
+}
 
-      input,
-      select {
-        width: 100%;
-      }
-    }
+.faq-question {
+  width: 100%;
+  @include flex-between;
+  padding: $space-6 0;
+  background: none;
+  border: none;
+  color: $text-primary;
+  font-family: $font-heading;
+  font-size: $fs-base;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: color $t-fast;
+
+  svg {
+    color: $accent;
+    transition: transform $t-base;
+    flex-shrink: 0;
+    margin-left: $space-4;
   }
 
-  input,
-  select,
-  textarea {
-    width: 100%;
-    background: rgba($bg-color, 0.5);
-    border: 1px solid rgba($text-white, 0.1);
-    padding: 12px 15px;
-    color: $text-white;
-    border-radius: 8px;
-    font-family: $font-body;
-    font-size: 1rem;
-
-    &::placeholder {
-      color: rgba($text-white, 0.5);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $primary;
-      box-shadow: 0 0 10px rgba($primary, 0.2);
-    }
+  &:hover {
+    color: $accent;
   }
 
-  select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300f0ff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    padding-right: 40px;
+  &[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s $ease-out-expo, padding 0.4s $ease-out-expo;
+  padding: 0;
+
+  &.open {
+    max-height: 300px;
+    padding-bottom: $space-6;
+  }
+
+  p {
+    font-size: $fs-sm;
+    color: $text-secondary;
+    line-height: 1.7;
   }
 }

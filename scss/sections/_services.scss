@@ -1,10 +1,82 @@
 // ============================================
-// SECTION SERVICES
+// SERVICES - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-#services {
-  // Les styles de carte sont dans _cards.scss
-  // Les styles de grille sont dans _cards.scss
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-6;
+  max-width: $container-max;
+  margin: 0 auto;
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('sm') {
+    grid-template-columns: 1fr;
+    gap: $space-4;
+  }
 }
 
+// ── Urgence section ──
+.urgence-section {
+  padding: $space-8 $container-padding;
+}
+
+.urgence-container {
+  max-width: $container-max;
+  margin: 0 auto;
+  position: relative;
+  background: linear-gradient(135deg, rgba($accent-warm, 0.08), rgba($accent-warm, 0.02));
+  border: 1px solid rgba($accent-warm, 0.2);
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.urgence-pulse {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: $accent-warm;
+  border-radius: 2px;
+  animation: glow-pulse 2s infinite;
+}
+
+.urgence-content {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-8;
+
+  @include respond-to('md') {
+    flex-direction: column;
+    text-align: center;
+    padding: $space-6;
+  }
+}
+
+.urgence-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.urgence-text {
+  flex: 1;
+
+  h2 {
+    font-size: $fs-xl;
+    color: $accent-warm;
+    margin-bottom: $space-2;
+  }
+
+  p {
+    font-size: $fs-sm;
+    color: $text-secondary;
+  }
+}

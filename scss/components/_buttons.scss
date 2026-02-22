@@ -1,90 +1,79 @@
 // ============================================
-// BOUTONS
+// BUTTONS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-// Bouton primaire
-.btn-primary {
+.btn {
   @include button-base;
-  background: $primary;
-  color: $bg-color;
-  border: 2px solid $primary;
   position: relative;
   overflow: hidden;
-  
-  &::before {
+
+  // Shimmer effect on hover
+  &::after {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba($text-white, 0.2), transparent);
-    transition: left $transition-medium;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
   }
-  
-  &:hover {
-    background: transparent;
-    color: $primary;
-    box-shadow: $shadow-primary;
-    
-    &::before {
-      left: 100%;
+
+  &:hover::after {
+    left: 100%;
+  }
+
+  // ── Primary ──
+  &--primary {
+    background: $accent;
+    color: $bg-primary;
+    font-weight: 700;
+
+    &:hover {
+      box-shadow: $shadow-glow;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
-  
-  @include respond-to('md') {
+
+  // ── Glass / Secondary ──
+  &--glass {
+    @include glass;
+    color: $text-primary;
+
+    &:hover {
+      @include glass-hover;
+      transform: translateY(-2px);
+    }
+  }
+
+  // ── Urgence ──
+  &--urgence {
+    background: $accent-warm;
+    color: #fff;
+    font-weight: 700;
+    animation: glow-pulse 2s infinite;
+
+    &:hover {
+      box-shadow: 0 0 30px rgba($accent-warm, 0.4);
+      transform: translateY(-2px);
+    }
+  }
+
+  // ── Full width ──
+  &--full {
     width: 100%;
-    max-width: 300px;
+    justify-content: center;
   }
-}
 
-// Bouton secondaire
-.btn-secondary {
-  @include button-base;
-  background: transparent;
-  color: $text-white;
-  border: 2px solid $text-white;
-  
-  &:hover {
-    border-color: $primary;
-    color: $primary;
-    box-shadow: 0 0 15px rgba($primary, 0.3);
-  }
-  
+  // ── Responsive ──
   @include respond-to('md') {
-    width: 100%;
-    max-width: 300px;
+    padding: $space-3 $space-6;
+    font-size: $fs-sm;
   }
 }
-
-// Bouton navigation
-.btn-nav {
-  background: $primary;
-  color: $bg-color !important;
-  padding: 8px 16px;
-  border-radius: $border-radius-sm;
-  font-weight: 700;
-  @include transition;
-  
-  &:hover {
-    box-shadow: $shadow-primary;
-  }
-}
-
-// Groupe de boutons CTA
-.cta-group {
-  display: flex;
-  gap: $spacing-lg;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 60px;
-  
-  @include respond-to('md') {
-    flex-direction: column;
-    gap: $spacing-md;
-    margin-bottom: $spacing-xxl;
-  }
-}
-

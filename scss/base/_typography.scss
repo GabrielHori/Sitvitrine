@@ -1,88 +1,100 @@
 // ============================================
-// TYPOGRAPHIE
+// TYPOGRAPHY - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
-// Titres principaux
-h1 {
-  font-family: $font-heading;
-  font-size: $font-size-h1;
-  line-height: 1.1;
-  margin-bottom: $spacing-xl;
-  text-transform: uppercase;
-
-  @include respond-to('md') {
-    font-size: $font-size-h1-tablet;
-    text-align: center;
-  }
-
-  @include respond-to('sm') {
-    font-size: $font-size-h1-mobile;
-  }
-}
-
+h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-heading;
-}
-
-// Texte accent (cyan)
-.text-accent {
-  color: $primary;
-}
-
-// Texte outline
-.text-outline {
-  -webkit-text-stroke: 2px $text-white;
-  color: transparent;
-
-  @include respond-to('md') {
-    -webkit-text-stroke: 1px $text-white;
-  }
-}
-
-// Titre de section
-.section-title {
-  font-family: $font-heading;
-  font-size: $font-size-h2;
-  text-align: center;
-  margin-bottom: $spacing-section-mobile;
-
-  @include respond-to('md') {
-    font-size: $font-size-h2-mobile;
-    margin-bottom: $spacing-xl;
-  }
-}
-
-// Sous-titre
-.subtitle {
-  color: $primary;
   font-weight: 700;
-  letter-spacing: 3px;
-  margin-bottom: $spacing-lg;
-  font-size: $font-size-base;
-  text-transform: uppercase;
+  line-height: 1.15;
+  color: $text-primary;
+}
+
+h1 {
+  font-size: $fs-5xl;
+  letter-spacing: -0.02em;
+
+  @include respond-to('md') {
+    font-size: $fs-4xl;
+  }
 
   @include respond-to('sm') {
-    font-size: $font-size-small;
-    letter-spacing: 2px;
+    font-size: $fs-3xl;
   }
 }
 
-// Description
-.description {
-  color: $text-gray;
-  font-size: $font-size-large;
-  margin-bottom: $spacing-xxl;
-  line-height: 1.7; // Espacement lignes amélioré
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 15px; // Espacement latéral sur mobile
+h2 {
+  font-size: $fs-3xl;
 
-  @include respond-to('sm') {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    padding: 0 10px;
+  @include respond-to('md') {
+    font-size: $fs-2xl;
+  }
+}
+
+h3 {
+  font-size: $fs-xl;
+
+  @include respond-to('md') {
+    font-size: $fs-lg;
+  }
+}
+
+p {
+  line-height: 1.7;
+  color: $text-secondary;
+}
+
+// Gradient text utility
+.gradient-text {
+  @include gradient-text;
+}
+
+// Section header system
+.section-header {
+  text-align: center;
+  margin-bottom: $space-16;
+
+  @include respond-to('md') {
+    margin-bottom: $space-10;
+  }
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: $fs-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: $accent;
+  background: rgba($accent, 0.08);
+  padding: $space-2 $space-4;
+  border-radius: $radius-full;
+  margin-bottom: $space-4;
+  border: 1px solid rgba($accent, 0.15);
+}
+
+.section-title {
+  font-size: $fs-3xl;
+  margin-bottom: $space-4;
+
+  @include respond-to('md') {
+    font-size: $fs-2xl;
+  }
+}
+
+.section-subtitle {
+  font-size: $fs-md;
+  color: $text-muted;
+  max-width: 560px;
+  margin: 0 auto;
+
+  @include respond-to('md') {
+    font-size: $fs-base;
   }
 }

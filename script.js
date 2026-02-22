@@ -1,292 +1,295 @@
 /**
  * ============================================
- * HORIZON IT - SCRIPT PRINCIPAL
+ * HORIZON IT v2.0 - SCRIPT PRINCIPAL
  * ============================================
  *
- * Table des matières:
  * 1. Animation Matrix (Intro)
- * 2. Gestion du Resize
- * 3. Menu Burger (Navigation mobile)
- * 4. Formulaire de Contact (EmailJS)
- * 5. Animations au Scroll & Compteurs
- * 6. Smooth Scroll amélioré
- * 7. Effet Parallax
- * 8. Système d'Avis Clients
+ * 2. Cursor Glow Effect
+ * 3. Navigation (Scroll + Burger)
+ * 4. Pricing Tabs
+ * 5. FAQ Accordion
+ * 6. Formulaire de Contact (API Netlify)
+ * 7. Animations au Scroll & Compteurs
+ * 8. Smooth Scroll
+ * 9. Système d'Avis Clients (API)
+ * 10. Stats dynamiques
  *
  * ============================================
  */
-
 
 // ============================================
 // 1. ANIMATION MATRIX (INTRO)
 // ============================================
 
-// Respect de la préférence utilisateur pour les animations réduites
 const motionSafe = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Cache des éléments DOM
 const canvas = document.getElementById('matrix-canvas');
 const siteContent = document.getElementById('site-content');
 
-// Si l'utilisateur préfère les animations réduites, skip l'animation Matrix
 if (!motionSafe) {
-    console.log('🎭 Animations réduites demandées, skip Matrix');
     if (canvas) canvas.remove();
     if (siteContent) siteContent.style.opacity = '1';
-}
-// Vérification de sécurité - afficher le contenu si le canvas n'existe pas
-else if (!canvas || !siteContent) {
-    console.warn('⚠️ Canvas ou site-content non trouvé, affichage direct');
+} else if (!canvas || !siteContent) {
     if (siteContent) siteContent.style.opacity = '1';
 } else {
-
     const ctx = canvas.getContext('2d', { alpha: false });
-
-    // Initialisation du canvas
     let canvasWidth = window.innerWidth;
     let canvasHeight = window.innerHeight;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-    // Constantes de configuration
     const CHARACTERS = ['0', '1'];
     const FONT_SIZE = 16;
     const ANIMATION_DURATION = 1400;
     const FADE_OUT_DURATION = 800;
 
-    // Calcul des colonnes et initialisation des gouttes
     let columns = Math.floor(canvasWidth / FONT_SIZE);
     const drops = Array.from({ length: columns }, () => 1);
 
-    // Styles pré-définis pour le canvas
-    ctx.fillStyle = "#00f0ff";
-    ctx.shadowColor = "#00f0ff";
+    ctx.fillStyle = "#00e5ff";
+    ctx.shadowColor = "#00e5ff";
     ctx.shadowBlur = 5;
-    ctx.font = `${FONT_SIZE}px 'Rajdhani', monospace`;
+    ctx.font = `${FONT_SIZE}px 'Inter', monospace`;
 
-    // État de l'animation
     let animationId = null;
     let isAnimating = true;
 
-    /**
-     * Fonction de dessin optimisée avec requestAnimationFrame
-     */
     function draw() {
         if (!isAnimating) return;
-
-        // Effet de traînée
-        ctx.fillStyle = "rgba(5, 5, 5, 0.1)";
+        ctx.fillStyle = "rgba(6, 6, 17, 0.1)";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillStyle = "#00e5ff";
 
-        // Couleur des caractères
-        ctx.fillStyle = "#00f0ff";
-
-        // Dessiner les caractères
         for (let i = 0; i < drops.length; i++) {
             const char = CHARACTERS[Math.random() < 0.5 ? 0 : 1];
-            const x = i * FONT_SIZE;
-            const y = drops[i] * FONT_SIZE;
-
-            ctx.fillText(char, x, y);
-
-            // Reset aléatoire quand la goutte sort de l'écran
-            if (y > canvasHeight && Math.random() > 0.95) {
+            ctx.fillText(char, i * FONT_SIZE, drops[i] * FONT_SIZE);
+            if (drops[i] * FONT_SIZE > canvasHeight && Math.random() > 0.95) {
                 drops[i] = 0;
             }
-
             drops[i]++;
         }
-
         animationId = requestAnimationFrame(draw);
     }
 
-    // Démarrage de l'animation
     animationId = requestAnimationFrame(draw);
 
-    // Arrêt et fondu après la durée définie
     setTimeout(() => {
         isAnimating = false;
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-        }
-
-        // Fondu du canvas
+        if (animationId) cancelAnimationFrame(animationId);
         canvas.style.transition = `opacity ${FADE_OUT_DURATION}ms ease-in`;
         canvas.style.opacity = '0';
-
-        // Apparition du contenu du site
         siteContent.style.transition = 'opacity 0.9s ease-in 0.2s';
         siteContent.style.opacity = '1';
-
-        // Suppression du canvas du DOM
-        setTimeout(() => {
-            canvas.remove();
-        }, FADE_OUT_DURATION);
-
+        setTimeout(() => canvas.remove(), FADE_OUT_DURATION);
     }, ANIMATION_DURATION);
-
-} // Fin du bloc else (canvas existe)
-
-// ============================================
-// 2. GESTION DU RESIZE (Debounced)
-// ============================================
-
-let resizeTimeout;
-
-/**
- * Gestion du redimensionnement avec debounce pour les performances
- */
-function handleResize() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        if (canvas && canvas.parentNode) {
-            canvasWidth = window.innerWidth;
-            canvasHeight = window.innerHeight;
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-            columns = Math.floor(canvasWidth / FONT_SIZE);
-
-            // Ajuster le tableau des gouttes
-            drops.length = columns;
-            for (let i = 0; i < columns; i++) {
-                if (drops[i] === undefined) drops[i] = 1;
-            }
-        }
-    }, 150);
 }
 
-window.addEventListener('resize', handleResize, { passive: true });
+
+// ============================================
+// 2. CURSOR GLOW EFFECT
+// ============================================
+
+const cursorGlow = document.getElementById('cursor-glow');
+if (cursorGlow && window.matchMedia('(hover: hover)').matches) {
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    }, { passive: true });
+
+    function updateCursorGlow() {
+        glowX += (mouseX - glowX) * 0.1;
+        glowY += (mouseY - glowY) * 0.1;
+        cursorGlow.style.left = glowX + 'px';
+        cursorGlow.style.top = glowY + 'px';
+        requestAnimationFrame(updateCursorGlow);
+    }
+    requestAnimationFrame(updateCursorGlow);
+}
 
 
 // ============================================
-// 3. MENU BURGER (Navigation mobile)
+// 3. NAVIGATION
 // ============================================
 
-const burger = document.querySelector('.burger');
-const nav = document.querySelector('nav ul');
-const navLinks = document.querySelectorAll('nav ul li a');
+const mainNav = document.getElementById('main-nav');
+const burger = document.getElementById('burger-btn');
+const navLinks = document.getElementById('nav-links');
+const allNavLinks = document.querySelectorAll('.nav-links a');
 
-// Toggle du menu burger
-burger.addEventListener('click', () => {
-    const isExpanded = burger.getAttribute('aria-expanded') === 'true';
-    burger.setAttribute('aria-expanded', !isExpanded);
+// Scroll detection for nav background
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    if (mainNav) {
+        if (currentScroll > 50) {
+            mainNav.classList.add('scrolled');
+        } else {
+            mainNav.classList.remove('scrolled');
+        }
+    }
+    lastScroll = currentScroll;
+}, { passive: true });
 
-    nav.classList.toggle('nav-active');
-    burger.classList.toggle('toggle');
-});
+// Burger toggle
+if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+        const isExpanded = burger.getAttribute('aria-expanded') === 'true';
+        burger.setAttribute('aria-expanded', !isExpanded);
+        navLinks.classList.toggle('nav-active');
+        burger.classList.toggle('toggle');
+    });
 
-// Fermeture auto du menu au clic sur un lien
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        nav.classList.remove('nav-active');
-        burger.classList.remove('toggle');
-        burger.setAttribute('aria-expanded', false);
+    allNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('nav-active');
+            burger.classList.remove('toggle');
+            burger.setAttribute('aria-expanded', 'false');
+        });
+    });
+}
+
+// Logo click to top
+const logo = document.querySelector('.nav-logo');
+if (logo) {
+    logo.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+
+// ============================================
+// 4. PRICING TABS
+// ============================================
+
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.pricing-panel');
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+
+        tabBtns.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const panel = document.getElementById(`panel-${target}`);
+        if (panel) panel.classList.add('active');
     });
 });
 
 
 // ============================================
-// 4. FORMULAIRE DE CONTACT (API Netlify + Supabase)
+// 5. FAQ ACCORDION
 // ============================================
 
-// Protection anti-spam pour les formulaires
-const formCooldowns = new Map();
-const FORM_COOLDOWN_MS = 30000; // 30 secondes entre chaque envoi
+const faqQuestions = document.querySelectorAll('.faq-question');
 
-/**
- * Vérifie si le formulaire peut être soumis (cooldown expiré)
- * @param {string} formId - ID du formulaire
- * @returns {boolean|number} - true si OK, sinon temps restant en secondes
- */
+faqQuestions.forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = question.getAttribute('aria-expanded') === 'true';
+
+        // Close all others
+        faqQuestions.forEach(q => {
+            q.setAttribute('aria-expanded', 'false');
+            q.nextElementSibling.classList.remove('open');
+        });
+
+        // Toggle current
+        if (!isOpen) {
+            question.setAttribute('aria-expanded', 'true');
+            answer.classList.add('open');
+        }
+    });
+});
+
+
+// ============================================
+// 6. FORMULAIRE DE CONTACT (API Netlify)
+// ============================================
+
+const formCooldowns = new Map();
+const FORM_COOLDOWN_MS = 30000;
+
 function canSubmitForm(formId) {
     const lastSubmit = formCooldowns.get(formId);
     if (!lastSubmit) return true;
-
     const elapsed = Date.now() - lastSubmit;
-    if (elapsed >= FORM_COOLDOWN_MS) {
-        return true;
-    }
+    if (elapsed >= FORM_COOLDOWN_MS) return true;
     return Math.ceil((FORM_COOLDOWN_MS - elapsed) / 1000);
 }
 
-document.getElementById('contact-form').addEventListener('submit', async function (event) {
-    event.preventDefault();
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
 
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    const formId = 'contact-form';
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalHTML = submitBtn.innerHTML;
+        const formId = 'contact-form';
 
-    // Vérification anti-spam
-    const canSubmit = canSubmitForm(formId);
-    if (canSubmit !== true) {
-        submitBtn.textContent = `⏳ Patientez ${canSubmit}s`;
-        submitBtn.disabled = true;
-        setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-        return;
-    }
-
-    // État de chargement
-    submitBtn.textContent = 'Envoi en cours...';
-    submitBtn.disabled = true;
-    submitBtn.style.opacity = '0.7';
-
-    const formData = new FormData(this);
-    const payload = {
-        name: formData.get('user_name'),
-        email: formData.get('user_email'),
-        service: formData.get('service'),
-        message: formData.get('message')
-    };
-
-    try {
-        const response = await fetch('/.netlify/functions/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.error || 'Erreur inconnue');
+        const canSubmit = canSubmitForm(formId);
+        if (canSubmit !== true) {
+            submitBtn.innerHTML = `<span>⏳ Patientez ${canSubmit}s</span>`;
+            submitBtn.disabled = true;
+            setTimeout(() => {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 2000);
+            return;
         }
 
-        console.log('✅ Demande enregistrée', result);
+        submitBtn.innerHTML = '<span>Envoi en cours...</span>';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
 
-        // Enregistrer le timestamp pour le cooldown
-        formCooldowns.set(formId, Date.now());
+        const formData = new FormData(this);
+        const payload = {
+            name: formData.get('user_name'),
+            email: formData.get('user_email'),
+            service: formData.get('service'),
+            message: formData.get('message')
+        };
 
-        submitBtn.textContent = '✅ Demande envoyée !';
-        submitBtn.style.backgroundColor = '#00ff88';
-        submitBtn.style.color = '#000';
+        try {
+            const response = await fetch('/.netlify/functions/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-        this.reset();
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Erreur inconnue');
 
-    } catch (error) {
-        console.error('❌ Erreur envoi contact:', error);
-        submitBtn.textContent = '❌ Erreur - Réessayer';
-        submitBtn.style.backgroundColor = '#ff4444';
-        submitBtn.style.color = '#fff';
-        alert(error.message || 'Impossible d\'envoyer la demande pour le moment.');
-    } finally {
-        setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            submitBtn.style.backgroundColor = '';
-            submitBtn.style.color = '';
-        }, 2500);
-    }
-});
+            formCooldowns.set(formId, Date.now());
+            submitBtn.innerHTML = '<span>✅ Demande envoyée !</span>';
+            submitBtn.style.background = '#00e676';
+            submitBtn.style.color = '#000';
+            this.reset();
+        } catch (error) {
+            submitBtn.innerHTML = '<span>❌ Erreur - Réessayer</span>';
+            submitBtn.style.background = '#ff5252';
+            alert(error.message || 'Impossible d\'envoyer pour le moment.');
+        } finally {
+            setTimeout(() => {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.background = '';
+                submitBtn.style.color = '';
+            }, 2500);
+        }
+    });
+}
+
 
 // ============================================
-// 5. ANIMATIONS AU SCROLL & COMPTEURS
+// 7. ANIMATIONS AU SCROLL & COMPTEURS
 // ============================================
 
-// Configuration de l'Intersection Observer
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -297,7 +300,6 @@ const observer = new IntersectionObserver((entries) => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
 
-            // Animation des compteurs statistiques
             if (entry.target.classList.contains('stat-item')) {
                 animateCounter(entry.target.querySelector('.stat-number'));
             }
@@ -305,30 +307,24 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Initialisation des éléments animés au chargement
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach(el => observer.observe(el));
-
-    // Ajout automatique de l'animation aux cartes et étapes
-    const sections = document.querySelectorAll('.card, .process-step, .stat-item');
-    sections.forEach(section => {
-        section.classList.add('animate-on-scroll');
-        observer.observe(section);
+    // Observe all animatable elements
+    const animatedElements = document.querySelectorAll(
+        '.animate-on-scroll, .service-card, .process-step, .stat-item, .why-card, .gallery-item, .reassurance-item, .price-card, .faq-item, .contact-info-card'
+    );
+    animatedElements.forEach(el => {
+        el.classList.add('animate-on-scroll');
+        observer.observe(el);
     });
 });
 
-/**
- * Animation des compteurs de statistiques
- * @param {HTMLElement} element - L'élément contenant le compteur
- */
 function animateCounter(element) {
+    if (!element) return;
     const target = parseInt(element.getAttribute('data-target'));
     const duration = 2000;
     const step = target / (duration / 16);
     let current = 0;
 
-    // Détecte si le label contient "%" pour afficher le bon suffixe
     const statItem = element.closest('.stat-item');
     const label = statItem?.querySelector('.stat-label')?.textContent || '';
     const suffix = label.includes('%') ? '%' : '';
@@ -343,57 +339,9 @@ function animateCounter(element) {
     }, 16);
 }
 
-/**
- * Chargement des statistiques dynamiques depuis l'API
- */
-async function loadDynamicStats() {
-    try {
-        const response = await fetch('/.netlify/functions/stats');
-
-        if (!response.ok) {
-            console.warn('⚠️ Impossible de charger les stats dynamiques');
-            return;
-        }
-
-        const stats = await response.json();
-        console.log('📊 Stats dynamiques chargées:', stats);
-
-        // Mettre à jour les data-target des éléments stats
-        const statMappings = {
-            'PC Montés': stats.pcBuilt,
-            'Clients Satisfaits': stats.happyClients,
-            'Réponse (h)': stats.responseTime,
-            'Note Moyenne': stats.avgRating
-        };
-
-        document.querySelectorAll('.stat-item').forEach(item => {
-            const label = item.querySelector('.stat-label');
-            const number = item.querySelector('.stat-number');
-
-            if (label && number) {
-                const labelText = label.textContent.trim();
-
-                // Chercher une correspondance
-                for (const [key, value] of Object.entries(statMappings)) {
-                    if (labelText.includes(key) || key.includes(labelText)) {
-                        number.setAttribute('data-target', value);
-                        break;
-                    }
-                }
-            }
-        });
-
-    } catch (error) {
-        console.warn('⚠️ Erreur chargement stats:', error);
-    }
-}
-
-// Charger les stats au démarrage
-document.addEventListener('DOMContentLoaded', loadDynamicStats);
-
 
 // ============================================
-// 6. SMOOTH SCROLL AMÉLIORÉ
+// 8. SMOOTH SCROLL
 // ============================================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -402,32 +350,21 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const target = document.querySelector(this.getAttribute('href'));
 
         if (target) {
-            // Calcul de la distance pour ajuster la durée
-            const targetPosition = target.offsetTop - 80; // Offset pour la nav fixe
+            const targetPosition = target.offsetTop - 80;
             const startPosition = window.pageYOffset;
             const distance = Math.abs(targetPosition - startPosition);
-            const duration = Math.min(Math.max(distance / 3, 800), 2000);
-
+            const duration = Math.min(Math.max(distance / 3, 600), 1500);
             const startTime = performance.now();
 
-            /**
-             * Animation du scroll avec easing cubic
-             */
             function animateScroll(currentTime) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-
-                // Fonction d'easing pour un mouvement naturel
                 const easeInOutCubic = progress < 0.5
                     ? 4 * progress * progress * progress
                     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-                const currentPosition = startPosition + (targetPosition - startPosition) * easeInOutCubic;
-                window.scrollTo(0, currentPosition);
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateScroll);
-                }
+                window.scrollTo(0, startPosition + (targetPosition - startPosition) * easeInOutCubic);
+                if (progress < 1) requestAnimationFrame(animateScroll);
             }
 
             requestAnimationFrame(animateScroll);
@@ -435,82 +372,34 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-
-// ============================================
-// 7. EFFET PARALLAX & INTERACTIONS
-// ============================================
-
-// Parallax sur le background glow (throttlé + désactivé si réduction d'animations)
-const backgroundGlow = document.querySelector('.background-glow');
-if (backgroundGlow && motionSafe) {
-    let parallaxPending = false;
-    const updateParallax = () => {
-        const scrolled = window.pageYOffset;
-        backgroundGlow.style.transform = `translateY(${scrolled * 0.35}px)`;
-        parallaxPending = false;
-    };
-
-    window.addEventListener('scroll', () => {
-        if (!parallaxPending) {
-            parallaxPending = true;
-            requestAnimationFrame(updateParallax);
-        }
-    }, { passive: true });
-}
-
-// Clic sur l'indicateur de scroll (flèche du hero)
+// Scroll hint click
 document.addEventListener('DOMContentLoaded', () => {
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', (e) => {
-            e.preventDefault();
-            const servicesSection = document.querySelector('#services');
-            if (servicesSection) {
-                servicesSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+    const scrollHint = document.querySelector('.scroll-hint');
+    if (scrollHint) {
+        scrollHint.addEventListener('click', () => {
+            const target = document.querySelector('#urgence') || document.querySelector('#services');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     }
 });
 
-// Clic sur le logo pour remonter en haut
-document.addEventListener('DOMContentLoaded', () => {
-    const logo = document.querySelector('.logo');
-    if (logo) {
-        logo.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        logo.style.cursor = 'pointer';
-    }
-});
 
 // ============================================
-// 8. SYSTÈME D'AVIS CLIENTS (API Netlify)
+// 9. SYSTÈME D'AVIS CLIENTS (API Netlify)
 // ============================================
 
 const API_URL = '/.netlify/functions/reviews';
 
-/**
- * Charge les avis depuis l'API
- * @returns {Promise<Array>} Liste des avis
- */
 async function loadReviews() {
     try {
         const response = await fetch(API_URL);
-        if (response.ok) {
-            return await response.json();
-        }
+        if (response.ok) return await response.json();
     } catch (error) {
-        console.error('Erreur lors du chargement des avis:', error);
+        console.error('Erreur chargement avis:', error);
     }
 
-    // Fallback vers des avis par défaut
     return [
         {
             name: "Thomas M.",
@@ -536,55 +425,30 @@ async function loadReviews() {
     ];
 }
 
-/**
- * Sauvegarde un nouvel avis via l'API
- * @param {Object} reviewData - Les données de l'avis
- * @returns {Promise<Object>} Résultat de la sauvegarde
- */
 async function saveNewReview(reviewData) {
     try {
-        console.log('📤 Envoi avis:', reviewData);
-
         const response = await fetch(API_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reviewData)
         });
-
         const result = await response.json();
-        console.log('📥 Réponse serveur:', result);
-
         return { success: response.ok, data: result };
     } catch (error) {
-        console.error('❌ Erreur lors de la sauvegarde:', error);
         return { success: false, error: 'Erreur de connexion' };
     }
 }
 
-/**
- * Génère le HTML des étoiles pour une note donnée
- * @param {number} rating - Note de 1 à 5
- * @returns {string} HTML des étoiles
- */
 function getStarsHTML(rating) {
     return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
 }
 
-/**
- * Affiche les avis dans le DOM
- */
 async function displayReviews() {
-    console.log('🔄 Rechargement des avis...');
     const reviews = await loadReviews();
-    console.log(`📋 ${reviews.length} avis chargés`);
-
     const reviewsList = document.getElementById('reviews-list');
     if (!reviewsList) return;
 
     reviewsList.innerHTML = reviews.map(review => {
-        // Supabase utilise created_at, fallback sur date pour compatibilité
         const reviewDate = review.created_at || review.date;
         const formattedDate = reviewDate
             ? new Date(reviewDate).toLocaleDateString('fr-FR')
@@ -596,40 +460,25 @@ async function displayReviews() {
                     <div class="review-client">${review.name}</div>
                     <div class="review-rating">${getStarsHTML(review.rating)}</div>
                 </div>
-                <div class="review-service">Service: ${review.service}</div>
+                <div class="review-service">${review.service}</div>
                 <div class="review-text">"${review.text}"</div>
                 <div class="review-date">${formattedDate}</div>
             </div>
         `;
     }).join('');
 
-    // Réappliquer l'observer pour les animations
     const newCards = reviewsList.querySelectorAll('.animate-on-scroll');
     newCards.forEach(card => observer.observe(card));
 }
 
-/**
- * Validation des données du formulaire d'avis
- * @param {Object} data - Données à valider
- * @returns {string|null} Message d'erreur ou null si valide
- */
 function validateReviewData(data) {
-    if (!data.name || data.name.length < 2) {
-        return '❌ Le nom doit contenir au moins 2 caractères';
-    }
-    if (!data.rating || data.rating < 1 || data.rating > 5) {
-        return '❌ Veuillez sélectionner une note';
-    }
-    if (!data.service || data.service.length < 3) {
-        return '❌ Le service doit contenir au moins 3 caractères';
-    }
-    if (!data.text || data.text.length < 10) {
-        return '❌ Le commentaire doit contenir au moins 10 caractères';
-    }
+    if (!data.name || data.name.length < 2) return '❌ Le nom doit contenir au moins 2 caractères';
+    if (!data.rating || data.rating < 1 || data.rating > 5) return '❌ Veuillez sélectionner une note';
+    if (!data.service || data.service.length < 3) return '❌ Le service doit contenir au moins 3 caractères';
+    if (!data.text || data.text.length < 10) return '❌ Le commentaire doit contenir au moins 10 caractères';
     return null;
 }
 
-// Gestion du formulaire d'ajout d'avis
 document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
 
@@ -641,7 +490,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalText = submitBtn.textContent;
             const formId = 'review-form';
 
-            // Vérification anti-spam
             const canSubmit = canSubmitForm(formId);
             if (canSubmit !== true) {
                 submitBtn.textContent = `⏳ Patientez ${canSubmit}s`;
@@ -653,11 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // État de chargement
             submitBtn.textContent = 'Publication...';
             submitBtn.disabled = true;
 
-            // Récupération des données
             const formData = new FormData(this);
             const reviewData = {
                 name: formData.get('client_name')?.trim(),
@@ -666,9 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: formData.get('review_text')?.trim()
             };
 
-            console.log('📤 Envoi des données:', reviewData);
-
-            // Validation côté client
             const validationError = validateReviewData(reviewData);
             if (validationError) {
                 alert(validationError);
@@ -677,42 +520,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Envoi à l'API
             const result = await saveNewReview(reviewData);
 
             if (result.success) {
-                // Enregistrer le timestamp pour le cooldown
                 formCooldowns.set(formId, Date.now());
-
-                // Succès
                 submitBtn.textContent = '✅ Avis publié !';
-                submitBtn.style.backgroundColor = '#00ff88';
+                submitBtn.style.background = '#00e676';
                 this.reset();
-
-                // Recharger les avis après 1 seconde
-                setTimeout(() => {
-                    displayReviews();
-                }, 1000);
+                setTimeout(() => displayReviews(), 1000);
             } else {
-                // Erreur
-                console.error('❌ Erreur:', result);
                 submitBtn.textContent = '❌ Erreur - Réessayer';
-                submitBtn.style.backgroundColor = '#ff4444';
-
-                if (result.data?.error) {
-                    alert(`Erreur: ${result.data.error}`);
-                }
+                submitBtn.style.background = '#ff5252';
+                if (result.data?.error) alert(`Erreur: ${result.data.error}`);
             }
 
-            // Reset du bouton après 3 secondes
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-                submitBtn.style.backgroundColor = '';
+                submitBtn.style.background = '';
             }, 3000);
         });
     }
 
-    // Charger les avis au démarrage
     displayReviews();
 });
+
+
+// ============================================
+// 10. STATS DYNAMIQUES
+// ============================================
+
+async function loadDynamicStats() {
+    try {
+        const response = await fetch('/.netlify/functions/stats');
+        if (!response.ok) return;
+
+        const stats = await response.json();
+        const statMappings = {
+            'PC Montés': stats.pcBuilt,
+            'Clients Satisfaits': stats.happyClients,
+            'Réponse (h)': stats.responseTime,
+            'Note Moyenne': stats.avgRating
+        };
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            const label = item.querySelector('.stat-label');
+            const number = item.querySelector('.stat-number');
+
+            if (label && number) {
+                const labelText = label.textContent.trim();
+                for (const [key, value] of Object.entries(statMappings)) {
+                    if (labelText.includes(key) || key.includes(labelText)) {
+                        number.setAttribute('data-target', value);
+                        break;
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.warn('⚠️ Erreur chargement stats:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadDynamicStats);

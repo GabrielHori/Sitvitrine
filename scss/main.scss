@@ -1,29 +1,24 @@
 // ============================================
-// HORIZON IT - FICHIER SASS PRINCIPAL
-// ============================================
-// Architecture SASS optimisée pour le SEO et la maintenabilité
+// HORIZON IT v2.0 - FICHIER SASS PRINCIPAL
+// Design System "Cyber Pulse"
 // ============================================
 
 // -----------------------------------------
 // 1. CONFIGURATION
 // -----------------------------------------
-// Variables et mixins via @use moderne
 @use 'variables' as *;
 @use 'mixins' as *;
 
 // -----------------------------------------
 // 2. BASE
 // -----------------------------------------
-// Reset, typographie et animations globales
 @use 'base/reset';
 @use 'base/typography';
 @use 'base/animations';
 
-
 // -----------------------------------------
 // 3. LAYOUT
 // -----------------------------------------
-// Structure de la page
 @use 'layout/sections';
 @use 'layout/navigation';
 @use 'layout/footer';
@@ -31,7 +26,6 @@
 // -----------------------------------------
 // 4. COMPOSANTS
 // -----------------------------------------
-// Éléments réutilisables
 @use 'components/buttons';
 @use 'components/cards';
 @use 'components/forms';
@@ -39,7 +33,6 @@
 // -----------------------------------------
 // 5. SECTIONS
 // -----------------------------------------
-// Styles spécifiques à chaque section
 @use 'sections/hero';
 @use 'sections/services';
 @use 'sections/tarifs';
@@ -50,3 +43,63 @@
 @use 'sections/boutique';
 @use 'sections/avis';
 
+// -----------------------------------------
+// 6. NOUVELLES SECTIONS
+// -----------------------------------------
+// Pourquoi moi
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-6;
+    max-width: $container-max;
+    margin: 0 auto;
+
+    @media screen and (max-width: $bp-sm) {
+        grid-template-columns: 1fr;
+        gap: $space-4;
+    }
+}
+
+// Reassurance
+.reassurance-section {
+    padding: $space-16 $container-padding;
+    background: $bg-secondary;
+    border-top: 1px solid $card-border;
+    border-bottom: 1px solid $card-border;
+}
+
+.reassurance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-6;
+    max-width: $container-max;
+    margin: 0 auto;
+
+    @media screen and (max-width: $bp-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: $bp-sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Contact Grid
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: $space-10;
+    max-width: $container-max;
+    margin: 0 auto;
+
+    @media screen and (max-width: $bp-md) {
+        grid-template-columns: 1fr;
+        gap: $space-6;
+    }
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+}

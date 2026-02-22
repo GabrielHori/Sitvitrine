@@ -1,74 +1,47 @@
 // ============================================
-// SECTION STATS
+// STATS - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
 .stats-section {
-  background: $bg-color;
-  padding: 70px 5%;
-  border-top: 1px solid rgba($primary, 0.1);
-  border-bottom: 1px solid rgba($primary, 0.1);
-
-  @include respond-to('sm') {
-    padding: 50px 4%;
-  }
+  padding: $space-16 $container-padding;
+  background: $bg-secondary;
+  border-top: 1px solid $card-border;
+  border-bottom: 1px solid $card-border;
 }
 
 .stats-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  max-width: 1000px;
+  gap: $space-8;
+  max-width: $container-max;
   margin: 0 auto;
 
-  @media screen and (max-width: 900px) {
+  @include respond-to('md') {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  @include respond-to('sm') {
-    gap: 15px;
+    gap: $space-6;
   }
 }
 
 .stat-item {
   text-align: center;
-  padding: 25px 15px;
-  @include glass-effect;
-  border-radius: 12px;
-  @include transition;
+  padding: $space-6;
 
-  &:hover {
-    transform: translateY(-3px);
-    border-color: rgba($primary, 0.3);
-    box-shadow: 0 8px 25px rgba($primary, 0.1);
+  .stat-number {
+    font-family: $font-heading;
+    font-size: $fs-4xl;
+    font-weight: 800;
+    @include gradient-text;
+    line-height: 1;
+    margin-bottom: $space-2;
   }
 
-  @media (hover: none) {
-    &:hover {
-      transform: none;
-    }
+  .stat-label {
+    font-size: $fs-sm;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
   }
-}
-
-.stat-number {
-  font-family: $font-heading;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: $primary;
-  margin-bottom: 8px;
-  display: block;
-
-  @include respond-to('sm') {
-    font-size: 2rem;
-  }
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: $text-gray;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-  line-height: 1.3;
 }

@@ -1,17 +1,98 @@
 // ============================================
-// FOOTER
+// FOOTER - HORIZON IT v2.0
 // ============================================
-@use '../globals' as *;
+@use '../variables' as *;
+@use '../mixins' as *;
 
 footer {
-  text-align: center;
-  padding: 25px $spacing-md;
-  color: $text-gray;
-  border-top: 1px solid rgba($text-white, 0.08);
-  background: rgba($bg-color, 0.95);
+  border-top: 1px solid $card-border;
+  background: $bg-secondary;
+  padding: $space-16 $container-padding $space-8;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: $space-10;
+  max-width: $container-max;
+  margin: 0 auto;
+  padding-bottom: $space-10;
+  border-bottom: 1px solid $card-border;
+
+  @include respond-to('lg') {
+    grid-template-columns: 1fr 1fr;
+    gap: $space-8;
+  }
+
+  @include respond-to('sm') {
+    grid-template-columns: 1fr;
+    gap: $space-8;
+    text-align: center;
+  }
+}
+
+.footer-brand {
+  .footer-logo {
+    font-family: $font-heading;
+    font-size: $fs-xl;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $space-4;
+
+    span {
+      @include gradient-text;
+      font-weight: 800;
+    }
+  }
 
   p {
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: $fs-sm;
+    color: $text-muted;
+    max-width: 280px;
+    line-height: 1.6;
+
+    @include respond-to('sm') {
+      max-width: 100%;
+    }
+  }
+}
+
+.footer-links {
+  h4 {
+    font-family: $font-heading;
+    font-size: $fs-sm;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: $space-5;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  ul {
+    @include flex-column;
+    gap: $space-3;
+  }
+
+  li,
+  li a {
+    font-size: $fs-sm;
+    color: $text-muted;
+    transition: color $t-fast;
+  }
+
+  li a:hover {
+    color: $accent;
+  }
+}
+
+.footer-bottom {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding-top: $space-8;
+  text-align: center;
+
+  p {
+    font-size: $fs-xs;
+    color: $text-muted;
   }
 }
