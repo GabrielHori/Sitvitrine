@@ -11,7 +11,7 @@
     "sass": "^1.69.5"
   },
   "scripts": {
-    "build": "sass scss/main.scss style.css --style=compressed --no-source-map --quiet",
-    "sass:watch": "sass --watch scss/main.scss:style.css"
+    "build": "npx sass scss/main.scss style.css --style=compressed --no-source-map --quiet",
+    "sass:watch": "npx sass --watch scss/main.scss:style.css"
   }
 }

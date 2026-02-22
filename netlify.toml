@@ -1,6 +1,6 @@
 [build]
   functions = "netlify/functions"
-  command = "ls -la && npm run build"
+  command = "npm install && npm run build"
   publish = "."
 
 [build.environment]
@@ -31,16 +31,18 @@
 # CACHE ASSETS STATIQUES - Performance
 # ============================================
 
-# CSS et JS - Cache 1 semaine (peut être invalidé par changement de hash)
+# CSS et JS - Désactivation du cache pour débugger le chargement partiel
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+    Cache-Control = "no-cache, must-revalidate"
+    Content-Type = "text/css; charset=UTF-8"
 
 [[headers]]
   for = "/*.js"
   [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+    Cache-Control = "no-cache, must-revalidate"
+    Content-Type = "application/javascript; charset=UTF-8"
 
 # Images - Cache 1 mois
 [[headers]]
