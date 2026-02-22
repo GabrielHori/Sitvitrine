@@ -29,7 +29,7 @@ body {
 }
 
 // Scrollbar custom (desktop only)
-@media (min-width: $bp-md + 1) {
+@media (min-width: 769px) {
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -99,6 +99,8 @@ ul {
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
+  background: none;
 }
 
 #site-content {
@@ -110,6 +112,6 @@ button {
 
 // Selection
 ::selection {
-  background: rgba($accent, 0.3);
-  color: $text-primary;
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
 }
