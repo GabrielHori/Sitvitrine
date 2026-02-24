@@ -1,6 +1,4 @@
 # Local Netlify folder
 .netlify
 
-# Compiled CSS
-style.css
-style.css.map
+# Compiled CSS (keep committed for Netlify fallback)
