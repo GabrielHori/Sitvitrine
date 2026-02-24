@@ -1,13 +1,10 @@
 [build]
   functions = "netlify/functions"
-  # Explicit install + build to guarantee Sass is present during deploy
-  command = "npm ci --include=dev && npm run build"
+  command = "npm run build"
   publish = "."
 
 [build.environment]
   NODE_VERSION = "18"
-  # Force npm to include dev deps if Netlify ever sets NODE_ENV=production
-  NPM_FLAGS = "--include=dev"
 
 # Redirection HTTPS forcée
 [[redirects]]

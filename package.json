@@ -5,11 +5,9 @@
   "main": "index.html",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
-    "jsonwebtoken": "^9.0.2",
-    "sass": "^1.69.5"
+    "jsonwebtoken": "^9.0.2"
   },
   "scripts": {
-    "build": "npx sass scss/main.scss style.css --style=compressed --no-source-map --quiet",
-    "sass:watch": "npx sass --watch scss/main.scss:style.css"
+    "build": "echo \"no build step\""
   }
 }
