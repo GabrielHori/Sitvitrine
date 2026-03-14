@@ -563,6 +563,9 @@
                 </div>
                 <div class="contact-form-box">
                     <form id="contact-form">
+                        <!-- Honeypot anti-spam (caché) -->
+                        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+                        
                         <input type="text" name="user_name" placeholder="Nom complet" required>
                         <input type="email" name="user_email" placeholder="Email" required>
                         <select name="service">

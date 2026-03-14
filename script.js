@@ -701,4 +701,60 @@ async function loadDynamicStats() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadDynamicStats);
+document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicStats();
+
+    // ============================================
+    // 11. FORMULAIRE DE CONTACT (Anti-spam)
+    // ============================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Envoi en cours...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(this);
+            const payload = {
+                name: formData.get('user_name'),
+                email: formData.get('user_email'),
+                service: formData.get('service'),
+                message: formData.get('message'),
+                _honey: formData.get('_honey') || ''
+            };
+
+            try {
+                const response = await fetch('/.netlify/functions/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    submitBtn.textContent = '✅ Message envoyé !';
+                    submitBtn.style.background = '#00e676';
+                    this.reset();
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Erreur lors de l’envoi. Veuillez réessayer.');
+                    submitBtn.textContent = '❌ Erreur';
+                    submitBtn.style.background = '#ff5252';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erreur réseau. Veuillez réessayer.');
+                submitBtn.textContent = '❌ Erreur réseau';
+                submitBtn.style.background = '#ff5252';
+            }
+
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.background = '';
+            }, 3000);
+        });
+    }
+});

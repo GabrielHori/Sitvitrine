@@ -86,12 +86,57 @@ exports.handler = async (event) => {
             return errorResponse('Format JSON invalide', 400);
         }
 
+        // ============================================
+        // 1. HONEYPOT ANTI-SPAM
+        // ============================================
+        // Si le champ caché _honey est rempli, c'est un robot. On valide silencieusement.
+        if (body._honey) {
+            logger.warn('🍯 Honeypot déclenché - Rejet silencieux du spam');
+            return successResponse({
+                message: 'Demande enregistrée, je reviens vers toi rapidement.'
+            }, 201);
+        }
+
+        // ============================================
+        // 2. VALIDATION & BASE DE DONNÉES
+        // ============================================
         const validation = validateLead(body);
         if (!validation.valid) {
             return errorResponse('Données invalides', 400, validation.errors);
         }
 
         const lead = await addLead(validation.data);
+
+        // ============================================
+        // 3. NOTIFICATION EMAIL (OPTIONNEL)
+        // ============================================
+        const resendKey = process.env.RESEND_API_KEY;
+        const adminEmail = process.env.ADMIN_EMAIL;
+        
+        if (resendKey && adminEmail) {
+            try {
+                await fetch('https://api.resend.com/emails', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${resendKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: 'Horizon IT <onboarding@resend.dev>',
+                        to: adminEmail,
+                        subject: `Nouvelle demande : ${validation.data.service} - ${validation.data.name}`,
+                        html: `<h2>Nouvelle demande client</h2>
+                               <p><strong>Nom :</strong> ${validation.data.name}</p>
+                               <p><strong>Email :</strong> ${validation.data.email}</p>
+                               <p><strong>Service :</strong> ${validation.data.service}</p>
+                               <p><strong>Message :</strong><br>${validation.data.message.replace(/\n/g, '<br>')}</p>`
+                    })
+                });
+                logger.info('📧 Notification email envoyée avec succès');
+            } catch (err) {
+                logger.error('Erreur lors de l\'envoi de l\'email:', err);
+            }
+        }
 
         return successResponse({
             message: 'Demande enregistrée, je reviens vers toi rapidement.',
