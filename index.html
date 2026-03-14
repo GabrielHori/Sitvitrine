@@ -625,11 +625,12 @@
                 <p id="modal-subtitle" class="modal-subtitle"></p>
             </div>
             <form id="modal-contact-form" class="modal-form">
+                <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
                 <div class="form-row">
                     <input type="text" name="modal_name" placeholder="Votre nom *" required>
                     <input type="tel" name="modal_phone" placeholder="Téléphone *" required>
                 </div>
-                <input type="email" name="modal_email" placeholder="Email">
+                <input type="email" name="modal_email" placeholder="Email *" required>
                 <textarea id="modal-message" name="modal_message" rows="5" placeholder="Décrivez votre besoin..." required></textarea>
                 <div id="modal-extra-fields"></div>
                 <button type="submit" class="btn btn--primary btn--full modal-submit">

@@ -485,21 +485,80 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') closeServiceModal();
     });
 
-    // Modal form submit — redirect to WhatsApp or just confirm
+    // Modal form submit — send via API
     const modalForm = document.getElementById('modal-contact-form');
     if (modalForm) {
-        modalForm.addEventListener('submit', (e) => {
+        modalForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = modalForm.modal_name?.value || '';
-            const phone = modalForm.modal_phone?.value || '';
-            const msg = document.getElementById('modal-message')?.value || '';
-            const subtitle = document.getElementById('modal-subtitle')?.textContent || '';
+            const submitBtn = modalForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
 
-            const text = encodeURIComponent(
-                `Bonjour, je suis ${name} (${phone}).\n\nService : ${subtitle}\n\n${msg}`
-            );
-            window.open(`https://wa.me/33766491225?text=${text}`, '_blank');
-            closeServiceModal();
+            submitBtn.textContent = 'Envoi en cours...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(modalForm);
+            const name = formData.get('modal_name') || '';
+            const phone = formData.get('modal_phone') || '';
+            const email = formData.get('modal_email') || '';
+            const device = formData.get('modal_device') || formData.get('modal_phone_model') || '';
+            const budget = formData.get('modal_budget') || '';
+            const baseMsg = document.getElementById('modal-message')?.value || '';
+            const service = document.getElementById('modal-subtitle')?.textContent || 'Demande de service';
+            const honey = formData.get('_honey') || '';
+
+            // Combine message with extra fields
+            let fullMessage = `Téléphone: ${phone}\n`;
+            if (device) fullMessage += `Appareil/Modèle: ${device}\n`;
+            if (budget) fullMessage += `Budget: ${budget}\n`;
+            fullMessage += `\nMessage:\n${baseMsg}`;
+
+            const payload = {
+                name: name,
+                email: email,
+                service: service,
+                message: fullMessage,
+                _honey: honey
+            };
+
+            try {
+                const response = await fetch('/.netlify/functions/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    submitBtn.textContent = '✅ Message envoyé !';
+                    submitBtn.style.background = '#00e676';
+                    setTimeout(() => {
+                        closeServiceModal();
+                        modalForm.reset();
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                    }, 2000);
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Erreur lors de l\'envoi. Veuillez réessayer.');
+                    submitBtn.textContent = '❌ Erreur';
+                    submitBtn.style.background = '#ff5252';
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                    }, 3000);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erreur réseau. Veuillez réessayer.');
+                submitBtn.textContent = '❌ Erreur réseau';
+                submitBtn.style.background = '#ff5252';
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                }, 3000);
+            }
         });
     }
 });
