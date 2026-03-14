@@ -9,5 +9,8 @@
   },
   "scripts": {
     "build": "echo \"no build step\""
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

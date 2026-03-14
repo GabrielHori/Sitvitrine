@@ -11,6 +11,17 @@
     <meta name="author" content="Horizon IT">
     <meta name="theme-color" content="#00e5ff">
     <link rel="icon" href="images/favicon.png" type="image/png">
+
+    <!-- Open Graph / Réseaux Sociaux -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ithorizon.netlify.app/">
+    <meta property="og:title" content="Horizon IT — Dépannage Informatique & Montage PC à Arles">
+    <meta property="og:description"
+        content="Intervention rapide, montage PC sur mesure, dépannage et réparation de smartphones à Arles et ses alentours. Devis gratuit.">
+    <meta property="og:image" content="https://ithorizon.netlify.app/images/build1.jpg">
+    <meta property="og:site_name" content="Horizon IT">
+    <meta property="og:locale" content="fr_FR">
+
     <title>Horizon IT — Dépannage Informatique & Montage PC à Arles</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +38,7 @@
         "@type": "LocalBusiness",
         "name": "Horizon IT",
         "image": "https://ithorizon.netlify.app/images/logo.png",
-        "telephone": "+33000000000",
+        "telephone": "+33766491225",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "Zone d'Arles et alentours",
@@ -93,7 +104,7 @@
                     </p>
                     <div class="hero-actions">
                         <a href="#contact" class="btn btn--primary">Obtenir mon devis gratuit</a>
-                        <a href="tel:+33000000000" class="btn btn--glass">Appeler maintenant</a>
+                        <a href="tel:0766491225" class="btn btn--glass">Appeler le 07 66 49 12 25</a>
                     </div>
                     <div class="hero-trust">
                         <div class="trust-item">⭐ 5/5 Avis Clients</div>
@@ -103,6 +114,10 @@
                 </div>
 
                 <div class="hero-visual">
+                    <div class="hero-image-wrapper">
+                        <img src="images/build1.webp" alt="Expert Informatique">
+                        <div class="hero-image-glow"></div>
+                    </div>
                     <div class="hero-card-stack">
                         <div class="floating-card fc-1">
                             <span class="fc-icon">🛠️</span>
@@ -139,7 +154,7 @@
                         <h2>Besoin d'aide immédiatement ?</h2>
                         <p>Une panne critique ? Un écran cassé ? J'interviens en priorité pour les urgences à Arles.</p>
                     </div>
-                    <a href="tel:+33000000000" class="btn btn--urgence">Appel Prioritaire</a>
+                    <a href="tel:0766491225" class="btn btn--urgence">Appel SOS : 07 66 49 12 25</a>
                 </div>
             </div>
         </section>
@@ -257,7 +272,73 @@
                         </div>
                     </div>
                 </div>
-                <!-- Autres panels simplifiés pour le token count -->
+
+                <div class="pricing-panel" id="panel-depannage">
+                    <div class="price-cards">
+                        <div class="price-card">
+                            <div class="price-card__header">
+                                <h4>Diagnostic et Devis</h4>
+                                <div class="price" style="font-size: 2.25rem;">Gratuit</div>
+                            </div>
+                            <ul>
+                                <li>Détection de panne matérielle</li>
+                                <li>Diagnostic logiciel complet</li>
+                                <li>Sans engagement</li>
+                            </ul>
+                        </div>
+                        <div class="price-card price-card--featured">
+                            <div class="price-badge">Logiciel</div>
+                            <div class="price-card__header">
+                                <h4>Nettoyage & Windows</h4>
+                                <div class="price">60<span>€</span></div>
+                            </div>
+                            <ul>
+                                <li>Éradication de virus et malwares</li>
+                                <li>Réinstallation Windows propre</li>
+                                <li>Optimisation de la rapidité</li>
+                            </ul>
+                        </div>
+                        <div class="price-card">
+                            <div class="price-card__header">
+                                <h4>Intervention Matérielle</h4>
+                                <div class="price">50<span>€</span></div>
+                            </div>
+                            <ul>
+                                <li>Changement pâte thermique CPU/GPU</li>
+                                <li>Remplacement Disque Dur ou RAM</li>
+                                <li>Dépoussiérage et entretien</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-panel" id="panel-smartphone">
+                    <div class="price-cards">
+                        <div class="price-card">
+                            <div class="price-card__header">
+                                <h4>Changement Écran</h4>
+                                <div class="price" style="font-size: 2.25rem;">Sur Devis</div>
+                            </div>
+                            <ul>
+                                <li>Main d'œuvre smartphone</li>
+                                <li>Pose d'écran de qualité</li>
+                                <li>Garantie de 6 mois incluse</li>
+                            </ul>
+                        </div>
+                        <div class="price-card price-card--featured">
+                            <div class="price-badge">Rapide</div>
+                            <div class="price-card__header">
+                                <h4>Changement Batterie</h4>
+                                <div class="price" style="font-size: 2.25rem;">Sur Devis</div>
+                            </div>
+                            <ul>
+                                <li>Main d'œuvre remplacement</li>
+                                <li>Batterie hautes performances</li>
+                                <li>Garantie de 6 mois incluse</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <p class="pricing-note">💡 Les tarifs peuvent varier selon la complexité du projet.</p>
         </section>
@@ -307,14 +388,15 @@
                 <h3>Partagez votre expérience</h3>
                 <form id="review-form">
                     <div class="form-row">
-                        <input type="text" name="client_name" placeholder="Votre nom" required>
+                        <input type="text" name="client_name" placeholder="Votre nom" maxlength="50" required>
                         <select name="rating" required>
                             <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
                             <option value="4">⭐⭐⭐⭐ (Très bon)</option>
                         </select>
                     </div>
-                    <input type="text" name="service_type" placeholder="Service réalisé (ex: Montage PC)" required>
-                    <textarea name="review_text" placeholder="Votre commentaire..." required></textarea>
+                    <input type="text" name="service_type" placeholder="Service réalisé (ex: Montage PC)"
+                        maxlength="100" required>
+                    <textarea name="review_text" placeholder="Votre commentaire..." maxlength="500" required></textarea>
                     <button type="submit" class="btn btn--primary btn--full">Publier mon avis</button>
                 </form>
             </div>
@@ -329,7 +411,42 @@
                             <path d="M19 9l-7 7-7-7" />
                         </svg></button>
                     <div class="faq-answer">
-                        <p>J'interviens à Arles et dans un rayon de 30 km (Tarascon, Nîmes, Saint-Rémy).</p>
+                        <p>J'interviens à Arles et dans un rayon de 30 à 40 minutes en voiture (Tarascon, Nîmes,
+                            Saint-Rémy, et jusqu'à Istres).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Vais-je perdre mes données lors de la réparation ? <svg width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg></button>
+                    <div class="faq-answer">
+                        <p>Vos données sont ma priorité ! Dans la très grande majorité des cas, vous ne perdez rien.
+                            S'il y a le moindre risque, je réalise systématiquement une sauvegarde de vos fichiers
+                            importants (photos, documents) avant toute manipulation ou réinstallation.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Les réparations et composants sont-ils garantis ? <svg width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg></button>
+                    <div class="faq-answer">
+                        <p>Oui, absolument. Toutes les pièces neuves pour ordinateurs bénéficient de la garantie
+                            constructeur classique (souvent 2 à 3 ans). Concernant mes interventions matérielles sur
+                            smartphone (écran, batterie), je vous offre une garantie pièces et main d'œuvre de 6 mois.
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Le diagnostic est-il vraiment gratuit ? <svg width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg></button>
+                    <div class="faq-answer">
+                        <p>Tout à fait. Je vous fournis un diagnostic précis et un devis clair et définitif avant toute
+                            réparation. Il n'y a aucun frais cachés, et c'est sans le moindre engagement. Vous êtes 100%
+                            libre de l'accepter ou non !</p>
                     </div>
                 </div>
             </div>
@@ -350,7 +467,7 @@
                         <div class="info-icon">📞</div>
                         <div>
                             <h4>Téléphone</h4>
-                            <p><a href="tel:+33000000000">+33 0 00 00 00 00</a></p>
+                            <p><a href="tel:0766491225">07 66 49 12 25</a></p>
                         </div>
                     </div>
                 </div>
@@ -388,6 +505,25 @@
                 <p>© 2026 Horizon IT - Tous droits réservés.</p>
             </div>
         </footer>
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <!-- WhatsApp -->
+        <a href="https://wa.me/33766491225?text=Bonjour%20Horizon%20IT%2C%20j%27ai%20besoin%20d%27assistance..."
+            target="_blank" rel="noopener noreferrer" class="fab fab-whatsapp" aria-label="Contact WhatsApp">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+            </svg>
+        </a>
+        <!-- Scroll Top -->
+        <button id="back-to-top" class="fab fab-top" aria-label="Retour en haut">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+        </button>
     </div>
 
     <!-- Scripts -->

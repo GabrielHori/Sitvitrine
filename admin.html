@@ -1146,7 +1146,7 @@
             c.innerHTML = reviews.map(r => `
             <div class="list-item">
                 <div class="info">
-                    <div><span class="name">${r.name}</span> <span class="rating">${'⭐'.repeat(r.rating)}</span> ${r.isDefault ? '<span class="pill pill-new">Défaut</span>' : ''}</div>
+                    <div><span class="name">${r.name}</span> <span class="rating">${'⭐'.repeat(r.rating)}</span> ${r.is_default ? '<span class="pill pill-new">Défaut</span>' : ''}</div>
                     <div class="meta">Service: ${r.service || 'N/A'} • ${r.date || new Date(r.created_at).toLocaleDateString('fr-FR')} • <span class="pill ${r.approved ? 'pill-approved' : 'pill-pending'}">${r.approved ? 'Approuvé' : 'En attente'}</span></div>
                     <div class="msg" style="font-style:italic">"${r.text}"</div>
                 </div>

@@ -372,8 +372,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Scroll hint click
+// Back to top & Scroll hint click
 document.addEventListener('DOMContentLoaded', () => {
+    // Scroll hint
     const scrollHint = document.querySelector('.scroll-hint');
     if (scrollHint) {
         scrollHint.addEventListener('click', () => {
@@ -381,6 +382,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+        });
+    }
+
+    // Back to top logic
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 });
@@ -558,9 +575,9 @@ async function loadDynamicStats() {
         const stats = await response.json();
         const statMappings = {
             'PC Montés': stats.pcBuilt,
-            'Clients Satisfaits': stats.happyClients,
+            'Clients Heureux': stats.happyClients,
             'Réponse (h)': stats.responseTime,
-            'Note Moyenne': stats.avgRating
+            'Note': stats.avgRating
         };
 
         document.querySelectorAll('.stat-item').forEach(item => {
