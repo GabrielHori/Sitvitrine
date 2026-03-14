@@ -423,21 +423,21 @@ async function loadReviews() {
             rating: 5,
             service: "Montage PC Gaming",
             text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
-            date: "2024-12-15"
+            date: "2026-03-02"
         },
         {
             name: "Sarah L.",
             rating: 5,
             service: "Dépannage PC",
             text: "Intervention rapide pour un écran bleu. Problème résolu en 1h, très professionnel !",
-            date: "2024-12-10"
+            date: "2026-02-27"
         },
         {
             name: "Kevin R.",
             rating: 4,
             service: "Optimisation PC",
             text: "PC beaucoup plus rapide après optimisation. Bon rapport qualité/prix.",
-            date: "2024-12-08"
+            date: "2026-02-20"
         }
     ];
 }
