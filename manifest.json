@@ -1,0 +1,21 @@
+{
+  "name": "Horizon IT",
+  "short_name": "Horizon IT",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#060611",
+  "theme_color": "#00e5ff",
+  "description": "Dépannage informatique et montage PC sur mesure à Arles.",
+  "icons": [
+    {
+      "src": "images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

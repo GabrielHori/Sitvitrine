@@ -404,7 +404,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ============================================
-// 9. SYSTÈME D'AVIS CLIENTS (API Netlify)
+// 9. MODAL DE CONTACT — OFFRES TARIFAIRES
+// ============================================
+
+const SERVICE_CONTEXTS = {
+    montage: {
+        icon: '🖥️',
+        placeholder: 'Décrivez votre configuration souhaitée (budget, usage gaming/bureautique, composants déjà en votre possession…)',
+        extra: `<label style="font-size:.8rem;color:#6a6a80;display:block;margin-bottom:6px">Budget approximatif</label>
+                <select name="modal_budget" style="width:100%;background:rgba(6,6,17,.5);border:1px solid rgba(255,255,255,.08);padding:14px 16px;color:#f0f0f8;font-size:.9rem;border-radius:10px;margin-bottom:16px;outline:none">
+                    <option value="">Sélectionner un budget</option>
+                    <option value="500-800">500 – 800€</option>
+                    <option value="800-1200">800 – 1200€</option>
+                    <option value="1200-1800">1200 – 1800€</option>
+                    <option value="1800+">1800€ et plus</option>
+                </select>`
+    },
+    depannage: {
+        icon: '🛠️',
+        placeholder: 'Décrivez le problème le plus précisément possible : symptômes, quand est-ce apparu, messages d\'erreur éventuels…',
+        extra: `<label style="font-size:.8rem;color:#6a6a80;display:block;margin-bottom:6px">Marque & modèle de l'appareil</label>
+                <input type="text" name="modal_device" placeholder="Ex : HP Pavilion 15, Dell XPS 13…" style="width:100%;background:rgba(6,6,17,.5);border:1px solid rgba(255,255,255,.08);padding:14px 16px;color:#f0f0f8;font-size:.9rem;border-radius:10px;margin-bottom:16px;outline:none">`
+    },
+    smartphone: {
+        icon: '📱',
+        placeholder: 'Précisez le modèle exact de votre smartphone et décrivez l\'état de l\'écran ou de la batterie (fissures, % de batterie restant…)',
+        extra: `<label style="font-size:.8rem;color:#6a6a80;display:block;margin-bottom:6px">Marque & modèle du smartphone</label>
+                <input type="text" name="modal_phone_model" placeholder="Ex : iPhone 13, Samsung Galaxy S22…" style="width:100%;background:rgba(6,6,17,.5);border:1px solid rgba(255,255,255,.08);padding:14px 16px;color:#f0f0f8;font-size:.9rem;border-radius:10px;margin-bottom:16px;outline:none">`
+    }
+};
+
+function openServiceModal(btn) {
+    const card = btn.closest('[data-service]');
+    if (!card) return;
+
+    const service = card.dataset.service;
+    const label = card.dataset.label || 'Demande de contact';
+    const prefill = card.dataset.message || '';
+    const ctx = SERVICE_CONTEXTS[service] || SERVICE_CONTEXTS['depannage'];
+
+    // Populate modal
+    document.getElementById('modal-title').textContent = 'Votre demande';
+    document.getElementById('modal-subtitle').textContent = label;
+    document.querySelector('.modal-icon').textContent = ctx.icon;
+
+    const textarea = document.getElementById('modal-message');
+    textarea.value = prefill + '\n\n';
+    textarea.placeholder = ctx.placeholder;
+
+    document.getElementById('modal-extra-fields').innerHTML = ctx.extra;
+
+    // Open
+    const overlay = document.getElementById('service-modal');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Focus first input
+    setTimeout(() => {
+        const firstInput = overlay.querySelector('input[name="modal_name"]');
+        if (firstInput) firstInput.focus();
+    }, 300);
+}
+
+function closeServiceModal() {
+    document.getElementById('service-modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// Close modal on overlay click
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('service-modal');
+    if (overlay) {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeServiceModal();
+        });
+    }
+
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeServiceModal();
+    });
+
+    // Modal form submit — redirect to WhatsApp or just confirm
+    const modalForm = document.getElementById('modal-contact-form');
+    if (modalForm) {
+        modalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = modalForm.modal_name?.value || '';
+            const phone = modalForm.modal_phone?.value || '';
+            const msg = document.getElementById('modal-message')?.value || '';
+            const subtitle = document.getElementById('modal-subtitle')?.textContent || '';
+
+            const text = encodeURIComponent(
+                `Bonjour, je suis ${name} (${phone}).\n\nService : ${subtitle}\n\n${msg}`
+            );
+            window.open(`https://wa.me/33766491225?text=${text}`, '_blank');
+            closeServiceModal();
+        });
+    }
+});
+
+
+// ============================================
+// 10. SYSTÈME D'AVIS CLIENTS (API Netlify)
 // ============================================
 
 const API_URL = '/.netlify/functions/reviews';

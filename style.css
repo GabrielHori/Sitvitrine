@@ -1,4 +1,4 @@
-﻿*,
+*,
 *::before,
 *::after {
         margin: 0;
@@ -130,7 +130,7 @@ h1 {
 
 @media screen and (max-width: 480px) {
         h1 {
-                font-size: 2.5rem
+                font-size: 2rem
         }
 }
 
@@ -1348,6 +1348,13 @@ form textarea {
         padding: 80px 5% 0
 }
 
+@media screen and (max-width: 768px) {
+        #hero {
+                min-height: auto;
+                padding: 100px 5% 40px
+        }
+}
+
 .hero-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1361,7 +1368,7 @@ form textarea {
 @media screen and (max-width: 768px) {
         .hero-grid {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 32px;
                 text-align: center
         }
 }
@@ -1427,8 +1434,19 @@ form textarea {
 @media screen and (max-width: 768px) {
         .hero-actions {
                 flex-direction: column;
-                align-items: center;
-                gap: 12px
+                align-items: stretch;
+                gap: 12px;
+                width: 100%;
+                max-width: 360px;
+                margin-left: auto;
+                margin-right: auto;
+                justify-content: center
+        }
+
+        .hero-actions .btn {
+                width: 100%;
+                justify-content: center;
+                text-align: center
         }
 }
 
@@ -1464,6 +1482,23 @@ form textarea {
 
 @media screen and (max-width: 768px) {
         .hero-visual {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 240px;
+                order: -1
+        }
+
+        .hero-image-wrapper {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                width: 180px;
+                height: 180px
+        }
+
+        .hero-card-stack {
                 display: none
         }
 }
@@ -1528,6 +1563,115 @@ form textarea {
         text-transform: uppercase;
         letter-spacing: .1em;
         transition: color .2s cubic-bezier(0.4, 0, 0.2, 1)
+}
+
+@media screen and (max-width: 768px) {
+        .scroll-hint {
+                display: none
+        }
+}
+
+/* -------- Hero Social Buttons -------- */
+.hero-socials {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+}
+
+@media screen and (max-width: 768px) {
+        .hero-socials {
+                justify-content: center;
+        }
+}
+
+.hero-social-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 9999px;
+        border: 1px solid transparent;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+}
+
+.hero-social-btn--insta {
+        color: #e1306c;
+        background: rgba(225, 48, 108, 0.06);
+        border-color: rgba(225, 48, 108, 0.2);
+}
+
+.hero-social-btn--insta:hover {
+        background: rgba(225, 48, 108, 0.14);
+        border-color: rgba(225, 48, 108, 0.4);
+        transform: translateY(-2px);
+}
+
+.hero-social-btn--tiktok {
+        color: #a0a0b8;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+}
+
+.hero-social-btn--tiktok:hover {
+        color: #f0f0f8;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+}
+
+/* -------- Nav Mobile Social Buttons -------- */
+.nav-socials {
+        display: none;
+}
+
+@media screen and (max-width: 768px) {
+        .nav-socials {
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+                margin-top: 24px;
+                padding-top: 24px;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                width: 100%;
+        }
+}
+
+.nav-social-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+}
+
+.nav-social-btn--insta {
+        color: #e1306c;
+        background: rgba(225, 48, 108, 0.07);
+        border-color: rgba(225, 48, 108, 0.2);
+}
+
+.nav-social-btn--insta:hover {
+        background: rgba(225, 48, 108, 0.15);
+}
+
+.nav-social-btn--tiktok {
+        color: #a0a0b8;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-social-btn--tiktok:hover {
+        color: #f0f0f8;
+        background: rgba(255, 255, 255, 0.08);
 }
 
 .scroll-hint:hover {
@@ -1699,13 +1843,13 @@ form textarea {
 
 .price-cards {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 24px;
         max-width: 900px;
         margin: 0 auto
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 640px) {
         .price-cards {
                 grid-template-columns: 1fr;
                 gap: 16px
@@ -2082,10 +2226,16 @@ form textarea {
 
 .why-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 24px;
         max-width: 1200px;
         margin: 0 auto
+}
+
+@media screen and (max-width: 1024px) {
+        .why-grid {
+                grid-template-columns: repeat(2, 1fr);
+        }
 }
 
 @media screen and (max-width: 480px) {
@@ -2219,3 +2369,389 @@ form textarea {
         box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
         border-color: #00e5ff;
 }
+
+/* ============================================
+   RÉSEAUX SOCIAUX
+   ============================================ */
+
+/* Dans la section Contact */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.social-link--insta {
+    color: #e1306c;
+    background: rgba(225, 48, 108, 0.06);
+    border-color: rgba(225, 48, 108, 0.15);
+}
+
+.social-link--insta:hover {
+    background: rgba(225, 48, 108, 0.12);
+    border-color: rgba(225, 48, 108, 0.35);
+    transform: translateX(4px);
+}
+
+.social-link--tiktok {
+    color: #f0f0f8;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.social-link--tiktok:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+}
+
+/* Dans le Footer */
+.footer-socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.footer-social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #a0a0b8;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footer-social-icon:nth-child(1):hover {
+    background: rgba(225, 48, 108, 0.12);
+    border-color: rgba(225, 48, 108, 0.35);
+    color: #e1306c;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(225, 48, 108, 0.2);
+}
+
+.footer-social-icon:nth-child(2):hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #f0f0f8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.08);
+}
+
+@media screen and (max-width: 480px) {
+    .footer-socials {
+        justify-content: center;
+    }
+}
+
+
+/* ============================================
+   MOBILE — CORRECTIONS GLOBALES
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    /* Hero title + badge centré */
+    .hero-badge {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Trust items en colonne sur mobile */
+    .hero-trust {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Contact grid en mode colonne */
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .contact-form-box {
+        padding: 20px;
+    }
+
+    /* Urgence button full-width */
+    .urgence-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .btn--urgence {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* FAQ plus lisible */
+    .faq-question {
+        font-size: 0.9rem;
+        padding: 20px 0;
+    }
+
+    /* Review form plus simple */
+    .review-form-wrapper {
+        margin: 24px 0 0;
+        padding: 20px;
+    }
+
+    /* Stats container */
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .stat-item .stat-number {
+        font-size: 2.5rem;
+    }
+
+    /* Footer */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .footer-brand p {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* FAB container */
+    .fab-container {
+        bottom: 20px;
+        right: 16px;
+        gap: 12px;
+    }
+
+    .fab {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Prix — titre taille réduite */
+    .price {
+        font-size: 2.5rem !important;
+    }
+
+    /* Services grid */
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Why grid */
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reassurance grid */
+    .reassurance-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Sections padding */
+    section {
+        padding: 48px 4%;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    /* Très petits écrans (iPhone SE etc.) */
+    .btn {
+        padding: 12px 16px;
+        font-size: 0.8rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .faq-question {
+        font-size: 0.825rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reassurance-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   PRICE CTA BUTTON
+   ============================================ */
+
+.price-cta-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    color: #00e5ff;
+    font-family: "Inter", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.02em;
+}
+
+.price-cta-btn:hover {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: #00e5ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 229, 255, 0.12);
+}
+
+.price-card--featured .price-cta-btn {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: #00e5ff;
+}
+
+.price-card--featured .price-cta-btn:hover {
+    background: rgba(0, 229, 255, 0.16);
+    box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2);
+}
+
+/* ============================================
+   MODAL DE CONTACT SERVICE
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 6, 17, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    background: #0d0d20;
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 229, 255, 0.05);
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-overlay.open .modal-box {
+    transform: translateY(0) scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #a0a0b8;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f0f0f8;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.modal-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.modal-header h3 {
+    font-size: 1.375rem;
+    color: #f0f0f8;
+    margin-bottom: 6px;
+}
+
+.modal-subtitle {
+    font-size: 0.85rem;
+    color: #00e5ff;
+    font-weight: 500;
+    background: rgba(0, 229, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    display: inline-block;
+    border: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.modal-form .modal-submit {
+    margin-top: 8px;
+    gap: 8px;
+}
+
+.modal-privacy {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #6a6a80;
+    margin-top: 12px;
+}
+
+@media screen and (max-width: 600px) {
+    .modal-box {
+        padding: 24px 20px;
+    }
+}
