@@ -1,0 +1,61 @@
+name: Fix reviews layout
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[skip review-layout]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Move review CTA below cards
+        run: |
+          cat >> style.css <<'EOF'
+
+/* ============================================================
+   AVIS CLIENTS — CTA sous les avis
+   ============================================================ */
+.reviews-section .container {
+    display: flex;
+    flex-direction: column;
+}
+
+.reviews-section .section-heading {
+    order: 1;
+}
+
+.reviews-section .reviews-grid {
+    order: 2;
+}
+
+.reviews-section .reviews-cta {
+    order: 3;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 35px 0 0;
+}
+
+@media (max-width: 600px) {
+    .reviews-section .reviews-cta {
+        margin-top: 28px;
+    }
+}
+EOF
+
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add style.css
+          git rm .github/workflows/fix-reviews-layout.yml
+          git commit -m "style: center review CTA below cards [skip review-layout]"
+          git push
