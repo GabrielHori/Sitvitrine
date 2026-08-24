@@ -2792,6 +2792,8 @@ p {
 }
 
 
+/* ---------- Grille des avis ---------- */
+
 .reviews-grid {
     display: grid;
 
@@ -2801,6 +2803,21 @@ p {
     gap: 15px;
 }
 
+
+/* ---------- Bouton laisser un avis ---------- */
+
+.reviews-actions {
+    display: flex;
+
+    justify-content: center;
+
+    width: 100%;
+
+    margin-top: 35px;
+}
+
+
+/* ---------- Aucun avis ---------- */
 
 .empty-reviews {
     grid-column:
@@ -2836,6 +2853,8 @@ p {
 }
 
 
+/* ---------- Carte avis ---------- */
+
 .review-card {
     padding: 25px;
 
@@ -2863,6 +2882,8 @@ p {
 }
 
 
+/* ---------- En-tête ---------- */
+
 .review-header {
     display: flex;
 
@@ -2888,6 +2909,8 @@ p {
 }
 
 
+/* ---------- Prestation ---------- */
+
 .review-service {
     margin-top: 6px;
 
@@ -2897,12 +2920,16 @@ p {
 }
 
 
+/* ---------- Commentaire ---------- */
+
 .review-text {
     margin-top: 20px;
 
     font-size: 0.85rem;
 }
 
+
+/* ---------- Date ---------- */
 
 .review-date {
     margin-top: 20px;
@@ -2912,6 +2939,16 @@ p {
     font-size: 0.68rem;
 }
 
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+    .reviews-actions {
+        margin-top: 28px;
+    }
+
+}
 
 /* ============================================================
    20. ZONE D'INTERVENTION
