@@ -1,18 +1,11 @@
 /**
- * ============================================
+ * ============================================================
  * HORIZON IT - MODULE PARTAGÉ BACKEND
- * ============================================
- * 
- * Centralise les fonctions communes entre les endpoints
+ * ============================================================
  */
-
-// ============================================
-// CONFIGURATION & CONSTANTES
-// ============================================
 
 const SITE_URL = process.env.URL || 'https://ithorizon.netlify.app';
 
-// Avis par défaut (utilisés si la BDD est vide)
 const DEFAULT_REVIEWS = [
     {
         id: 999,
@@ -46,82 +39,113 @@ const DEFAULT_REVIEWS = [
     }
 ];
 
-// ============================================
-// HEADERS CORS SÉCURISÉS
-// ============================================
-
 function getCorsHeaders(allowedMethods = 'GET, POST, OPTIONS') {
     return {
         'Access-Control-Allow-Origin': SITE_URL,
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': allowedMethods,
         'Access-Control-Max-Age': '86400',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin'
     };
 }
-
-// ============================================
-// VALIDATION & SANITISATION
-// ============================================
 
 function sanitizeString(str) {
     if (typeof str !== 'string') return '';
     return str
-        .replace(/<[^>]*>/g, '')     // Supprime les balises HTML
-        .replace(/[<>\"'`;()]/g, '') // Supprime les caractères dangereux
+        .replace(/<[^>]*>/g, '')
+        .replace(/[\u0000-\u001F\u007F]/g, '')
         .trim();
+}
+
+function validateEmail(email) {
+    return typeof email === 'string' &&
+        email.length <= 254 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function sanitizePhone(phone) {
+    if (typeof phone !== 'string') return '';
+    // Conserve uniquement les caractères utiles à un numéro français/international.
+    return phone
+        .replace(/[^\d+().\s-]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function validatePhone(phone) {
+    if (!phone) return true; // facultatif
+    const normalized = phone.replace(/[^\d+]/g, '');
+    return normalized.length >= 8 && normalized.length <= 15;
+}
+
+function validateLead(data) {
+    const errors = [];
+
+    if (!data || typeof data !== 'object') {
+        return { valid: false, errors: ['Données invalides'] };
+    }
+
+    const name = sanitizeString(data.name);
+    const email = sanitizeString(data.email).toLowerCase();
+    const phone = sanitizePhone(data.phone);
+    const service = sanitizeString(data.service);
+    const message = sanitizeString(data.message);
+
+    if (name.length < 2 || name.length > 80) {
+        errors.push('Nom: 2-80 caractères');
+    }
+
+    if (!validateEmail(email)) {
+        errors.push('Adresse email invalide');
+    }
+
+    if (!validatePhone(phone)) {
+        errors.push('Numéro de téléphone invalide');
+    }
+
+    if (service.length < 2 || service.length > 120) {
+        errors.push('Service: 2-120 caractères');
+    }
+
+    if (message.length < 10 || message.length > 3000) {
+        errors.push('Message: 10-3000 caractères');
+    }
+
+    if (errors.length) {
+        return { valid: false, errors };
+    }
+
+    return {
+        valid: true,
+        data: { name, email, phone, service, message }
+    };
 }
 
 function validateReviewData(data) {
     const errors = [];
-    const { name, rating, service, text } = data;
-
-    // Validation du nom
-    if (!name || typeof name !== 'string') {
-        errors.push('Nom requis');
-    } else if (name.trim().length < 2 || name.trim().length > 50) {
-        errors.push('Nom: 2-50 caractères');
+    if (!data || typeof data !== 'object') {
+        return { valid: false, errors: ['Données invalides'] };
     }
 
-    // Validation de la note
-    const ratingNum = typeof rating === 'string' ? parseInt(rating) : rating;
-    if (!ratingNum || !Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-        errors.push('Note: 1-5 requise');
-    }
+    const name = sanitizeString(data.name);
+    const ratingNum = typeof data.rating === 'string' ? Number(data.rating) : data.rating;
+    const service = sanitizeString(data.service);
+    const text = sanitizeString(data.text);
 
-    // Validation du service
-    if (!service || typeof service !== 'string') {
-        errors.push('Service requis');
-    } else if (service.trim().length < 3 || service.trim().length > 100) {
-        errors.push('Service: 3-100 caractères');
-    }
+    if (name.length < 2 || name.length > 50) errors.push('Nom: 2-50 caractères');
+    if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) errors.push('Note: 1-5 requise');
+    if (service.length < 3 || service.length > 100) errors.push('Service: 3-100 caractères');
+    if (text.length < 10 || text.length > 500) errors.push('Commentaire: 10-500 caractères');
 
-    // Validation du texte
-    if (!text || typeof text !== 'string') {
-        errors.push('Commentaire requis');
-    } else if (text.trim().length < 10 || text.trim().length > 500) {
-        errors.push('Commentaire: 10-500 caractères');
-    }
+    if (errors.length) return { valid: false, errors };
 
-    if (errors.length > 0) {
-        return { valid: false, errors };
-    }
-
-    // Retourne les données sanitisées
     return {
         valid: true,
-        data: {
-            name: sanitizeString(name),
-            rating: ratingNum,
-            service: sanitizeString(service),
-            text: sanitizeString(text)
-        }
+        data: { name, rating: ratingNum, service, text }
     };
 }
-
-// ============================================
-// RÉPONSES HTTP STANDARDISÉES
-// ============================================
 
 function successResponse(data, statusCode = 200) {
     return {
@@ -134,7 +158,6 @@ function successResponse(data, statusCode = 200) {
 function errorResponse(message, statusCode = 400, details = null) {
     const body = { error: message };
     if (details) body.details = details;
-
     return {
         statusCode,
         headers: getCorsHeaders(),
@@ -142,68 +165,42 @@ function errorResponse(message, statusCode = 400, details = null) {
     };
 }
 
-function optionsResponse() {
+function optionsResponse(allowedMethods = 'GET, POST, OPTIONS') {
     return {
         statusCode: 204,
-        headers: getCorsHeaders(),
+        headers: getCorsHeaders(allowedMethods),
         body: ''
     };
 }
 
-// ============================================
-// LOGGING SÉCURISÉ
-// ============================================
-
-const IS_PRODUCTION = process.env.NODE_ENV === 'production' ||
+const IS_PRODUCTION =
+    process.env.NODE_ENV === 'production' ||
     process.env.CONTEXT === 'production';
 
-/**
- * Log conditionnel - désactivé en production (sauf erreurs)
- */
 const logger = {
-    // Info: seulement en développement
     info: (...args) => {
-        if (!IS_PRODUCTION) {
-            console.log(...args);
-        }
+        if (!IS_PRODUCTION) console.log(...args);
     },
-
-    // Debug: seulement en développement
     debug: (...args) => {
-        if (!IS_PRODUCTION) {
-            console.log('🔍', ...args);
-        }
+        if (!IS_PRODUCTION) console.log('🔍', ...args);
     },
-
-    // Warn: toujours affiché mais sans détails sensibles en prod
     warn: (...args) => {
-        if (IS_PRODUCTION) {
-            console.warn('⚠️ Warning occurred');
-        } else {
-            console.warn('⚠️', ...args);
-        }
+        if (IS_PRODUCTION) console.warn('⚠️ Warning occurred');
+        else console.warn('⚠️', ...args);
     },
-
-    // Error: toujours affiché (nécessaire pour le debugging)
-    error: (...args) => {
-        console.error('🚨', ...args);
-    },
-
-    // Security: alertes de sécurité (toujours loggées)
-    security: (...args) => {
-        console.log('🔒 SECURITY:', ...args);
-    }
+    error: (...args) => console.error('🚨', ...args),
+    security: (...args) => console.warn('🔒 SECURITY:', ...args)
 };
-
-// ============================================
-// EXPORTS
-// ============================================
 
 module.exports = {
     SITE_URL,
     DEFAULT_REVIEWS,
     getCorsHeaders,
     sanitizeString,
+    validateEmail,
+    sanitizePhone,
+    validatePhone,
+    validateLead,
     validateReviewData,
     successResponse,
     errorResponse,

@@ -1,1270 +1,381 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Admin Hub — Horizon IT</title>
+    <meta name="robots" content="noindex,nofollow">
+    <title>Horizon IT — Administration</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #060611;
-            --bg2: #0a0a1a;
-            --card: #0d0d20;
-            --elevated: #111128;
-            --accent: #00e5ff;
-            --accent2: #7c4dff;
-            --warm: #ff6b6b;
-            --success: #00e676;
-            --warning: #ffab00;
-            --error: #ff5252;
-            --text: #f0f0f8;
-            --text2: #a0a0b8;
-            --text3: #6a6a80;
-            --border: rgba(255, 255, 255, 0.06);
-            --border-h: rgba(0, 229, 255, 0.25);
-            --glass: rgba(13, 13, 32, 0.6);
-            --radius: 12px;
-            --font: 'Inter', sans-serif;
-            --font-h: 'Space Grotesk', sans-serif;
-        }
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        ::selection {
-            background: rgba(0, 229, 255, 0.3);
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 3px;
-        }
-
-        /* ── Login ── */
-        .login-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 400px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .login-box h1 {
-            font-family: var(--font-h);
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
-        .login-box .sub {
-            color: var(--text3);
-            font-size: 0.9rem;
-            margin-bottom: 28px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(6, 6, 17, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 1rem;
-            font-family: var(--font);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            margin-bottom: 16px;
-        }
-
-        .login-box input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
-        }
-
-        .login-box .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: var(--font);
-        }
-
-        .login-box .btn-login:hover {
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .login-error {
-            color: var(--error);
-            font-size: 0.85rem;
-            margin-top: 12px;
-            min-height: 20px;
-        }
-
-        /* ── Layout ── */
-        .admin-app {
-            display: none;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 240px;
-            background: var(--bg2);
-            border-right: 1px solid var(--border);
-            padding: 24px 0;
-            display: flex;
-            flex-direction: column;
-            z-index: 50;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-logo {
-            padding: 0 24px 24px;
-            font-family: var(--font-h);
-            font-size: 1.2rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 8px;
-        }
-
-        .sidebar-logo span {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 8px 12px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            color: var(--text2);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-family: var(--font);
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text);
-        }
-
-        .nav-item.active {
-            background: rgba(0, 229, 255, 0.08);
-            color: var(--accent);
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: var(--warm);
-            color: #fff;
-            font-size: 0.7rem;
-            padding: 2px 7px;
-            border-radius: 10px;
-            font-weight: 700;
-        }
-
-        .sidebar-footer {
-            padding: 16px 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        .main-content {
-            margin-left: 240px;
-            padding: 24px 32px;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-        }
-
-        .page-header h2 {
-            font-family: var(--font-h);
-            font-size: 1.5rem;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* ── Cards ── */
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            transition: all 0.2s;
-        }
-
-        .card:hover {
-            border-color: var(--border-h);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--accent), var(--accent2));
-            border-radius: 3px 0 0 3px;
-        }
-
-        .stat-card h4 {
-            font-size: 0.75rem;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .stat-val {
-            font-family: var(--font-h);
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text3);
-            margin-top: 4px;
-        }
-
-        /* ── Buttons ── */
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: var(--font);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .btn-accent:hover {
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: #000;
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: #fff;
-        }
-
-        .btn-ghost {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text2);
-            border: 1px solid var(--border);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--border-h);
-            color: var(--text);
-        }
-
-        .btn-warn {
-            background: var(--warning);
-            color: #000;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        /* ── Tables / Lists ── */
-        .list-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            margin-bottom: 8px;
-            transition: all 0.2s;
-        }
-
-        .list-item:hover {
-            border-color: var(--border-h);
-        }
-
-        .list-item .info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .list-item .name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .list-item .meta {
-            font-size: 0.8rem;
-            color: var(--text3);
-            margin-top: 2px;
-        }
-
-        .list-item .msg {
-            font-size: 0.85rem;
-            color: var(--text2);
-            margin-top: 6px;
-            white-space: pre-line;
-        }
-
-        .list-item .actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-        }
-
-        .pill {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .pill-pending {
-            background: rgba(255, 171, 0, 0.15);
-            color: var(--warning);
-            border: 1px solid rgba(255, 171, 0, 0.2);
-        }
-
-        .pill-approved {
-            background: rgba(0, 230, 118, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
-
-        .pill-new {
-            background: rgba(0, 229, 255, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-        }
-
-        .pill-contacted {
-            background: rgba(124, 77, 255, 0.1);
-            color: var(--accent2);
-            border: 1px solid rgba(124, 77, 255, 0.2);
-        }
-
-        .pill-done {
-            background: rgba(0, 230, 118, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
-
-        .rating {
-            color: #ffcc00;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-        }
-
-        /* ── Filter bar ── */
-        .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .filter-bar select {
-            padding: 8px 14px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 0.85rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .filter-bar select:focus {
-            border-color: var(--accent);
-        }
-
-        .count-label {
-            font-size: 0.8rem;
-            color: var(--text3);
-        }
-
-        /* ── Forms ── */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text3);
-            margin-bottom: 6px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(6, 6, 17, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .form-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-        }
-
-        .form-card h4 {
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-
-        .divider {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 32px 0;
-        }
-
-        .info-box {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            max-width: 400px;
-        }
-
-        .info-box p {
-            font-size: 0.85rem;
-            color: var(--text2);
-            margin: 6px 0;
-        }
-
-        .info-box strong {
-            color: var(--text);
-        }
-
-        /* ── Toast ── */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            padding: 14px 20px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: slideIn 0.3s ease;
-            min-width: 280px;
-            backdrop-filter: blur(20px);
-            border: 1px solid;
-        }
-
-        .toast-success {
-            background: rgba(0, 230, 118, 0.1);
-            border-color: rgba(0, 230, 118, 0.3);
-            color: var(--success);
-        }
-
-        .toast-error {
-            background: rgba(255, 82, 82, 0.1);
-            border-color: rgba(255, 82, 82, 0.3);
-            color: var(--error);
-        }
-
-        .toast-info {
-            background: rgba(0, 229, 255, 0.1);
-            border-color: rgba(0, 229, 255, 0.3);
-            color: var(--accent);
-        }
-
-        .toast.hide {
-            animation: slideOut 0.3s ease forwards;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        /* ── Loading ── */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .loading-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text3);
-        }
-
-        /* ── Panel visibility ── */
-        .panel {
-            display: none;
-        }
-
-        .panel.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ── Mobile burger ── */
-        .mobile-header {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 56px;
-            background: rgba(6, 6, 17, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 60;
-            padding: 0 16px;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-header h3 {
-            font-family: var(--font-h);
-            font-size: 1rem;
-        }
-
-        .mobile-header h3 span {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .burger-admin {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 45;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .mobile-header {
-                display: flex;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 55;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay.open {
-                display: block;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 72px 16px 24px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .list-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .list-item .actions {
-                width: 100%;
-                justify-content: flex-end;
-                margin-top: 8px;
-            }
-
-            .page-header {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
-
-            .filter-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-
-            .stat-card {
-                padding: 14px;
-            }
-
-            .stat-val {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
-    <!-- TOAST CONTAINER -->
-    <div class="toast-container" id="toast-container"></div>
+    <!-- =========================================================
+         TOASTS
+    ========================================================== -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-    <!-- LOGIN -->
-    <div class="login-wrapper" id="login-wrapper">
-        <div class="login-box">
-            <h1>🔐 Admin Hub</h1>
-            <p class="sub">Horizon IT — Panneau d'administration</p>
-            <input type="password" id="password" placeholder="Mot de passe" autocomplete="current-password">
-            <button class="btn-login" id="btn-login" onclick="login()">Se connecter</button>
-            <div class="login-error" id="login-error"></div>
+    <!-- =========================================================
+         CONNEXION
+    ========================================================== -->
+    <section id="login-wrapper" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-brand">
+                <span>HORIZON</span> IT
+            </div>
+
+            <span class="login-eyebrow">Administration</span>
+
+            <h1>Bienvenue dans votre espace.</h1>
+
+            <p>
+                Gérez vos demandes de devis, vos avis clients
+                et les statistiques de votre site.
+            </p>
+
+            <form id="login-form">
+                <label for="password">Mot de passe</label>
+
+                <input
+                    id="password"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Votre mot de passe"
+                    required
+                >
+
+                <button id="btn-login" class="btn btn-primary btn-full" type="submit">
+                    Se connecter
+                </button>
+
+                <div id="login-error" class="login-error"></div>
+            </form>
         </div>
-    </div>
+    </section>
 
-    <!-- MOBILE HEADER -->
-    <div class="mobile-header" id="mobile-header">
-        <h3>Horizon <span>IT</span></h3>
-        <button class="burger-admin" id="burger-admin" onclick="toggleSidebar()">☰</button>
-    </div>
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- =========================================================
+         APPLICATION
+    ========================================================== -->
+    <div id="admin-app" class="admin-app">
 
-    <!-- ADMIN APP -->
-    <div class="admin-app" id="admin-app">
+        <!-- Mobile header -->
+        <header class="mobile-header">
+            <div class="brand-small">
+                HORIZON <span>IT</span>
+            </div>
+
+            <button
+                id="burger-admin"
+                class="icon-button"
+                type="button"
+                aria-label="Ouvrir le menu"
+            >
+                ☰
+            </button>
+        </header>
+
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
         <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">Horizon <span>IT</span> Admin</div>
-            <nav class="sidebar-nav">
-                <button class="nav-item active" data-panel="dashboard" onclick="switchPanel('dashboard', this)">📊
-                    Dashboard</button>
-                <button class="nav-item" data-panel="reviews" onclick="switchPanel('reviews', this)">📝 Avis <span
-                        class="badge" id="badge-pending" style="display:none">0</span></button>
-                <button class="nav-item" data-panel="leads" onclick="switchPanel('leads', this)">📩 Leads <span
-                        class="badge" id="badge-leads" style="display:none">0</span></button>
-                <button class="nav-item" data-panel="settings" onclick="switchPanel('settings', this)">⚙️
-                    Paramètres</button>
+        <aside id="sidebar" class="sidebar">
+
+            <div class="sidebar-top">
+                <a href="/" class="sidebar-brand">
+                    <strong>HORIZON <span>IT</span></strong>
+                    <small>Administration</small>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Navigation administration">
+
+                <button class="nav-item active" data-panel="dashboard">
+                    <span>📊</span>
+                    Dashboard
+                </button>
+
+                <button class="nav-item" data-panel="leads">
+                    <span>📩</span>
+                    Demandes
+                    <span id="badge-leads" class="badge" hidden>0</span>
+                </button>
+
+                <button class="nav-item" data-panel="reviews">
+                    <span>⭐</span>
+                    Avis
+                    <span id="badge-pending" class="badge" hidden>0</span>
+                </button>
+
+                <button class="nav-item" data-panel="settings">
+                    <span>⚙️</span>
+                    Statistiques
+                </button>
+
             </nav>
-            <div class="sidebar-footer">
-                <button class="nav-item" onclick="logout()" style="color:var(--error)">🚪 Déconnexion</button>
+
+            <div class="sidebar-bottom">
+                <div class="session-mini">
+                    <span class="status-dot"></span>
+                    <div>
+                        <strong>Session active</strong>
+                        <small id="last-login">—</small>
+                    </div>
+                </div>
+
+                <button id="logout-button" class="nav-item nav-logout">
+                    <span>↪</span>
+                    Déconnexion
+                </button>
             </div>
         </aside>
 
         <!-- Main -->
         <main class="main-content">
-            <!-- DASHBOARD -->
-            <div class="panel active" id="panel-dashboard">
-                <div class="page-header">
-                    <h2>📊 Dashboard</h2>
-                    <div class="header-actions"><button class="btn btn-ghost" onclick="loadDashboard()">🔄
-                            Actualiser</button></div>
-                </div>
-                <div class="stats-grid" id="dash-stats">
-                    <div class="card stat-card">
-                        <h4>📝 Total Avis</h4>
-                        <div class="stat-val" id="s-total">0</div>
-                        <div class="stat-label">avis reçus</div>
-                    </div>
-                    <div class="card stat-card">
-                        <h4>✅ Approuvés</h4>
-                        <div class="stat-val" id="s-approved">0</div>
-                        <div class="stat-label">publiés</div>
-                    </div>
-                    <div class="card stat-card">
-                        <h4>⏳ En attente</h4>
-                        <div class="stat-val" id="s-pending">0</div>
-                        <div class="stat-label">à modérer</div>
-                    </div>
-                    <div class="card stat-card">
-                        <h4>⭐ Note</h4>
-                        <div class="stat-val" id="s-avg">5.0</div>
-                        <div class="stat-label">sur 5</div>
-                    </div>
-                    <div class="card stat-card">
-                        <h4>📩 Demandes</h4>
-                        <div class="stat-val" id="s-leads">0</div>
-                        <div class="stat-label">devis</div>
-                    </div>
-                    <div class="card stat-card">
-                        <h4>🆕 Nouveaux</h4>
-                        <div class="stat-val" id="s-leads-new">0</div>
-                        <div class="stat-label">à traiter</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h4 style="margin-bottom:12px;color:var(--accent)">📋 Derniers avis</h4>
-                    <div id="recent-reviews">
-                        <div class="loading-state">
-                            <div class="spinner"></div> Chargement...
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- REVIEWS -->
-            <div class="panel" id="panel-reviews">
+            <!-- =================================================
+                 DASHBOARD
+            ================================================== -->
+            <section id="panel-dashboard" class="panel active">
+
                 <div class="page-header">
-                    <h2>📝 Gestion des Avis</h2>
-                </div>
-                <div class="filter-bar">
-                    <div style="display:flex;gap:8px;align-items:center">
-                        <button class="btn btn-ghost" onclick="loadReviews()">🔄 Actualiser</button>
-                        <span class="count-label" id="reviews-count"></span>
+                    <div>
+                        <span class="eyebrow">Vue d'ensemble</span>
+                        <h2>Dashboard</h2>
+                        <p>Voici l'état actuel de votre activité.</p>
                     </div>
-                    <select id="reviews-filter" onchange="filterReviews()">
+
+                    <button id="refresh-dashboard" class="btn btn-secondary">
+                        ↻ Actualiser
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+
+                    <article class="stat-card">
+                        <div class="stat-icon">📩</div>
+                        <div>
+                            <span>Demandes</span>
+                            <strong id="s-leads">0</strong>
+                            <small>total reçues</small>
+                        </div>
+                    </article>
+
+                    <article class="stat-card stat-card-accent">
+                        <div class="stat-icon">🆕</div>
+                        <div>
+                            <span>Nouvelles demandes</span>
+                            <strong id="s-leads-new">0</strong>
+                            <small>à traiter</small>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div>
+                            <span>Avis</span>
+                            <strong id="s-total">0</strong>
+                            <small>reçus</small>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon">✓</div>
+                        <div>
+                            <span>Avis approuvés</span>
+                            <strong id="s-approved">0</strong>
+                            <small>publiés</small>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div>
+                            <span>Avis en attente</span>
+                            <strong id="s-pending">0</strong>
+                            <small>à modérer</small>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon">★</div>
+                        <div>
+                            <span>Note moyenne</span>
+                            <strong id="s-avg">0.0</strong>
+                            <small>sur 5</small>
+                        </div>
+                    </article>
+
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <article class="panel-card">
+                        <div class="card-header">
+                            <div>
+                                <span class="eyebrow">Avis</span>
+                                <h3>Derniers avis</h3>
+                            </div>
+
+                            <button class="text-button" data-open-panel="reviews">
+                                Voir tous →
+                            </button>
+                        </div>
+
+                        <div id="recent-reviews" class="recent-list">
+                            <div class="loading-state">Chargement…</div>
+                        </div>
+                    </article>
+
+                    <article class="panel-card dashboard-help">
+                        <span class="help-icon">💡</span>
+                        <span class="eyebrow">À retenir</span>
+                        <h3>Traitez rapidement vos demandes</h3>
+                        <p>
+                            Une nouvelle demande contient maintenant le
+                            numéro de téléphone du client. Vous pouvez
+                            directement l'appeler depuis le tableau
+                            des demandes.
+                        </p>
+                        <button class="btn btn-primary" data-open-panel="leads">
+                            Voir les demandes
+                        </button>
+                    </article>
+
+                </div>
+            </section>
+
+
+            <!-- =================================================
+                 LEADS
+            ================================================== -->
+            <section id="panel-leads" class="panel">
+
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">Clients potentiels</span>
+                        <h2>Demandes de devis</h2>
+                        <p>Suivez chaque demande jusqu'à sa clôture.</p>
+                    </div>
+
+                    <button id="refresh-leads" class="btn btn-secondary">
+                        ↻ Actualiser
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <span id="leads-count" class="count-label"></span>
+
+                    <select id="leads-filter" class="select-control">
+                        <option value="all">Toutes les demandes</option>
+                        <option value="new">Nouvelles</option>
+                        <option value="contacted">Contactées</option>
+                        <option value="done">Clôturées</option>
+                    </select>
+                </div>
+
+                <div id="leads-container" class="lead-list">
+                    <div class="loading-state">Chargement…</div>
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 AVIS
+            ================================================== -->
+            <section id="panel-reviews" class="panel">
+
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">Réputation</span>
+                        <h2>Avis clients</h2>
+                        <p>Modérez les avis avant leur publication.</p>
+                    </div>
+
+                    <button id="refresh-reviews" class="btn btn-secondary">
+                        ↻ Actualiser
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <span id="reviews-count" class="count-label"></span>
+
+                    <select id="reviews-filter" class="select-control">
                         <option value="all">Tous les avis</option>
                         <option value="pending">En attente</option>
                         <option value="approved">Approuvés</option>
                     </select>
                 </div>
-                <div id="reviews-container">
-                    <div class="loading-state">
-                        <div class="spinner"></div> Chargement...
-                    </div>
-                </div>
-            </div>
 
-            <!-- LEADS -->
-            <div class="panel" id="panel-leads">
-                <div class="page-header">
-                    <h2>📩 Gestion des Leads</h2>
+                <div id="reviews-container" class="review-list">
+                    <div class="loading-state">Chargement…</div>
                 </div>
-                <div class="filter-bar">
-                    <div style="display:flex;gap:8px;align-items:center">
-                        <button class="btn btn-ghost" onclick="loadLeads()">🔄 Actualiser</button>
-                        <span class="count-label" id="leads-count"></span>
-                    </div>
-                    <select id="leads-filter" onchange="filterLeads()">
-                        <option value="all">Tous</option>
-                        <option value="new">Nouveaux</option>
-                        <option value="contacted">Contactés</option>
-                        <option value="done">Clôturés</option>
-                    </select>
-                </div>
-                <div id="leads-container">
-                    <div class="loading-state">
-                        <div class="spinner"></div> Chargement...
-                    </div>
-                </div>
-            </div>
 
-            <!-- SETTINGS -->
-            <div class="panel" id="panel-settings">
+            </section>
+
+
+            <!-- =================================================
+                 STATISTIQUES
+            ================================================== -->
+            <section id="panel-settings" class="panel">
+
                 <div class="page-header">
-                    <h2>⚙️ Paramètres</h2>
-                </div>
-                <h3 style="margin-bottom:16px;font-size:1rem">📊 Statistiques du site</h3>
-                <p style="color:var(--text3);margin-bottom:16px;font-size:0.85rem">Ces valeurs s'affichent dans la
-                    section stats de votre site.</p>
-                <div class="form-grid">
-                    <div class="form-card">
-                        <h4>🖥️ PC Montés</h4>
-                        <div class="form-group"><input type="number" id="input-pc" placeholder="Ex: 50" min="0"></div>
-                    </div>
-                    <div class="form-card">
-                        <h4>😊 Clients Satisfaits</h4>
-                        <div class="form-group"><input type="number" id="input-clients" placeholder="Ex: 100" min="0">
-                        </div>
-                    </div>
-                    <div class="form-card">
-                        <h4>⏱️ Réponse (h)</h4>
-                        <div class="form-group"><input type="number" id="input-response" placeholder="Ex: 2" min="1"
-                                max="72"></div>
+                    <div>
+                        <span class="eyebrow">Site public</span>
+                        <h2>Statistiques affichées</h2>
+                        <p>Modifiez les chiffres présentés sur Horizon IT.</p>
                     </div>
                 </div>
-                <div style="margin-top:20px;display:flex;gap:10px;align-items:center">
-                    <button class="btn btn-success" onclick="saveStats()">💾 Sauvegarder</button>
-                    <span id="save-status" style="font-size:0.85rem"></span>
-                </div>
-                <hr class="divider">
-                <h3 style="margin-bottom:16px;font-size:1rem">ℹ️ Système</h3>
-                <div class="info-box">
-                    <p><strong>Version:</strong> 2.0.0</p>
-                    <p><strong>Dernière connexion:</strong> <span id="last-login">—</span></p>
-                    <p><strong>Session:</strong> <span style="color:var(--success)">✅ Active</span></p>
-                </div>
-            </div>
+
+                <article class="panel-card settings-card">
+
+                    <div class="settings-warning">
+                        <span>ℹ️</span>
+                        <p>
+                            Utilisez uniquement des chiffres correspondant
+                            à votre activité réelle.
+                        </p>
+                    </div>
+
+                    <div class="settings-grid">
+
+                        <label class="setting-field">
+                            <span>🖥️ PC montés</span>
+                            <input id="input-pc" type="number" min="0" step="1">
+                        </label>
+
+                        <label class="setting-field">
+                            <span>🤝 Clients satisfaits</span>
+                            <input id="input-clients" type="number" min="0" step="1">
+                        </label>
+
+                        <label class="setting-field">
+                            <span>⚡ Temps de réponse</span>
+                            <div class="input-suffix">
+                                <input id="input-response" type="number" min="1" step="1">
+                                <span>h</span>
+                            </div>
+                        </label>
+
+                    </div>
+
+                    <div class="settings-actions">
+                        <span id="save-status"></span>
+
+                        <button id="save-stats" class="btn btn-primary">
+                            Enregistrer les statistiques
+                        </button>
+                    </div>
+
+                </article>
+            </section>
+
         </main>
     </div>
 
-    <script>
-        // ============================================
-        // GLOBALS
-        // ============================================
-        let authToken = localStorage.getItem('admin-token');
-        let currentPanel = 'dashboard';
-        let allReviews = [];
-        let allLeads = [];
-        const SESSION_TIMEOUT = 4 * 60 * 60 * 1000; // 4h
-
-        // ── Toast System ──
-        function toast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = `toast toast-${type}`;
-            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-            el.innerHTML = `<span>${icons[type] || ''}</span> ${message}`;
-            container.appendChild(el);
-            setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 300); }, 3500);
-        }
-
-        // ── Session Check ──
-        function checkSession() {
-            const loginTime = localStorage.getItem('admin-login-time');
-            if (loginTime && Date.now() - parseInt(loginTime) > SESSION_TIMEOUT) {
-                logout();
-                toast('Session expirée, veuillez vous reconnecter', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        // Init
-        if (authToken && checkSession()) { showAdmin(); loadDashboard(); }
-
-        // ── Auth ──
-        async function login() {
-            const pwd = document.getElementById('password').value;
-            const errDiv = document.getElementById('login-error');
-            const btn = document.getElementById('btn-login');
-            btn.textContent = 'Connexion...'; btn.disabled = true;
-            try {
-                const res = await fetch('/.netlify/functions/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
-                const data = await res.json();
-                if (res.ok) {
-                    authToken = data.token;
-                    localStorage.setItem('admin-token', authToken);
-                    localStorage.setItem('admin-login-time', Date.now().toString());
-                    localStorage.setItem('last-login', new Date().toLocaleString('fr-FR'));
-                    showAdmin(); loadDashboard();
-                    toast('Connecté avec succès', 'success');
-                    errDiv.textContent = '';
-                } else { errDiv.textContent = data.error || 'Identifiants invalides'; }
-            } catch (e) { errDiv.textContent = 'Erreur de connexion au serveur'; }
-            btn.textContent = 'Se connecter'; btn.disabled = false;
-        }
-
-        function showAdmin() {
-            document.getElementById('login-wrapper').style.display = 'none';
-            document.getElementById('admin-app').style.display = 'block';
-            document.getElementById('last-login').textContent = localStorage.getItem('last-login') || 'Première connexion';
-        }
-
-        function logout() {
-            localStorage.removeItem('admin-token');
-            localStorage.removeItem('admin-login-time');
-            authToken = null;
-            document.getElementById('login-wrapper').style.display = 'flex';
-            document.getElementById('admin-app').style.display = 'none';
-            document.getElementById('password').value = '';
-        }
-
-        // ── Sidebar ──
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebar-overlay').classList.toggle('open');
-        }
-
-        function switchPanel(name, btn) {
-            if (!checkSession()) return;
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item[data-panel]').forEach(n => n.classList.remove('active'));
-            document.getElementById('panel-' + name).classList.add('active');
-            if (btn) btn.classList.add('active');
-            currentPanel = name;
-            if (name === 'dashboard') loadDashboard();
-            if (name === 'reviews') loadReviews();
-            if (name === 'leads') loadLeads();
-            if (name === 'settings') loadSiteStats();
-            // Close mobile sidebar
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebar-overlay').classList.remove('open');
-        }
-
-        // ── Dashboard ──
-        async function loadDashboard() {
-            if (!authToken || !checkSession()) return;
-            try {
-                const res = await fetch('/.netlify/functions/admin-stats', { headers: { 'Authorization': `Bearer ${authToken}` } });
-                if (res.status === 401) { logout(); return; }
-                const s = await res.json();
-                document.getElementById('s-total').textContent = s.reviews?.total ?? 0;
-                document.getElementById('s-approved').textContent = s.reviews?.approved ?? 0;
-                document.getElementById('s-pending').textContent = s.reviews?.pending ?? 0;
-                document.getElementById('s-avg').textContent = s.reviews?.avgRating || '5.0';
-                document.getElementById('s-leads').textContent = s.leads?.total ?? 0;
-                document.getElementById('s-leads-new').textContent = s.leads?.new ?? 0;
-                // Badges
-                const pending = s.reviews?.pending ?? 0;
-                const newLeads = s.leads?.new ?? 0;
-                const bp = document.getElementById('badge-pending');
-                const bl = document.getElementById('badge-leads');
-                bp.style.display = pending > 0 ? 'inline' : 'none'; bp.textContent = pending;
-                bl.style.display = newLeads > 0 ? 'inline' : 'none'; bl.textContent = newLeads;
-                // Recent reviews
-                displayRecent(s.recent);
-                // Pre-fill settings
-                if (s.site) {
-                    document.getElementById('input-pc').value = s.site.pcBuilt;
-                    document.getElementById('input-clients').value = s.site.happyClients;
-                    document.getElementById('input-response').value = s.site.responseTime;
-                }
-            } catch (e) { console.error('Dashboard error:', e); }
-        }
-
-        function displayRecent(reviews) {
-            const c = document.getElementById('recent-reviews');
-            if (!reviews || reviews.length === 0) { c.innerHTML = '<p style="color:var(--text3)">Aucun avis récent</p>'; return; }
-            c.innerHTML = reviews.map(r => `
-            <div class="list-item" style="margin-bottom:6px;padding:12px">
-                <div class="info">
-                    <span class="name">${r.name}</span>
-                    <span class="rating" style="margin-left:8px">${'⭐'.repeat(r.rating)}</span>
-                </div>
-                <span style="font-size:0.8rem;color:var(--text3)">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
-                <span class="pill ${r.approved ? 'pill-approved' : 'pill-pending'}">${r.approved ? 'Approuvé' : 'En attente'}</span>
-            </div>`).join('');
-        }
-
-        // ── Reviews ──
-        async function loadReviews() {
-            if (!authToken || !checkSession()) return;
-            try {
-                const res = await fetch('/.netlify/functions/admin-reviews', { headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } });
-                if (res.ok) { allReviews = await res.json(); filterReviews(); }
-                else if (res.status === 401) logout();
-                else document.getElementById('reviews-container').innerHTML = '<p style="color:var(--error)">Erreur de chargement</p>';
-            } catch (e) { document.getElementById('reviews-container').innerHTML = '<p style="color:var(--error)">Erreur de connexion</p>'; }
-        }
-
-        function filterReviews() {
-            const f = document.getElementById('reviews-filter').value;
-            let filtered = allReviews;
-            if (f === 'pending') filtered = allReviews.filter(r => !r.approved);
-            else if (f === 'approved') filtered = allReviews.filter(r => r.approved);
-            const p = allReviews.filter(r => !r.approved).length;
-            const a = allReviews.filter(r => r.approved).length;
-            document.getElementById('reviews-count').textContent = `${allReviews.length} total • ${p} en attente • ${a} approuvés`;
-            displayReviews(filtered);
-        }
-
-        function displayReviews(reviews) {
-            const c = document.getElementById('reviews-container');
-            if (!reviews.length) { c.innerHTML = '<p style="color:var(--text3)">Aucun avis.</p>'; return; }
-            c.innerHTML = reviews.map(r => `
-            <div class="list-item">
-                <div class="info">
-                    <div><span class="name">${r.name}</span> <span class="rating">${'⭐'.repeat(r.rating)}</span> ${r.is_default ? '<span class="pill pill-new">Défaut</span>' : ''}</div>
-                    <div class="meta">Service: ${r.service || 'N/A'} • ${r.date || new Date(r.created_at).toLocaleDateString('fr-FR')} • <span class="pill ${r.approved ? 'pill-approved' : 'pill-pending'}">${r.approved ? 'Approuvé' : 'En attente'}</span></div>
-                    <div class="msg" style="font-style:italic">"${r.text}"</div>
-                </div>
-                <div class="actions">
-                    ${!r.approved ? `<button class="btn btn-success btn-sm" onclick="approveReview(${r.id})">✅ Approuver</button>` : ''}
-                    <button class="btn btn-danger btn-sm" onclick="deleteReview(${r.id}, '${(r.name || '').replace(/'/g, "\\'")}')">🗑️</button>
-                </div>
-            </div>`).join('');
-        }
-
-        async function approveReview(id) { await reviewAction('approve', id); }
-        async function deleteReview(id, name) { if (confirm(`Supprimer l'avis de ${name} ?`)) await reviewAction('delete', id); }
-        async function reviewAction(action, reviewId) {
-            try {
-                const res = await fetch('/.netlify/functions/admin-reviews', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action, reviewId }) });
-                if (res.ok) { toast(action === 'approve' ? 'Avis approuvé !' : 'Avis supprimé', action === 'approve' ? 'success' : 'info'); loadReviews(); loadDashboard(); }
-                else if (res.status === 401) logout();
-                else toast('Erreur lors de l\'action', 'error');
-            } catch (e) { toast('Erreur de connexion', 'error'); }
-        }
-
-        // ── Leads ──
-        async function loadLeads() {
-            if (!authToken || !checkSession()) return;
-            try {
-                const res = await fetch('/.netlify/functions/admin-leads', { headers: { 'Authorization': `Bearer ${authToken}` } });
-                if (res.ok) { allLeads = await res.json(); filterLeads(); }
-                else if (res.status === 401) logout();
-                else document.getElementById('leads-container').innerHTML = '<p style="color:var(--error)">Erreur</p>';
-            } catch (e) { document.getElementById('leads-container').innerHTML = '<p style="color:var(--error)">Erreur connexion</p>'; }
-        }
-
-        function filterLeads() {
-            const f = document.getElementById('leads-filter').value;
-            let filtered = f === 'all' ? allLeads : allLeads.filter(l => l.status === f);
-            const cn = allLeads.filter(l => l.status === 'new').length;
-            const cc = allLeads.filter(l => l.status === 'contacted').length;
-            const cd = allLeads.filter(l => l.status === 'done').length;
-            document.getElementById('leads-count').textContent = `${allLeads.length} total • ${cn} nouveaux • ${cc} contactés • ${cd} clôturés`;
-            displayLeads(filtered);
-        }
-
-        function displayLeads(leads) {
-            const c = document.getElementById('leads-container');
-            if (!leads || !leads.length) { c.innerHTML = '<p style="color:var(--text3)">Aucune demande.</p>'; return; }
-            c.innerHTML = leads.map(l => {
-                const statusMap = { done: ['Clôturé', 'pill-done'], contacted: ['Contacté', 'pill-contacted'], new: ['Nouveau', 'pill-new'] };
-                const [label, cls] = statusMap[l.status] || statusMap.new;
-                const d = l.created_at ? new Date(l.created_at).toLocaleString('fr-FR') : '';
-                return `
-            <div class="list-item">
-                <div class="info">
-                    <div><span class="name">${l.name || 'Sans nom'}</span> • <span class="meta">${l.email || 'N/A'}</span></div>
-                    <div class="meta">Service: ${l.service || 'N/A'} • ${d}</div>
-                    ${l.message ? `<div class="msg">${l.message}</div>` : ''}
-                </div>
-                <div class="actions">
-                    <span class="pill ${cls}">${label}</span>
-                    ${l.status !== 'contacted' ? `<button class="btn btn-accent btn-sm" onclick="updateLead(${l.id},'contacted')">📞</button>` : ''}
-                    ${l.status !== 'done' ? `<button class="btn btn-success btn-sm" onclick="updateLead(${l.id},'done')">✅</button>` : ''}
-                    <button class="btn btn-danger btn-sm" onclick="deleteLead(${l.id},'${(l.name || '').replace(/'/g, "\\'")}')">🗑️</button>
-                </div>
-            </div>`;
-            }).join('');
-        }
-
-        async function updateLead(id, status) { await leadAction('update', id, status); }
-        async function deleteLead(id, name) { if (confirm(`Supprimer la demande de ${name || 'ce contact'} ?`)) await leadAction('delete', id); }
-        async function leadAction(action, leadId, status = null) {
-            try {
-                const res = await fetch('/.netlify/functions/admin-leads', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action, leadId, status }) });
-                if (res.ok) { toast(action === 'delete' ? 'Lead supprimé' : 'Lead mis à jour', action === 'delete' ? 'info' : 'success'); loadLeads(); loadDashboard(); }
-                else if (res.status === 401) logout();
-                else toast('Erreur action lead', 'error');
-            } catch (e) { toast('Erreur de connexion', 'error'); }
-        }
-
-        // ── Settings ──
-        async function loadSiteStats() {
-            if (!authToken || !checkSession()) return;
-            try {
-                const res = await fetch('/.netlify/functions/admin-stats', { headers: { 'Authorization': `Bearer ${authToken}` } });
-                if (res.ok) {
-                    const d = await res.json();
-                    if (d.site) {
-                        document.getElementById('input-pc').value = d.site.pcBuilt || 50;
-                        document.getElementById('input-clients').value = d.site.happyClients || 100;
-                        document.getElementById('input-response').value = d.site.responseTime || 24;
-                    }
-                }
-            } catch (e) { console.error('Stats load error:', e); }
-        }
-
-        async function saveStats() {
-            if (!authToken || !checkSession()) return;
-            const span = document.getElementById('save-status');
-            span.innerHTML = '<span class="spinner"></span> Sauvegarde...'; span.style.color = 'var(--warning)';
-            const pcBuilt = parseInt(document.getElementById('input-pc').value) || 50;
-            const happyClients = parseInt(document.getElementById('input-clients').value) || 100;
-            const responseTime = parseInt(document.getElementById('input-response').value) || 24;
-            try {
-                const res = await fetch('/.netlify/functions/admin-stats', { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ pcBuilt, happyClients, responseTime }) });
-                if (res.ok) { span.textContent = ''; toast('Statistiques sauvegardées !', 'success'); }
-                else { const e = await res.json(); span.textContent = ''; toast(e.error || 'Erreur sauvegarde', 'error'); }
-            } catch (e) { span.textContent = ''; toast('Erreur de connexion', 'error'); }
-        }
-
-        // ── Auto-refresh (only active panel) ──
-        setInterval(() => {
-            if (!authToken || !checkSession()) return;
-            if (currentPanel === 'dashboard') loadDashboard();
-            else if (currentPanel === 'reviews') loadReviews();
-            else if (currentPanel === 'leads') loadLeads();
-        }, 30000);
-
-        // Enter key login
-        document.getElementById('password').addEventListener('keypress', e => { if (e.key === 'Enter') login(); });
-    </script>
+    <script src="admin.js"></script>
 </body>
-
 </html>

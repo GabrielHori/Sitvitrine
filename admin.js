@@ -1,0 +1,1654 @@
+/* ============================================================
+   HORIZON IT — ADMIN.JS
+
+   Compatible avec :
+   /.netlify/functions/auth
+   /.netlify/functions/admin-stats
+   /.netlify/functions/admin-reviews
+   /.netlify/functions/admin-leads
+   ============================================================ */
+
+(() => {
+
+    "use strict";
+
+
+    /* =========================================================
+       01. ÉTAT GLOBAL
+    ========================================================== */
+
+    let authToken =
+        localStorage.getItem("admin-token");
+
+    let currentPanel =
+        "dashboard";
+
+    let allLeads = [];
+
+    let allReviews = [];
+
+    const SESSION_TIMEOUT =
+        4 * 60 * 60 * 1000;
+
+
+    /* =========================================================
+       02. OUTILS
+    ========================================================== */
+
+    const $ = id =>
+        document.getElementById(id);
+
+
+    function escapeHTML(value) {
+
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "";
+        }
+
+        const date =
+            new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "";
+        }
+
+        return date.toLocaleString(
+            "fr-FR",
+            {
+                dateStyle: "short",
+                timeStyle: "short"
+            }
+        );
+    }
+
+
+    function formatPhone(phone) {
+
+        if (!phone) {
+            return "";
+        }
+
+        return String(phone)
+            .trim()
+            .replace(/\s+/g, " ");
+    }
+
+
+    function phoneHref(phone) {
+
+        if (!phone) {
+            return "#";
+        }
+
+        return "tel:" +
+            String(phone)
+                .replace(/[^\d+]/g, "");
+    }
+
+
+    function mailHref(email) {
+
+        return email
+            ? `mailto:${encodeURIComponent(email)}`
+            : "#";
+    }
+
+
+    /* =========================================================
+       03. TOAST
+    ========================================================== */
+
+    function toast(message, type = "info") {
+
+        const container =
+            $("toast-container");
+
+        const el =
+            document.createElement("div");
+
+        const icons = {
+            success: "✓",
+            error: "!",
+            info: "i"
+        };
+
+        el.className =
+            `toast toast-${type}`;
+
+        el.innerHTML = `
+            <strong>${icons[type] || "i"}</strong>
+            <span>${escapeHTML(message)}</span>
+        `;
+
+        container.appendChild(el);
+
+        setTimeout(() => {
+
+            el.remove();
+
+        }, 3600);
+    }
+
+
+    /* =========================================================
+       04. SESSION
+    ========================================================== */
+
+    function checkSession() {
+
+        const loginTime =
+            localStorage.getItem(
+                "admin-login-time"
+            );
+
+        if (
+            loginTime &&
+            Date.now() -
+                Number(loginTime) >
+                SESSION_TIMEOUT
+        ) {
+
+            logout(
+                "Session expirée, veuillez vous reconnecter."
+            );
+
+            return false;
+        }
+
+        return Boolean(authToken);
+    }
+
+
+    function showAdmin() {
+
+        $("login-wrapper").style.display =
+            "none";
+
+        $("admin-app").style.display =
+            "block";
+
+        $("last-login").textContent =
+            localStorage.getItem(
+                "last-login"
+            ) ||
+            "Connexion actuelle";
+    }
+
+
+    function showLogin() {
+
+        $("login-wrapper").style.display =
+            "grid";
+
+        $("admin-app").style.display =
+            "none";
+    }
+
+
+    function logout(message = "") {
+
+        localStorage.removeItem(
+            "admin-token"
+        );
+
+        localStorage.removeItem(
+            "admin-login-time"
+        );
+
+        authToken = null;
+
+        showLogin();
+
+        $("password").value = "";
+
+        if (message) {
+            toast(message, "error");
+        }
+    }
+
+
+    /* =========================================================
+       05. REQUÊTE API
+    ========================================================== */
+
+    async function api(
+        endpoint,
+        options = {}
+    ) {
+
+        if (!authToken) {
+            throw new Error("Non authentifié");
+        }
+
+        const headers = {
+            ...(options.body
+                ? {
+                    "Content-Type":
+                        "application/json"
+                }
+                : {}),
+            "Authorization":
+                `Bearer ${authToken}`,
+            ...(options.headers || {})
+        };
+
+        const response =
+            await fetch(
+                `/.netlify/functions/${endpoint}`,
+                {
+                    ...options,
+                    headers
+                }
+            );
+
+        if (response.status === 401) {
+
+            logout(
+                "Session expirée, veuillez vous reconnecter."
+            );
+
+            throw new Error(
+                "Session expirée"
+            );
+        }
+
+        let data = null;
+
+        try {
+            data =
+                await response.json();
+        } catch {
+            data = null;
+        }
+
+        if (!response.ok) {
+
+            throw new Error(
+                data?.error ||
+                "Une erreur est survenue."
+            );
+        }
+
+        return data;
+    }
+
+
+    /* =========================================================
+       06. CONNEXION
+    ========================================================== */
+
+    async function login() {
+
+        const password =
+            $("password").value.trim();
+
+        const error =
+            $("login-error");
+
+        const button =
+            $("btn-login");
+
+        if (!password) {
+            error.textContent =
+                "Veuillez saisir votre mot de passe.";
+
+            return;
+        }
+
+        button.disabled = true;
+
+        button.textContent =
+            "Connexion…";
+
+        error.textContent = "";
+
+        try {
+
+            const response =
+                await fetch(
+                    "/.netlify/functions/auth",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                password
+                            })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Mot de passe incorrect."
+                );
+            }
+
+            authToken =
+                data.token;
+
+            localStorage.setItem(
+                "admin-token",
+                authToken
+            );
+
+            localStorage.setItem(
+                "admin-login-time",
+                Date.now().toString()
+            );
+
+            localStorage.setItem(
+                "last-login",
+                new Date()
+                    .toLocaleString(
+                        "fr-FR"
+                    )
+            );
+
+            showAdmin();
+
+            await loadDashboard();
+
+            toast(
+                "Connexion réussie.",
+                "success"
+            );
+
+        } catch (err) {
+
+            error.textContent =
+                err.message ||
+                "Impossible de se connecter.";
+
+        } finally {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Se connecter";
+        }
+    }
+
+
+    /* =========================================================
+       07. NAVIGATION
+    ========================================================== */
+
+    function openPanel(name) {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        document
+            .querySelectorAll(".panel")
+            .forEach(panel => {
+
+                panel.classList.toggle(
+                    "active",
+                    panel.id ===
+                    `panel-${name}`
+                );
+            });
+
+        document
+            .querySelectorAll(
+                ".nav-item[data-panel]"
+            )
+            .forEach(button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.panel ===
+                    name
+                );
+            });
+
+        currentPanel = name;
+
+        closeMobileSidebar();
+
+        if (name === "dashboard") {
+            loadDashboard();
+        }
+
+        if (name === "leads") {
+            loadLeads();
+        }
+
+        if (name === "reviews") {
+            loadReviews();
+        }
+
+        if (name === "settings") {
+            loadSiteStats();
+        }
+    }
+
+
+    function closeMobileSidebar() {
+
+        $("sidebar")
+            .classList.remove("open");
+
+        $("sidebar-overlay")
+            .classList.remove("open");
+    }
+
+
+    function toggleSidebar() {
+
+        $("sidebar")
+            .classList.toggle("open");
+
+        $("sidebar-overlay")
+            .classList.toggle("open");
+    }
+
+
+    /* =========================================================
+       08. DASHBOARD
+    ========================================================== */
+
+    async function loadDashboard() {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        try {
+
+            const data =
+                await api("admin-stats");
+
+            $("s-total").textContent =
+                data.reviews?.total ?? 0;
+
+            $("s-approved").textContent =
+                data.reviews?.approved ?? 0;
+
+            $("s-pending").textContent =
+                data.reviews?.pending ?? 0;
+
+            $("s-avg").textContent =
+                Number(
+                    data.reviews?.avgRating ?? 0
+                ).toFixed(1);
+
+            $("s-leads").textContent =
+                data.leads?.total ?? 0;
+
+            $("s-leads-new").textContent =
+                data.leads?.new ?? 0;
+
+            updateBadge(
+                "badge-pending",
+                data.reviews?.pending ?? 0
+            );
+
+            updateBadge(
+                "badge-leads",
+                data.leads?.new ?? 0
+            );
+
+            displayRecent(
+                data.recent || []
+            );
+
+            if (data.site) {
+
+                $("input-pc").value =
+                    data.site.pcBuilt ?? 0;
+
+                $("input-clients").value =
+                    data.site.happyClients ?? 0;
+
+                $("input-response").value =
+                    data.site.responseTime ?? 24;
+            }
+
+        } catch (error) {
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    "Impossible de charger le dashboard.",
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    function updateBadge(
+        id,
+        value
+    ) {
+
+        const badge = $(id);
+
+        badge.textContent =
+            value;
+
+        badge.hidden =
+            Number(value) <= 0;
+    }
+
+
+    function displayRecent(reviews) {
+
+        const container =
+            $("recent-reviews");
+
+        if (!reviews.length) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    Aucun avis récent.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML =
+            reviews
+                .slice(0, 5)
+                .map(review => {
+
+                    const rating =
+                        Math.max(
+                            1,
+                            Math.min(
+                                5,
+                                Number(
+                                    review.rating
+                                ) || 5
+                            )
+                        );
+
+                    return `
+                        <article class="recent-item">
+
+                            <div class="recent-item-top">
+
+                                <strong class="recent-name">
+                                    ${escapeHTML(
+                                        review.name ||
+                                        "Client"
+                                    )}
+                                </strong>
+
+                                <span class="recent-date">
+                                    ${formatDate(
+                                        review.created_at ||
+                                        review.date
+                                    )}
+                                </span>
+
+                            </div>
+
+                            <div class="recent-meta">
+                                ${"★".repeat(rating)}
+                                ·
+                                ${escapeHTML(
+                                    review.service ||
+                                    "Service"
+                                )}
+                            </div>
+
+                            <div class="recent-message">
+                                ${escapeHTML(
+                                    review.text ||
+                                    ""
+                                )}
+                            </div>
+
+                        </article>
+                    `;
+
+                })
+                .join("");
+    }
+
+
+    /* =========================================================
+       09. LEADS
+    ========================================================== */
+
+    async function loadLeads() {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        $("leads-container").innerHTML =
+            `<div class="loading-state">
+                <span class="spinner"></span>
+                Chargement…
+            </div>`;
+
+        try {
+
+            allLeads =
+                await api("admin-leads");
+
+            if (!Array.isArray(allLeads)) {
+                allLeads = [];
+            }
+
+            filterLeads();
+
+        } catch (error) {
+
+            $("leads-container").innerHTML =
+                `<div class="empty-state">
+                    Impossible de charger les demandes.
+                </div>`;
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    function filterLeads() {
+
+        const filter =
+            $("leads-filter").value;
+
+        const filtered =
+            filter === "all"
+                ? allLeads
+                : allLeads.filter(
+                    lead =>
+                        lead.status ===
+                        filter
+                );
+
+        const counts = {
+            new:
+                allLeads.filter(
+                    l => l.status === "new"
+                ).length,
+
+            contacted:
+                allLeads.filter(
+                    l => l.status === "contacted"
+                ).length,
+
+            done:
+                allLeads.filter(
+                    l => l.status === "done"
+                ).length
+        };
+
+        $("leads-count").textContent =
+            `${allLeads.length} total · ` +
+            `${counts.new} nouvelles · ` +
+            `${counts.contacted} contactées · ` +
+            `${counts.done} clôturées`;
+
+        displayLeads(filtered);
+    }
+
+
+    function displayLeads(leads) {
+
+        const container =
+            $("leads-container");
+
+        if (!leads.length) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    Aucune demande dans cette catégorie.
+                </div>
+            `;
+
+            return;
+        }
+
+        const statusMap = {
+            new: [
+                "Nouveau",
+                "status-new"
+            ],
+
+            contacted: [
+                "Contacté",
+                "status-contacted"
+            ],
+
+            done: [
+                "Clôturé",
+                "status-done"
+            ]
+        };
+
+        container.innerHTML =
+            leads.map(lead => {
+
+                const [
+                    statusLabel,
+                    statusClass
+                ] =
+                    statusMap[
+                        lead.status
+                    ] ||
+                    statusMap.new;
+
+                const phone =
+                    formatPhone(
+                        lead.phone
+                    );
+
+                const email =
+                    lead.email || "";
+
+                return `
+                    <article class="lead-card">
+
+                        <div class="lead-main">
+
+                            <div class="lead-name-row">
+
+                                <strong class="lead-name">
+                                    ${escapeHTML(
+                                        lead.name ||
+                                        "Sans nom"
+                                    )}
+                                </strong>
+
+                                <span class="status-pill ${statusClass}">
+                                    ${statusLabel}
+                                </span>
+
+                            </div>
+
+                            <div class="lead-service">
+                                ${escapeHTML(
+                                    lead.service ||
+                                    "Besoin non précisé"
+                                )}
+                            </div>
+
+                            <div class="lead-contact">
+
+                                ${
+                                    email
+                                        ? `
+                                            <a
+                                                class="contact-chip"
+                                                href="${mailHref(
+                                                    email
+                                                )}"
+                                            >
+                                                ✉ ${escapeHTML(
+                                                    email
+                                                )}
+                                            </a>
+                                          `
+                                        : ""
+                                }
+
+                                ${
+                                    phone
+                                        ? `
+                                            <a
+                                                class="contact-chip"
+                                                href="${phoneHref(
+                                                    phone
+                                                )}"
+                                                title="Appeler ${escapeHTML(
+                                                    phone
+                                                )}"
+                                            >
+                                                📞 ${escapeHTML(
+                                                    phone
+                                                )}
+                                            </a>
+                                          `
+                                        : `
+                                            <span class="contact-chip">
+                                                📞 Téléphone non renseigné
+                                            </span>
+                                          `
+                                }
+
+                            </div>
+
+                            ${
+                                lead.message
+                                    ? `
+                                        <div class="lead-message">
+                                            ${escapeHTML(
+                                                lead.message
+                                            )}
+                                        </div>
+                                      `
+                                    : ""
+                            }
+
+                            <div class="lead-date">
+                                Reçue le
+                                ${formatDate(
+                                    lead.created_at
+                                )}
+                            </div>
+
+                        </div>
+
+                        <div class="lead-actions">
+
+                            ${
+                                lead.status !==
+                                "contacted"
+                                    ? `
+                                        <button
+                                            class="btn btn-primary btn-small"
+                                            data-lead-action="contacted"
+                                            data-id="${Number(
+                                                lead.id
+                                            )}"
+                                        >
+                                            📞 Contacté
+                                        </button>
+                                      `
+                                    : ""
+                            }
+
+                            ${
+                                lead.status !==
+                                "done"
+                                    ? `
+                                        <button
+                                            class="btn btn-success btn-small"
+                                            data-lead-action="done"
+                                            data-id="${Number(
+                                                lead.id
+                                            )}"
+                                        >
+                                            ✓ Clôturer
+                                        </button>
+                                      `
+                                    : ""
+                            }
+
+                            <button
+                                class="btn btn-danger btn-small"
+                                data-lead-action="delete"
+                                data-id="${Number(
+                                    lead.id
+                                )}"
+                                data-name="${escapeHTML(
+                                    lead.name ||
+                                    "ce contact"
+                                )}"
+                            >
+                                Supprimer
+                            </button>
+
+                        </div>
+
+                    </article>
+                `;
+
+            })
+            .join("");
+    }
+
+
+    async function leadAction(
+        action,
+        leadId,
+        status = null
+    ) {
+
+        try {
+
+            await api(
+                "admin-leads",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            action,
+                            leadId,
+                            status
+                        })
+                }
+            );
+
+            toast(
+                action === "delete"
+                    ? "Demande supprimée."
+                    : "Demande mise à jour.",
+                action === "delete"
+                    ? "info"
+                    : "success"
+            );
+
+            await loadLeads();
+
+            await loadDashboard();
+
+        } catch (error) {
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    /* =========================================================
+       10. AVIS
+    ========================================================== */
+
+    async function loadReviews() {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        $("reviews-container").innerHTML =
+            `<div class="loading-state">
+                <span class="spinner"></span>
+                Chargement…
+            </div>`;
+
+        try {
+
+            allReviews =
+                await api("admin-reviews");
+
+            if (!Array.isArray(allReviews)) {
+                allReviews = [];
+            }
+
+            filterReviews();
+
+        } catch (error) {
+
+            $("reviews-container").innerHTML =
+                `<div class="empty-state">
+                    Impossible de charger les avis.
+                </div>`;
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    function filterReviews() {
+
+        const filter =
+            $("reviews-filter").value;
+
+        const filtered =
+            filter === "all"
+                ? allReviews
+                : filter === "pending"
+                    ? allReviews.filter(
+                        review =>
+                            !review.approved
+                    )
+                    : allReviews.filter(
+                        review =>
+                            review.approved
+                    );
+
+        const pending =
+            allReviews.filter(
+                review =>
+                    !review.approved
+            ).length;
+
+        const approved =
+            allReviews.filter(
+                review =>
+                    review.approved
+            ).length;
+
+        $("reviews-count").textContent =
+            `${allReviews.length} total · ` +
+            `${pending} en attente · ` +
+            `${approved} approuvés`;
+
+        updateBadge(
+            "badge-pending",
+            pending
+        );
+
+        displayReviews(filtered);
+    }
+
+
+    function displayReviews(reviews) {
+
+        const container =
+            $("reviews-container");
+
+        if (!reviews.length) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    Aucun avis dans cette catégorie.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML =
+            reviews.map(review => {
+
+                const rating =
+                    Math.max(
+                        1,
+                        Math.min(
+                            5,
+                            Number(
+                                review.rating
+                            ) || 5
+                        )
+                    );
+
+                return `
+                    <article class="review-card">
+
+                        <div class="review-main">
+
+                            <div class="review-top">
+
+                                <strong class="review-name">
+                                    ${escapeHTML(
+                                        review.name ||
+                                        "Client"
+                                    )}
+                                </strong>
+
+                                <span class="review-rating">
+                                    ${"★".repeat(
+                                        rating
+                                    )}${"☆".repeat(
+                                        5 - rating
+                                    )}
+                                </span>
+
+                                <span class="status-pill ${
+                                    review.approved
+                                        ? "approved-pill"
+                                        : "pending-pill"
+                                }">
+                                    ${
+                                        review.approved
+                                            ? "Approuvé"
+                                            : "En attente"
+                                    }
+                                </span>
+
+                            </div>
+
+                            <div class="review-service">
+                                ${escapeHTML(
+                                    review.service ||
+                                    "Service non précisé"
+                                )}
+                            </div>
+
+                            <div class="review-text">
+                                « ${escapeHTML(
+                                    review.text ||
+                                    ""
+                                )} »
+                            </div>
+
+                            <div class="review-date">
+                                ${formatDate(
+                                    review.created_at ||
+                                    review.date
+                                )}
+                            </div>
+
+                        </div>
+
+                        <div class="review-actions">
+
+                            ${
+                                !review.approved
+                                    ? `
+                                        <button
+                                            class="btn btn-success btn-small"
+                                            data-review-action="approve"
+                                            data-id="${Number(
+                                                review.id
+                                            )}"
+                                        >
+                                            ✓ Approuver
+                                        </button>
+                                      `
+                                    : ""
+                            }
+
+                            <button
+                                class="btn btn-danger btn-small"
+                                data-review-action="delete"
+                                data-id="${Number(
+                                    review.id
+                                )}"
+                                data-name="${escapeHTML(
+                                    review.name ||
+                                    "ce client"
+                                )}"
+                            >
+                                Supprimer
+                            </button>
+
+                        </div>
+
+                    </article>
+                `;
+
+            })
+            .join("");
+    }
+
+
+    async function reviewAction(
+        action,
+        reviewId
+    ) {
+
+        try {
+
+            await api(
+                "admin-reviews",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            action,
+                            reviewId
+                        })
+                }
+            );
+
+            toast(
+                action === "approve"
+                    ? "Avis approuvé."
+                    : "Avis supprimé.",
+                action === "approve"
+                    ? "success"
+                    : "info"
+            );
+
+            await loadReviews();
+
+            await loadDashboard();
+
+        } catch (error) {
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    /* =========================================================
+       11. STATISTIQUES
+    ========================================================== */
+
+    async function loadSiteStats() {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        try {
+
+            const data =
+                await api("admin-stats");
+
+            if (!data.site) {
+                return;
+            }
+
+            $("input-pc").value =
+                data.site.pcBuilt ?? 0;
+
+            $("input-clients").value =
+                data.site.happyClients ?? 0;
+
+            $("input-response").value =
+                data.site.responseTime ?? 24;
+
+        } catch (error) {
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    "Impossible de charger les statistiques.",
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    async function saveStats() {
+
+        if (!checkSession()) {
+            return;
+        }
+
+        const saveStatus =
+            $("save-status");
+
+        const pcBuilt =
+            Math.max(
+                0,
+                parseInt(
+                    $("input-pc").value,
+                    10
+                ) || 0
+            );
+
+        const happyClients =
+            Math.max(
+                0,
+                parseInt(
+                    $("input-clients").value,
+                    10
+                ) || 0
+            );
+
+        const responseTime =
+            Math.max(
+                1,
+                parseInt(
+                    $("input-response").value,
+                    10
+                ) || 24
+            );
+
+        saveStatus.innerHTML =
+            `<span class="spinner"></span>
+             Sauvegarde…`;
+
+        try {
+
+            await api(
+                "admin-stats",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            pcBuilt,
+                            happyClients,
+                            responseTime
+                        })
+                }
+            );
+
+            saveStatus.textContent =
+                "Enregistré.";
+
+            toast(
+                "Statistiques sauvegardées.",
+                "success"
+            );
+
+        } catch (error) {
+
+            saveStatus.textContent =
+                "";
+
+            if (
+                error.message !==
+                "Session expirée"
+            ) {
+
+                toast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+    }
+
+
+    /* =========================================================
+       12. ÉVÉNEMENTS
+    ========================================================== */
+
+    $("login-form")
+        .addEventListener(
+            "submit",
+            event => {
+
+                event.preventDefault();
+
+                login();
+            }
+        );
+
+
+    $("logout-button")
+        .addEventListener(
+            "click",
+            () => logout()
+        );
+
+
+    $("burger-admin")
+        .addEventListener(
+            "click",
+            toggleSidebar
+        );
+
+
+    $("sidebar-overlay")
+        .addEventListener(
+            "click",
+            closeMobileSidebar
+        );
+
+
+    document
+        .querySelectorAll(
+            ".nav-item[data-panel]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () =>
+                    openPanel(
+                        button.dataset.panel
+                    )
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            "[data-open-panel]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () =>
+                    openPanel(
+                        button.dataset.openPanel
+                    )
+            );
+        });
+
+
+    $("refresh-dashboard")
+        .addEventListener(
+            "click",
+            loadDashboard
+        );
+
+
+    $("refresh-leads")
+        .addEventListener(
+            "click",
+            loadLeads
+        );
+
+
+    $("refresh-reviews")
+        .addEventListener(
+            "click",
+            loadReviews
+        );
+
+
+    $("leads-filter")
+        .addEventListener(
+            "change",
+            filterLeads
+        );
+
+
+    $("reviews-filter")
+        .addEventListener(
+            "change",
+            filterReviews
+        );
+
+
+    $("save-stats")
+        .addEventListener(
+            "click",
+            saveStats
+        );
+
+
+    $("leads-container")
+        .addEventListener(
+            "click",
+            event => {
+
+                const button =
+                    event.target.closest(
+                        "[data-lead-action]"
+                    );
+
+                if (!button) {
+                    return;
+                }
+
+                const action =
+                    button.dataset.leadAction;
+
+                const id =
+                    Number(
+                        button.dataset.id
+                    );
+
+                if (
+                    action ===
+                    "delete"
+                ) {
+
+                    const name =
+                        button.dataset.name ||
+                        "ce contact";
+
+                    if (
+                        !confirm(
+                            `Supprimer la demande de ${name} ?`
+                        )
+                    ) {
+                        return;
+                    }
+
+                    leadAction(
+                        "delete",
+                        id
+                    );
+
+                    return;
+                }
+
+                leadAction(
+                    "update",
+                    id,
+                    action
+                );
+            }
+        );
+
+
+    $("reviews-container")
+        .addEventListener(
+            "click",
+            event => {
+
+                const button =
+                    event.target.closest(
+                        "[data-review-action]"
+                    );
+
+                if (!button) {
+                    return;
+                }
+
+                const action =
+                    button.dataset.reviewAction;
+
+                const id =
+                    Number(
+                        button.dataset.id
+                    );
+
+                if (
+                    action ===
+                    "delete"
+                ) {
+
+                    const name =
+                        button.dataset.name ||
+                        "ce client";
+
+                    if (
+                        !confirm(
+                            `Supprimer l'avis de ${name} ?`
+                        )
+                    ) {
+                        return;
+                    }
+                }
+
+                reviewAction(
+                    action,
+                    id
+                );
+            }
+        );
+
+
+    /* =========================================================
+       13. AUTO REFRESH
+    ========================================================== */
+
+    setInterval(
+        () => {
+
+            if (!checkSession()) {
+                return;
+            }
+
+            if (
+                currentPanel ===
+                "dashboard"
+            ) {
+                loadDashboard();
+            }
+
+            if (
+                currentPanel ===
+                "leads"
+            ) {
+                loadLeads();
+            }
+
+            if (
+                currentPanel ===
+                "reviews"
+            ) {
+                loadReviews();
+            }
+
+        },
+        30000
+    );
+
+
+    /* =========================================================
+       14. INITIALISATION
+    ========================================================== */
+
+    if (
+        authToken &&
+        checkSession()
+    ) {
+
+        showAdmin();
+
+        loadDashboard();
+
+    } else {
+
+        showLogin();
+
+    }
+
+})();

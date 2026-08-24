@@ -1,11 +1,7 @@
 /**
- * ============================================
- * HORIZON IT - API ADMIN STATISTIQUES
- * ============================================
- *
- * Endpoints protégés par JWT:
- * - GET  /.netlify/functions/admin-stats     → Dashboard stats
- * - POST /.netlify/functions/admin-stats     → Mettre à jour les stats
+ * ============================================================
+ * HORIZON IT - ADMIN STATISTIQUES
+ * ============================================================
  */
 
 const jwt = require('jsonwebtoken');
@@ -18,189 +14,131 @@ const {
 
 const { getSupabaseClient } = require('./utils/supabase');
 
-// ============================================
-// VÉRIFICATION JWT
-// ============================================
-
-function verifyToken(token) {
+function verifyAdminToken(authHeader) {
+    if (!authHeader || !authHeader.startsWith('Bearer ') || !process.env.JWT_SECRET) return null;
     try {
-        if (!process.env.JWT_SECRET) {
-            console.error('❌ JWT_SECRET non configuré');
-            return null;
-        }
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
+        const decoded = jwt.verify(authHeader.slice(7).trim(), process.env.JWT_SECRET);
+        return decoded?.admin === true ? decoded : null;
+    } catch {
         return null;
     }
 }
-
-function extractToken(authHeader) {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return null;
-    }
-    return authHeader.split(' ')[1];
-}
-
-// ============================================
-// HANDLER PRINCIPAL
-// ============================================
 
 exports.handler = async (event) => {
-    if (event.httpMethod === 'OPTIONS') {
-        return optionsResponse();
-    }
+    if (event.httpMethod === 'OPTIONS') return optionsResponse();
 
-    // Vérification auth
-    const token = extractToken(event.headers.authorization);
-    if (!token) {
-        return errorResponse('Token requis', 401);
-    }
-
-    const decoded = verifyToken(token);
-    if (!decoded || !decoded.admin) {
+    if (!verifyAdminToken(event.headers?.authorization)) {
         return errorResponse('Non autorisé', 401);
     }
 
     const client = getSupabaseClient();
 
     try {
-        // ========================================
-        // GET - Récupérer les stats admin
-        // ========================================
         if (event.httpMethod === 'GET') {
-            const stats = await getAdminStats(client);
-            return successResponse(stats);
+            return successResponse(await getAdminStats(client));
         }
 
-        // ========================================
-        // POST - Mettre à jour les stats du site
-        // ========================================
         if (event.httpMethod === 'POST') {
+            if (!client) return errorResponse('Base de données non configurée', 500);
+
             let body;
-            try {
-                body = JSON.parse(event.body);
-            } catch (e) {
-                return errorResponse('Format JSON invalide', 400);
+            try { body = JSON.parse(event.body || '{}'); }
+            catch { return errorResponse('Format JSON invalide', 400); }
+
+            const updateBody = {
+                id: 1,
+                updated_at: new Date().toISOString()
+            };
+
+            if (body.pcBuilt !== undefined) {
+                const value = Number(body.pcBuilt);
+                if (!Number.isInteger(value) || value < 0) return errorResponse('pcBuilt invalide', 400);
+                updateBody.pc_built = value;
             }
 
-            const { pcBuilt, happyClients, responseTime } = body;
+            if (body.happyClients !== undefined) {
+                const value = Number(body.happyClients);
+                if (!Number.isInteger(value) || value < 0) return errorResponse('happyClients invalide', 400);
+                updateBody.happy_clients = value;
+            }
 
-            // DEBUG: Log des valeurs reçues
-            console.log('📥 Valeurs reçues:', { pcBuilt, happyClients, responseTime });
-            console.log('📊 Types:', {
-                pcBuilt: typeof pcBuilt,
-                happyClients: typeof happyClients,
-                responseTime: typeof responseTime
-            });
+            if (body.responseTime !== undefined) {
+                const value = Number(body.responseTime);
+                if (!Number.isInteger(value) || value < 0) return errorResponse('responseTime invalide', 400);
+                updateBody.response_time = value;
+            }
 
-            // Conversion et validation des données
-            let pcBuiltNum, happyClientsNum, responseTimeNum;
-
-            if (pcBuilt !== undefined) {
-                pcBuiltNum = parseInt(pcBuilt, 10);
-                console.log('🔢 pcBuiltNum après parseInt:', pcBuiltNum, 'isNaN:', isNaN(pcBuiltNum));
-                if (isNaN(pcBuiltNum) || pcBuiltNum < 0) {
-                    console.error('❌ Validation pcBuilt échouée:', pcBuiltNum);
-                    return errorResponse('pcBuilt doit être un entier positif', 400);
+            if (body.successRate !== undefined) {
+                const value = Number(body.successRate);
+                if (!Number.isInteger(value) || value < 0 || value > 100) {
+                    return errorResponse('successRate doit être entre 0 et 100', 400);
                 }
-            }
-            if (happyClients !== undefined) {
-                happyClientsNum = parseInt(happyClients, 10);
-                console.log('🔢 happyClientsNum après parseInt:', happyClientsNum, 'isNaN:', isNaN(happyClientsNum));
-                if (isNaN(happyClientsNum) || happyClientsNum < 0) {
-                    console.error('❌ Validation happyClients échouée:', happyClientsNum);
-                    return errorResponse('happyClients doit être un entier positif', 400);
-                }
-            }
-            if (responseTime !== undefined) {
-                responseTimeNum = parseInt(responseTime, 10);
-                console.log('🔢 responseTimeNum après parseInt:', responseTimeNum, 'isNaN:', isNaN(responseTimeNum));
-                if (isNaN(responseTimeNum) || responseTimeNum < 0) {
-                    console.error('❌ Validation responseTime échouée:', responseTimeNum);
-                    return errorResponse('responseTime doit être un entier positif', 400);
-                }
+                updateBody.success_rate = value;
             }
 
-            console.log('✅ Validation passée, valeurs converties:', { pcBuiltNum, happyClientsNum, responseTimeNum });
-
-            if (!client) {
-                return errorResponse('Base de données non configurée', 500);
+            if (Object.keys(updateBody).length === 2) {
+                return errorResponse('Aucune statistique à modifier', 400);
             }
 
-            // Construction dynamique de l'objet pour l'upsert
-            const updateBody = { id: 1, updated_at: new Date().toISOString() };
-
-            if (pcBuiltNum !== undefined) updateBody.pc_built = pcBuiltNum;
-            if (happyClientsNum !== undefined) updateBody.happy_clients = happyClientsNum;
-            if (responseTimeNum !== undefined) updateBody.response_time = responseTimeNum;
-
-            console.log('📦 Envoi à Supabase:', updateBody);
-
-            // Upsert dans site_stats
-            const { error: dbError } = await client
+            const { data, error } = await client
                 .from('site_stats')
-                .upsert(updateBody);
+                .upsert(updateBody, { onConflict: 'id' })
+                .select()
+                .single();
 
-            if (dbError) {
-                console.error('❌ Erreur Supabase:', dbError);
-                // Retourner le message d'erreur précis pour le débogage
-                return errorResponse(`Erreur DB: ${dbError.message || JSON.stringify(dbError)}`, 500);
+            if (error) {
+                console.error('Erreur Supabase admin-stats:', error);
+                return errorResponse('Erreur lors de la sauvegarde des statistiques', 500);
             }
 
-            console.log('✅ Stats mises à jour');
-            return successResponse({ message: 'Stats mises à jour' });
+            return successResponse({ message: 'Stats mises à jour', stats: data });
         }
 
         return errorResponse('Méthode non autorisée', 405);
-
     } catch (error) {
-        console.error('🚨 Erreur admin-stats:', error);
+        console.error('Erreur admin-stats:', error);
         return errorResponse('Erreur serveur', 500);
     }
 };
-
-// ============================================
-// RÉCUPÉRATION STATS ADMIN
-// ============================================
 
 async function getAdminStats(client) {
     const stats = {
         reviews: { total: 0, approved: 0, pending: 0, avgRating: 0 },
         leads: { total: 0, new: 0, contacted: 0, done: 0 },
-        site: { pcBuilt: 50, happyClients: 100, responseTime: 24 },
-        recent: []
+        site: { pcBuilt: 0, happyClients: 0, responseTime: 24, successRate: 100 },
+        recent: [],
+        recentLeads: []
     };
 
     if (!client) return stats;
 
     try {
-        // Stats des avis
-        const { data: reviews } = await client
+        const { data: reviews, error: reviewsError } = await client
             .from('reviews')
-            .select('id, name, rating, approved, created_at')
+            .select('id, name, rating, service, text, approved, created_at')
             .order('created_at', { ascending: false });
 
-        if (reviews) {
+        if (!reviewsError && reviews) {
             stats.reviews.total = reviews.length;
             stats.reviews.approved = reviews.filter(r => r.approved).length;
             stats.reviews.pending = reviews.filter(r => !r.approved).length;
 
-            const approvedReviews = reviews.filter(r => r.approved);
-            if (approvedReviews.length > 0) {
-                const sum = approvedReviews.reduce((acc, r) => acc + r.rating, 0);
-                stats.reviews.avgRating = Math.round((sum / approvedReviews.length) * 10) / 10;
+            const approved = reviews.filter(r => r.approved);
+            if (approved.length) {
+                stats.reviews.avgRating = Math.round(
+                    (approved.reduce((sum, r) => sum + Number(r.rating || 0), 0) / approved.length) * 10
+                ) / 10;
             }
 
             stats.recent = reviews.slice(0, 5);
         }
 
-        // Stats des leads (demandes)
-        const { data: leads } = await client
+        const { data: leads, error: leadsError } = await client
             .from('leads')
-            .select('id, status, name, email, service, created_at')
+            .select('id, status, name, email, phone, service, message, created_at')
             .order('created_at', { ascending: false });
 
-        if (leads) {
+        if (!leadsError && leads) {
             stats.leads.total = leads.length;
             stats.leads.new = leads.filter(l => l.status === 'new').length;
             stats.leads.contacted = leads.filter(l => l.status === 'contacted').length;
@@ -208,24 +146,23 @@ async function getAdminStats(client) {
             stats.recentLeads = leads.slice(0, 5);
         }
 
-        // Stats du site
-        const { data: siteStats } = await client
+        const { data: siteStats, error: siteError } = await client
             .from('site_stats')
             .select('*')
-            .single();
+            .eq('id', 1)
+            .maybeSingle();
 
-        if (siteStats) {
+        if (!siteError && siteStats) {
             stats.site = {
-                pcBuilt: siteStats.pc_built || 50,
-                happyClients: siteStats.happy_clients || 100,
-                responseTime: siteStats.response_time || 24
+                pcBuilt: siteStats.pc_built ?? 0,
+                happyClients: siteStats.happy_clients ?? 0,
+                responseTime: siteStats.response_time ?? 24,
+                successRate: siteStats.success_rate ?? 100
             };
         }
-
     } catch (error) {
-        console.error('❌ Erreur getAdminStats:', error);
+        console.error('Erreur getAdminStats:', error);
     }
 
     return stats;
 }
-

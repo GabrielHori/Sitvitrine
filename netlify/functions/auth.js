@@ -1,16 +1,10 @@
 /**
- * ============================================
- * HORIZON IT - API AUTHENTIFICATION ADMIN
- * ============================================
- *
- * Endpoint:
- * - POST /api/auth     → Authentification avec mot de passe
- *
- * Variables d'environnement requises:
- * - ADMIN_PASSWORD: Mot de passe admin
- * - JWT_SECRET: Clé secrète pour signer les tokens
+ * ============================================================
+ * HORIZON IT - AUTHENTIFICATION ADMIN
+ * ============================================================
  */
 
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const {
@@ -20,43 +14,40 @@ const {
     logger
 } = require('./utils/shared');
 
-// ============================================
-// CONFIGURATION
-// ============================================
-
 const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+const LOCKOUT_DURATION = 15 * 60 * 1000;
 const TOKEN_EXPIRY = '24h';
-
-// Stockage temporaire des tentatives (reset au redémarrage de la fonction)
-// Note: Pour une vraie protection, utiliser Redis ou Supabase
 const loginAttempts = new Map();
 
-// ============================================
-// PROTECTION BRUTE-FORCE
-// ============================================
+function getClientIP(event) {
+    const forwarded = event.headers?.['x-forwarded-for'];
+    return (forwarded ? forwarded.split(',')[0].trim() : event.headers?.['client-ip']) || 'unknown';
+}
+
+function hashSecret(value) {
+    return crypto.createHash('sha256').update(String(value)).digest('hex');
+}
+
+function safeEqual(a, b) {
+    const ah = Buffer.from(hashSecret(a), 'hex');
+    const bh = Buffer.from(hashSecret(b), 'hex');
+    return ah.length === bh.length && crypto.timingSafeEqual(ah, bh);
+}
 
 function checkBruteForce(clientIP) {
     const now = Date.now();
     const attempts = loginAttempts.get(clientIP);
+    if (!attempts) return { blocked: false };
 
-    if (!attempts) {
-        return { blocked: false };
-    }
-
-    // Vérifier si le lockout est expiré
     if (attempts.lockedUntil && now < attempts.lockedUntil) {
-        const remainingMinutes = Math.ceil((attempts.lockedUntil - now) / 60000);
         return {
             blocked: true,
-            message: `Trop de tentatives. Réessayez dans ${remainingMinutes} minute(s).`
+            message: `Trop de tentatives. Réessayez dans ${Math.ceil((attempts.lockedUntil - now) / 60000)} minute(s).`
         };
     }
 
-    // Reset si lockout expiré
     if (attempts.lockedUntil && now >= attempts.lockedUntil) {
         loginAttempts.delete(clientIP);
-        return { blocked: false };
     }
 
     return { blocked: false };
@@ -64,115 +55,65 @@ function checkBruteForce(clientIP) {
 
 function recordFailedAttempt(clientIP) {
     const now = Date.now();
-    const attempts = loginAttempts.get(clientIP) || { count: 0, firstAttempt: now };
+    const attempts = loginAttempts.get(clientIP) || { count: 0 };
+    attempts.count += 1;
 
-    attempts.count++;
-
-    // Si trop de tentatives, bloquer
     if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
         attempts.lockedUntil = now + LOCKOUT_DURATION;
-        logger.security(`IP ${clientIP} bloquée pour 15 minutes après ${attempts.count} tentatives`);
     }
 
     loginAttempts.set(clientIP, attempts);
 }
 
-function resetAttempts(clientIP) {
-    loginAttempts.delete(clientIP);
-}
-
-// ============================================
-// HANDLER PRINCIPAL
-// ============================================
-
 exports.handler = async (event) => {
-    // Preflight CORS
-    if (event.httpMethod === 'OPTIONS') {
-        return optionsResponse();
-    }
+    if (event.httpMethod === 'OPTIONS') return optionsResponse();
 
-    // Seulement POST autorisé
     if (event.httpMethod !== 'POST') {
         return errorResponse('Méthode non autorisée', 405);
     }
 
-    const clientIP = event.headers['x-forwarded-for'] ||
-        event.headers['client-ip'] ||
-        'unknown';
+    const clientIP = getClientIP(event);
+    const bruteCheck = checkBruteForce(clientIP);
+
+    if (bruteCheck.blocked) {
+        return errorResponse(bruteCheck.message, 429);
+    }
 
     try {
-        // ========================================
-        // Vérification brute-force
-        // ========================================
-        const bruteCheck = checkBruteForce(clientIP);
-        if (bruteCheck.blocked) {
-            logger.security(`Tentative bloquée pour IP: ${clientIP}`);
-            return errorResponse(bruteCheck.message, 429);
-        }
-
-        // ========================================
-        // Parse du body
-        // ========================================
         let body;
-        try {
-            body = JSON.parse(event.body);
-        } catch (e) {
-            return errorResponse('Format JSON invalide', 400);
-        }
+        try { body = JSON.parse(event.body || '{}'); }
+        catch { return errorResponse('Format JSON invalide', 400); }
 
-        const { password } = body;
-
-        if (!password) {
+        if (typeof body.password !== 'string' || !body.password) {
             return errorResponse('Mot de passe requis', 400);
         }
 
-        // ========================================
-        // Vérification des variables d'environnement
-        // ========================================
-        if (!process.env.ADMIN_PASSWORD || !process.env.JWT_SECRET) {
-            logger.error('Variables d\'environnement manquantes!');
-            logger.error('   ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD ? '✓' : '✗');
-            logger.error('   JWT_SECRET:', process.env.JWT_SECRET ? '✓' : '✗');
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        const jwtSecret = process.env.JWT_SECRET;
+
+        if (!adminPassword || !jwtSecret) {
+            logger.error('ADMIN_PASSWORD ou JWT_SECRET manquant');
             return errorResponse('Configuration serveur incorrecte', 500);
         }
 
-        // ========================================
-        // Vérification du mot de passe
-        // ========================================
-        logger.info(`🔐 Tentative de connexion depuis IP: ${clientIP.substring(0, 10)}...`);
-
-        if (password === process.env.ADMIN_PASSWORD) {
-            // Succès - Reset les tentatives et créer le token
-            resetAttempts(clientIP);
-
-            const token = jwt.sign(
-                {
-                    admin: true,
-                    ip: clientIP.substring(0, 10),
-                    iat: Math.floor(Date.now() / 1000)
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: TOKEN_EXPIRY }
-            );
-
-            logger.security('Connexion admin réussie');
-
-            return successResponse({
-                token,
-                message: 'Connexion réussie',
-                expiresIn: TOKEN_EXPIRY
-            });
+        if (!safeEqual(body.password, adminPassword)) {
+            recordFailedAttempt(clientIP);
+            return errorResponse('Mot de passe incorrect', 401);
         }
 
-        // ========================================
-        // Échec - Enregistrer la tentative
-        // ========================================
-        recordFailedAttempt(clientIP);
+        loginAttempts.delete(clientIP);
 
-        logger.security(`Tentative échouée depuis IP: ${clientIP}`);
+        const token = jwt.sign(
+            { admin: true },
+            jwtSecret,
+            { expiresIn: TOKEN_EXPIRY }
+        );
 
-        return errorResponse('Mot de passe incorrect', 401);
-
+        return successResponse({
+            token,
+            message: 'Connexion réussie',
+            expiresIn: TOKEN_EXPIRY
+        });
     } catch (error) {
         logger.error('Erreur auth:', error);
         return errorResponse('Erreur serveur', 500);

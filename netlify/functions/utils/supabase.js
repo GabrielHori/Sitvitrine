@@ -1,85 +1,53 @@
 /**
- * ============================================
+ * ============================================================
  * HORIZON IT - CLIENT SUPABASE
- * ============================================
- * 
- * Gestion de la base de données des avis
- * 
- * Variables d'environnement requises:
- * - SUPABASE_URL: URL de votre projet Supabase
- * - SUPABASE_ANON_KEY: Clé anonyme (publique)
+ * ============================================================
  */
 
+const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 const { DEFAULT_REVIEWS, logger } = require('./shared');
 
-// ============================================
-// INITIALISATION SUPABASE
-// ============================================
-
 function getSupabaseClient() {
     const supabaseUrl = process.env.SUPABASE_URL;
-    // Utiliser service_role pour bypass RLS
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+    const supabaseKey =
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        logger.error('Variables Supabase manquantes!');
-        logger.error('   SUPABASE_URL:', supabaseUrl ? '✓' : '✗');
-        logger.error('   SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓' : '✗');
+        logger.error('Variables Supabase manquantes');
         return null;
     }
 
-    logger.debug('Supabase: utilisation de', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE' : 'ANON');
-    return createClient(supabaseUrl, supabaseKey);
+    return createClient(supabaseUrl, supabaseKey, {
+        auth: { persistSession: false, autoRefreshToken: false }
+    });
 }
 
-// ============================================
-// OPÉRATIONS SUR LES AVIS
-// ============================================
-
-/**
- * Récupère tous les avis (approuvés uniquement par défaut)
- */
 async function getReviews(approvedOnly = true) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        logger.warn('Supabase non configuré, retour aux avis par défaut');
-        return DEFAULT_REVIEWS;
-    }
+    if (!client) return DEFAULT_REVIEWS;
 
     try {
         let query = client.from('reviews').select('*');
-
-        if (approvedOnly) {
-            query = query.eq('approved', true);
-        }
+        if (approvedOnly) query = query.eq('approved', true);
 
         const { data, error } = await query.order('created_at', { ascending: false });
-
         if (error) {
-            logger.error('Erreur Supabase getReviews:', error);
+            logger.error('Erreur getReviews:', error);
             return DEFAULT_REVIEWS;
         }
 
-        logger.info(`📋 ${data.length} avis récupérés depuis Supabase`);
-        return data.length > 0 ? data : DEFAULT_REVIEWS;
-
+        return data && data.length ? data : DEFAULT_REVIEWS;
     } catch (error) {
         logger.error('Exception getReviews:', error);
         return DEFAULT_REVIEWS;
     }
 }
 
-/**
- * Ajoute un nouvel avis
- */
 async function addReview(reviewData, clientIP = 'unknown') {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const newReview = {
         name: reviewData.name,
@@ -98,23 +66,16 @@ async function addReview(reviewData, clientIP = 'unknown') {
         .single();
 
     if (error) {
-        logger.error('Erreur Supabase addReview:', error);
-        throw new Error('Erreur lors de l\'ajout de l\'avis');
+        logger.error('Erreur addReview:', error);
+        throw new Error('Erreur lors de l’ajout de l’avis');
     }
 
-    logger.info(`✅ Nouvel avis ajouté: ID ${data.id}`);
     return data;
 }
 
-/**
- * Met à jour le statut d'un avis (approuver/rejeter)
- */
 async function updateReviewStatus(reviewId, approved) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const { data, error } = await client
         .from('reviews')
@@ -124,22 +85,16 @@ async function updateReviewStatus(reviewId, approved) {
         .single();
 
     if (error) {
-        logger.error('Erreur Supabase updateReviewStatus:', error);
+        logger.error('Erreur updateReviewStatus:', error);
         throw new Error('Erreur lors de la mise à jour');
     }
 
     return data;
 }
 
-/**
- * Supprime un avis
- */
 async function deleteReview(reviewId) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const { error } = await client
         .from('reviews')
@@ -147,30 +102,21 @@ async function deleteReview(reviewId) {
         .eq('id', reviewId);
 
     if (error) {
-        logger.error('Erreur Supabase deleteReview:', error);
+        logger.error('Erreur deleteReview:', error);
         throw new Error('Erreur lors de la suppression');
     }
 
     return true;
 }
 
-// ============================================
-// OPÉRATIONS SUR LES DEMANDES DE CONTACT / DEVIS
-// ============================================
-
-/**
- * Ajoute une demande de devis/contact
- */
 async function addLead(leadData) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const newLead = {
         name: leadData.name,
         email: leadData.email,
+        phone: leadData.phone || null,
         service: leadData.service,
         message: leadData.message,
         status: 'new',
@@ -184,49 +130,36 @@ async function addLead(leadData) {
         .single();
 
     if (error) {
-        logger.error('Erreur Supabase addLead:', error);
-        throw new Error('Erreur lors de l\'ajout de la demande');
+        logger.error('Erreur addLead:', error);
+        throw new Error('Erreur lors de l’ajout de la demande');
     }
 
-    logger.info(`✅ Lead ajouté: ID ${data.id}`);
     return data;
 }
 
-/**
- * Récupère les demandes de devis
- */
 async function getLeads(status = 'all') {
     const client = getSupabaseClient();
+    if (!client) return [];
 
-    if (!client) {
-        logger.warn('Supabase non configuré, aucun lead retourné');
-        return [];
-    }
+    let query = client
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    let query = client.from('leads').select('*').order('created_at', { ascending: false });
-    if (status && status !== 'all') {
-        query = query.eq('status', status);
-    }
+    if (status && status !== 'all') query = query.eq('status', status);
 
     const { data, error } = await query;
-
     if (error) {
-        logger.error('Erreur Supabase getLeads:', error);
+        logger.error('Erreur getLeads:', error);
         return [];
     }
 
     return data || [];
 }
 
-/**
- * Met à jour le statut d'un lead
- */
 async function updateLeadStatus(leadId, status) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const { data, error } = await client
         .from('leads')
@@ -236,22 +169,16 @@ async function updateLeadStatus(leadId, status) {
         .single();
 
     if (error) {
-        logger.error('Erreur Supabase updateLeadStatus:', error);
+        logger.error('Erreur updateLeadStatus:', error);
         throw new Error('Erreur lors de la mise à jour du lead');
     }
 
     return data;
 }
 
-/**
- * Supprime un lead
- */
 async function deleteLead(leadId) {
     const client = getSupabaseClient();
-
-    if (!client) {
-        throw new Error('Base de données non configurée');
-    }
+    if (!client) throw new Error('Base de données non configurée');
 
     const { error } = await client
         .from('leads')
@@ -259,45 +186,31 @@ async function deleteLead(leadId) {
         .eq('id', leadId);
 
     if (error) {
-        logger.error('Erreur Supabase deleteLead:', error);
+        logger.error('Erreur deleteLead:', error);
         throw new Error('Erreur lors de la suppression du lead');
     }
 
     return true;
 }
 
-/**
- * Hash sécurisé de l'IP avec SHA-256 et salt
- * Anonymise l'IP tout en permettant de détecter les doublons
- */
 function hashIP(ip) {
-    if (!ip) return 'unknown';
-
-    const crypto = require('crypto');
+    const value = String(ip || 'unknown');
     const salt = process.env.IP_HASH_SALT;
 
-    // Avertissement si le salt n'est pas configuré
     if (!salt) {
-        logger.warn('⚠️ IP_HASH_SALT non configuré ! Utilisation d\'un salt par défaut (NON SÉCURISÉ pour la production)');
-        // Utiliser un salt par défaut uniquement en développement
-        const defaultSalt = 'horizon-it-default-salt-2024';
-        return crypto
-            .createHash('sha256')
-            .update(ip + defaultSalt)
-            .digest('hex')
-            .slice(0, 16);
+        // Ne pas utiliser un salt fixe en production.
+        if (process.env.CONTEXT === 'production') {
+            logger.warn('IP_HASH_SALT non configuré en production');
+        }
+        return crypto.createHash('sha256').update(value).digest('hex').slice(0, 16);
     }
 
     return crypto
         .createHash('sha256')
-        .update(ip + salt)
+        .update(value + salt)
         .digest('hex')
-        .slice(0, 16); // Garder 16 caractères pour un hash compact
+        .slice(0, 16);
 }
-
-// ============================================
-// EXPORTS
-// ============================================
 
 module.exports = {
     getSupabaseClient,
