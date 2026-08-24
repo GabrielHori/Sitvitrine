@@ -6,39 +6,6 @@
 
 const SITE_URL = process.env.URL || 'https://ithorizon.netlify.app';
 
-const DEFAULT_REVIEWS = [
-    {
-        id: 999,
-        name: "Thomas M.",
-        rating: 5,
-        service: "Montage PC Gaming",
-        text: "Service au top ! Mon PC gaming fonctionne parfaitement, cable management impeccable. Je recommande vivement !",
-        date: "2026-03-02",
-        approved: true,
-        is_default: true
-    },
-    {
-        id: 998,
-        name: "Sarah L.",
-        rating: 5,
-        service: "Dépannage PC",
-        text: "Intervention rapide pour un écran bleu. Problème résolu en 1h, très professionnel !",
-        date: "2026-02-27",
-        approved: true,
-        is_default: true
-    },
-    {
-        id: 997,
-        name: "Kevin R.",
-        rating: 4,
-        service: "Optimisation PC",
-        text: "PC beaucoup plus rapide après optimisation. Bon rapport qualité/prix.",
-        date: "2026-02-20",
-        approved: true,
-        is_default: true
-    }
-];
-
 function getCorsHeaders(allowedMethods = 'GET, POST, OPTIONS') {
     return {
         'Access-Control-Allow-Origin': SITE_URL,
@@ -67,7 +34,6 @@ function validateEmail(email) {
 
 function sanitizePhone(phone) {
     if (typeof phone !== 'string') return '';
-    // Conserve uniquement les caractères utiles à un numéro français/international.
     return phone
         .replace(/[^\d+().\s-]/g, '')
         .replace(/\s+/g, ' ')
@@ -75,7 +41,7 @@ function sanitizePhone(phone) {
 }
 
 function validatePhone(phone) {
-    if (!phone) return true; // facultatif
+    if (!phone) return true;
     const normalized = phone.replace(/[^\d+]/g, '');
     return normalized.length >= 8 && normalized.length <= 15;
 }
@@ -93,34 +59,15 @@ function validateLead(data) {
     const service = sanitizeString(data.service);
     const message = sanitizeString(data.message);
 
-    if (name.length < 2 || name.length > 80) {
-        errors.push('Nom: 2-80 caractères');
-    }
+    if (name.length < 2 || name.length > 80) errors.push('Nom: 2-80 caractères');
+    if (!validateEmail(email)) errors.push('Adresse email invalide');
+    if (!validatePhone(phone)) errors.push('Numéro de téléphone invalide');
+    if (service.length < 2 || service.length > 120) errors.push('Service: 2-120 caractères');
+    if (message.length < 10 || message.length > 3000) errors.push('Message: 10-3000 caractères');
 
-    if (!validateEmail(email)) {
-        errors.push('Adresse email invalide');
-    }
+    if (errors.length) return { valid: false, errors };
 
-    if (!validatePhone(phone)) {
-        errors.push('Numéro de téléphone invalide');
-    }
-
-    if (service.length < 2 || service.length > 120) {
-        errors.push('Service: 2-120 caractères');
-    }
-
-    if (message.length < 10 || message.length > 3000) {
-        errors.push('Message: 10-3000 caractères');
-    }
-
-    if (errors.length) {
-        return { valid: false, errors };
-    }
-
-    return {
-        valid: true,
-        data: { name, email, phone, service, message }
-    };
+    return { valid: true, data: { name, email, phone, service, message } };
 }
 
 function validateReviewData(data) {
@@ -141,36 +88,21 @@ function validateReviewData(data) {
 
     if (errors.length) return { valid: false, errors };
 
-    return {
-        valid: true,
-        data: { name, rating: ratingNum, service, text }
-    };
+    return { valid: true, data: { name, rating: ratingNum, service, text } };
 }
 
 function successResponse(data, statusCode = 200) {
-    return {
-        statusCode,
-        headers: getCorsHeaders(),
-        body: JSON.stringify(data)
-    };
+    return { statusCode, headers: getCorsHeaders(), body: JSON.stringify(data) };
 }
 
 function errorResponse(message, statusCode = 400, details = null) {
     const body = { error: message };
     if (details) body.details = details;
-    return {
-        statusCode,
-        headers: getCorsHeaders(),
-        body: JSON.stringify(body)
-    };
+    return { statusCode, headers: getCorsHeaders(), body: JSON.stringify(body) };
 }
 
 function optionsResponse(allowedMethods = 'GET, POST, OPTIONS') {
-    return {
-        statusCode: 204,
-        headers: getCorsHeaders(allowedMethods),
-        body: ''
-    };
+    return { statusCode: 204, headers: getCorsHeaders(allowedMethods), body: '' };
 }
 
 const IS_PRODUCTION =
@@ -178,12 +110,8 @@ const IS_PRODUCTION =
     process.env.CONTEXT === 'production';
 
 const logger = {
-    info: (...args) => {
-        if (!IS_PRODUCTION) console.log(...args);
-    },
-    debug: (...args) => {
-        if (!IS_PRODUCTION) console.log('🔍', ...args);
-    },
+    info: (...args) => { if (!IS_PRODUCTION) console.log(...args); },
+    debug: (...args) => { if (!IS_PRODUCTION) console.log('🔍', ...args); },
     warn: (...args) => {
         if (IS_PRODUCTION) console.warn('⚠️ Warning occurred');
         else console.warn('⚠️', ...args);
@@ -194,7 +122,6 @@ const logger = {
 
 module.exports = {
     SITE_URL,
-    DEFAULT_REVIEWS,
     getCorsHeaders,
     sanitizeString,
     validateEmail,

@@ -6,7 +6,7 @@
 
 const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
-const { DEFAULT_REVIEWS, logger } = require('./shared');
+const { logger } = require('./shared');
 
 function getSupabaseClient() {
     const supabaseUrl = process.env.SUPABASE_URL;
@@ -26,7 +26,7 @@ function getSupabaseClient() {
 
 async function getReviews(approvedOnly = true) {
     const client = getSupabaseClient();
-    if (!client) return DEFAULT_REVIEWS;
+    if (!client) return [];
 
     try {
         let query = client.from('reviews').select('*');
@@ -35,13 +35,13 @@ async function getReviews(approvedOnly = true) {
         const { data, error } = await query.order('created_at', { ascending: false });
         if (error) {
             logger.error('Erreur getReviews:', error);
-            return DEFAULT_REVIEWS;
+            return [];
         }
 
-        return data && data.length ? data : DEFAULT_REVIEWS;
+        return data || [];
     } catch (error) {
         logger.error('Exception getReviews:', error);
-        return DEFAULT_REVIEWS;
+        return [];
     }
 }
 
@@ -198,7 +198,6 @@ function hashIP(ip) {
     const salt = process.env.IP_HASH_SALT;
 
     if (!salt) {
-        // Ne pas utiliser un salt fixe en production.
         if (process.env.CONTEXT === 'production') {
             logger.warn('IP_HASH_SALT non configuré en production');
         }
