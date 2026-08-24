@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <title>Avis clients | Horizon IT</title>
+    <meta name="description" content="Partagez votre expérience avec Horizon IT et consultez les avis des clients.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#edf4f8;--card:#fff;--text:#102238;--muted:#40566d;--border:#c8d6e0;--accent:#00a6c2;--accent-dark:#00879f;--success:#15966a;--error:#c93d3d;--shadow:0 18px 50px rgba(16,34,56,.10)}
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{min-height:100vh;background:linear-gradient(135deg,#edf4f8,#dce8ef);color:var(--text);font-family:Inter,sans-serif;line-height:1.6}
+        a{color:inherit;text-decoration:none}
+        .page{width:min(1120px,calc(100% - 32px));margin:auto;padding:34px 0 70px}
+        .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:55px}
+        .logo{font:700 1.35rem 'Space Grotesk',sans-serif;letter-spacing:-.05em}.logo span{color:var(--accent)}
+        .back{display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.72);font-size:.9rem;font-weight:600}
+        .hero{text-align:center;max-width:760px;margin:0 auto 48px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--accent-dark);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em}.eyebrow:before{content:'';width:24px;height:2px;background:var(--accent);border-radius:2px}
+        h1,h2,h3{font-family:'Space Grotesk',sans-serif}.hero h1{font-size:clamp(2.25rem,5vw,4rem);line-height:1.05;letter-spacing:-.05em;margin:14px 0 18px}.hero p{color:var(--muted);font-size:1.05rem}
+        .layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:start}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:30px}
+        .card h2{font-size:1.55rem;margin-bottom:7px}.card-intro{color:var(--muted);font-size:.93rem;margin-bottom:24px}
+        label{display:block;font-size:.86rem;font-weight:700;margin-bottom:8px}input,select,textarea{width:100%;border:1px solid var(--border);border-radius:11px;background:#f8fbfc;color:var(--text);padding:13px 14px;outline:none;transition:.2s}input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,166,194,.12);background:#fff}textarea{min-height:135px;resize:vertical}.field{margin-bottom:18px}
+        .rating{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:4px;margin-bottom:2px}.rating input{position:absolute;opacity:0;pointer-events:none}.rating label{font-size:2rem;line-height:1;color:#c8d6e0;cursor:pointer;margin:0;transition:.15s}.rating label:hover,.rating label:hover~label,.rating input:checked~label{color:#f3b51b}.rating-help{font-size:.78rem;color:var(--muted)}
+        .submit{width:100%;border:0;border-radius:11px;background:var(--accent);color:#fff;padding:14px 18px;font-weight:700;cursor:pointer;transition:.2s}.submit:hover{background:var(--accent-dark);transform:translateY(-1px)}.submit:disabled{opacity:.6;cursor:wait;transform:none}
+        .message{margin-top:15px;padding:12px 14px;border-radius:10px;font-size:.9rem;display:none}.message.success{display:block;background:#e8f8f1;color:#0c7550}.message.error{display:block;background:#fff0f0;color:#a52e2e}
+        .summary{display:flex;align-items:center;gap:18px;padding:20px;background:#f5fafb;border:1px solid #dce9ee;border-radius:15px;margin-bottom:22px}.average{font:700 2.6rem 'Space Grotesk',sans-serif;line-height:1}.summary-stars{color:#f3b51b;font-size:1.1rem;letter-spacing:1px}.summary small{display:block;color:var(--muted);margin-top:3px}
+        .reviews{display:grid;gap:13px}.review{border:1px solid var(--border);border-radius:14px;padding:18px}.review-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.review-name{font-weight:700}.stars{color:#f3b51b;white-space:nowrap;letter-spacing:1px}.review-service{display:inline-block;margin-top:7px;padding:4px 9px;border-radius:999px;background:#e9f7fa;color:#007e96;font-size:.72rem;font-weight:700}.review-text{color:var(--muted);margin-top:10px;font-size:.92rem}.review-date{color:#718597;font-size:.74rem;margin-top:10px}.empty{text-align:center;color:var(--muted);padding:24px 8px;border:1px dashed var(--border);border-radius:14px}
+        .privacy{font-size:.75rem;color:#718597;margin-top:12px;text-align:center}.privacy a{text-decoration:underline}
+        @media(max-width:800px){.layout{grid-template-columns:1fr}.topbar{margin-bottom:38px}.card{padding:22px}.page{padding-top:22px}}
+        @media(max-width:480px){.topbar{align-items:flex-start}.back{font-size:.8rem;padding:8px 10px}.hero{margin-bottom:32px}.hero h1{font-size:2.2rem}.summary{gap:13px}.average{font-size:2.2rem}}
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="topbar">
+        <a href="/" class="logo">HORIZON <span>IT</span></a>
+        <a href="/" class="back">← Retour au site</a>
+    </header>
+
+    <section class="hero">
+        <span class="eyebrow">Avis clients</span>
+        <h1>Votre expérience compte.</h1>
+        <p>Vous avez fait appel à Horizon IT ? Partagez votre expérience en quelques secondes. Chaque avis est vérifié avant publication.</p>
+    </section>
+
+    <main class="layout">
+        <section class="card">
+            <h2>Laisser un avis</h2>
+            <p class="card-intro">Votre avis sera envoyé pour modération avant d'apparaître publiquement.</p>
+            <form id="review-form" novalidate>
+                <div class="field">
+                    <label for="name">Votre prénom ou nom</label>
+                    <input id="name" name="name" type="text" minlength="2" maxlength="50" autocomplete="name" required placeholder="Ex. Thomas M.">
+                </div>
+                <div class="field">
+                    <label>Votre note</label>
+                    <div class="rating" aria-label="Choisir une note de 1 à 5">
+                        <input id="star5" name="rating" type="radio" value="5" required><label for="star5" title="5 étoiles">★</label>
+                        <input id="star4" name="rating" type="radio" value="4"><label for="star4" title="4 étoiles">★</label>
+                        <input id="star3" name="rating" type="radio" value="3"><label for="star3" title="3 étoiles">★</label>
+                        <input id="star2" name="rating" type="radio" value="2"><label for="star2" title="2 étoiles">★</label>
+                        <input id="star1" name="rating" type="radio" value="1"><label for="star1" title="1 étoile">★</label>
+                    </div>
+                    <div class="rating-help">1 = décevant · 5 = excellent</div>
+                </div>
+                <div class="field">
+                    <label for="service">Prestation réalisée</label>
+                    <select id="service" name="service" required>
+                        <option value="">Sélectionnez une prestation</option>
+                        <option>Dépannage informatique</option>
+                        <option>Montage PC sur mesure</option>
+                        <option>Optimisation PC</option>
+                        <option>Récupération de données</option>
+                        <option>Conseil / assistance</option>
+                        <option>Autre</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="text">Votre commentaire</label>
+                    <textarea id="text" name="text" minlength="10" maxlength="500" required placeholder="Expliquez brièvement votre expérience..."></textarea>
+                </div>
+                <button class="submit" id="submit-review" type="submit">Envoyer mon avis →</button>
+                <div class="message" id="form-message" role="status" aria-live="polite"></div>
+                <p class="privacy">Aucune adresse e-mail n'est demandée. L'avis est soumis à modération avant publication.</p>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Ce que pensent nos clients</h2>
+            <p class="card-intro">Seuls les avis validés sont affichés ici.</p>
+            <div class="summary" id="review-summary" hidden>
+                <div class="average" id="average">—</div>
+                <div><div class="summary-stars" id="summary-stars">☆☆☆☆☆</div><small id="review-count">0 avis</small></div>
+            </div>
+            <div class="reviews" id="reviews-list"><div class="empty">Chargement des avis…</div></div>
+        </section>
+    </main>
+</div>
+
+<script>
+(() => {
+    const form = document.getElementById('review-form');
+    const list = document.getElementById('reviews-list');
+    const summary = document.getElementById('review-summary');
+    const average = document.getElementById('average');
+    const summaryStars = document.getElementById('summary-stars');
+    const count = document.getElementById('review-count');
+    const message = document.getElementById('form-message');
+    const submit = document.getElementById('submit-review');
+
+    const escapeHTML = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
+    const stars = rating => '★'.repeat(rating) + '☆'.repeat(5 - rating);
+
+    async function loadReviews() {
+        try {
+            const response = await fetch('/.netlify/functions/reviews', {headers:{Accept:'application/json'}});
+            if (!response.ok) throw new Error();
+            const reviews = await response.json();
+            if (!Array.isArray(reviews) || reviews.length === 0) {
+                summary.hidden = true;
+                list.innerHTML = '<div class="empty">Aucun avis publié pour le moment. Soyez le premier à partager votre expérience !</div>';
+                return;
+            }
+            const valid = reviews.filter(review => Number.isInteger(Number(review.rating)) && Number(review.rating) >= 1 && Number(review.rating) <= 5);
+            const avg = valid.reduce((total, review) => total + Number(review.rating), 0) / valid.length;
+            average.textContent = avg.toFixed(1).replace('.', ',') + '/5';
+            summaryStars.textContent = stars(Math.round(avg));
+            count.textContent = valid.length + (valid.length > 1 ? ' avis' : ' avis');
+            summary.hidden = false;
+            list.innerHTML = valid.map(review => {
+                const rating = Number(review.rating);
+                const dateValue = review.created_at || review.date;
+                let date = '';
+                if (dateValue && !Number.isNaN(new Date(dateValue).getTime())) date = new Date(dateValue).toLocaleDateString('fr-FR');
+                return `<article class="review"><div class="review-head"><strong class="review-name">${escapeHTML(review.name || 'Client')}</strong><span class="stars" aria-label="${rating} sur 5">${stars(rating)}</span></div>${review.service ? `<span class="review-service">${escapeHTML(review.service)}</span>` : ''}<p class="review-text">“${escapeHTML(review.text || '')}”</p>${date ? `<div class="review-date">${date}</div>` : ''}</article>`;
+            }).join('');
+        } catch (error) {
+            list.innerHTML = '<div class="empty">Impossible de charger les avis pour le moment. Vous pouvez tout de même déposer le vôtre.</div>';
+        }
+    }
+
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        message.className = 'message';
+        message.textContent = '';
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        const data = Object.fromEntries(new FormData(form).entries());
+        submit.disabled = true;
+        submit.textContent = 'Envoi en cours…';
+        try {
+            const response = await fetch('/.netlify/functions/reviews', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json','Accept':'application/json'},
+                body: JSON.stringify({name:data.name,rating:Number(data.rating),service:data.service,text:data.text})
+            });
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(result.error || 'Impossible d’envoyer votre avis.');
+            form.reset();
+            message.className = 'message success';
+            message.textContent = '✓ Merci ! Votre avis a bien été envoyé et sera publié après validation.';
+        } catch (error) {
+            message.className = 'message error';
+            message.textContent = error.message || 'Une erreur est survenue. Réessayez dans quelques instants.';
+        } finally {
+            submit.disabled = false;
+            submit.textContent = 'Envoyer mon avis →';
+        }
+    });
+
+    loadReviews();
+})();
+</script>
+</body>
+</html>
