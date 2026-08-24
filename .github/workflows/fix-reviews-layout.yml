@@ -36,7 +36,7 @@ jobs:
     order: 2;
 }
 
-.reviews-section .reviews-cta {
+.reviews-section .reviews-actions {
     order: 3;
     display: flex;
     justify-content: center;
@@ -45,7 +45,7 @@ jobs:
 }
 
 @media (max-width: 600px) {
-    .reviews-section .reviews-cta {
+    .reviews-section .reviews-actions {
         margin-top: 28px;
     }
 }
