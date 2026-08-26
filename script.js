@@ -543,6 +543,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             "message"
                         ),
 
+                    turnstileToken:
+                        formData.get(
+                            "cf-turnstile-response"
+                        ),
+
                     _honey:
                         honey || ""
 

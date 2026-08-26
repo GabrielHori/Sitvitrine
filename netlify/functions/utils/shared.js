@@ -5,6 +5,63 @@
  */
 
 const SITE_URL = process.env.URL || 'https://ithorizon.netlify.app';
+const rateLimits = new Map();
+
+function getClientIdentifier(event) {
+    const forwarded = event.headers?.['x-forwarded-for'];
+    return (forwarded ? forwarded.split(',')[0].trim() : event.headers?.['client-ip']) || 'unknown';
+}
+
+function checkRateLimit(scope, clientIdentifier, limit, windowMs) {
+    const now = Date.now();
+    const key = `${scope}:${clientIdentifier}`;
+    const current = rateLimits.get(key);
+
+    if (!current || now >= current.resetAt) {
+        rateLimits.set(key, { count: 1, resetAt: now + windowMs });
+        return { allowed: true, retryAfter: 0 };
+    }
+
+    if (current.count >= limit) {
+        return {
+            allowed: false,
+            retryAfter: Math.ceil((current.resetAt - now) / 1000)
+        };
+    }
+
+    current.count += 1;
+    return { allowed: true, retryAfter: 0 };
+}
+
+async function verifyTurnstile(token, remoteip, expectedAction) {
+    const secret = process.env.TURNSTILE_SECRET_KEY;
+    if (!secret || typeof token !== 'string' || !token) {
+        return { valid: false };
+    }
+
+    const formData = new URLSearchParams({ secret, response: token });
+    if (remoteip && remoteip !== 'unknown') formData.set('remoteip', remoteip);
+
+    try {
+        const response = await fetch(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            }
+        );
+        const result = await response.json();
+        return {
+            valid: response.ok &&
+                result.success === true &&
+                result.action === expectedAction
+        };
+    } catch (error) {
+        logger.error('Erreur de vérification Turnstile:', error);
+        return { valid: false };
+    }
+}
 
 function getCorsHeaders(allowedMethods = 'GET, POST, OPTIONS') {
     return {
@@ -122,6 +179,9 @@ const logger = {
 
 module.exports = {
     SITE_URL,
+    getClientIdentifier,
+    checkRateLimit,
+    verifyTurnstile,
     getCorsHeaders,
     sanitizeString,
     validateEmail,

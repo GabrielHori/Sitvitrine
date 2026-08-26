@@ -9,6 +9,9 @@ const {
     successResponse,
     errorResponse,
     optionsResponse,
+    getClientIdentifier,
+    checkRateLimit,
+    verifyTurnstile,
     logger
 } = require('./utils/shared');
 
@@ -32,6 +35,19 @@ exports.handler = async (event) => {
         return errorResponse('Méthode non autorisée', 405);
     }
 
+    const rateLimit = checkRateLimit(
+        'contact',
+        getClientIdentifier(event),
+        5,
+        60 * 60 * 1000
+    );
+    if (!rateLimit.allowed) {
+        return errorResponse(
+            `Trop de demandes. Réessayez dans ${Math.ceil(rateLimit.retryAfter / 60)} minute(s).`,
+            429
+        );
+    }
+
     try {
         let body;
         try {
@@ -51,6 +67,15 @@ exports.handler = async (event) => {
         const validation = validateLead(body);
         if (!validation.valid) {
             return errorResponse('Données invalides', 400, validation.errors);
+        }
+
+        const turnstile = await verifyTurnstile(
+            body.turnstileToken,
+            getClientIdentifier(event),
+            'contact'
+        );
+        if (!turnstile.valid) {
+            return errorResponse('Vérification anti-spam invalide. Réessayez.', 403);
         }
 
         const lead = await addLead(validation.data);

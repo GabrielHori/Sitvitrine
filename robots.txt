@@ -13,6 +13,3 @@ Disallow: /netlify/
 
 # Sitemap
 Sitemap: https://ithorizon.netlify.app/sitemap.xml
-
-# Délai entre les requêtes (optionnel, pour réduire la charge serveur)
-Crawl-delay: 1

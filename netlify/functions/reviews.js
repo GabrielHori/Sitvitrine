@@ -9,6 +9,9 @@ const {
     successResponse,
     errorResponse,
     optionsResponse,
+    getClientIdentifier,
+    checkRateLimit,
+    verifyTurnstile,
     logger
 } = require('./utils/shared');
 
@@ -31,6 +34,19 @@ exports.handler = async (event) => {
         }
 
         if (event.httpMethod === 'POST') {
+            const rateLimit = checkRateLimit(
+                'review',
+                getClientIdentifier(event),
+                3,
+                24 * 60 * 60 * 1000
+            );
+            if (!rateLimit.allowed) {
+                return errorResponse(
+                    `Trop d'avis envoyés. Réessayez dans ${Math.ceil(rateLimit.retryAfter / 3600)} heure(s).`,
+                    429
+                );
+            }
+
             let rawData;
             try {
                 rawData = JSON.parse(event.body || '{}');
@@ -41,6 +57,15 @@ exports.handler = async (event) => {
             const validation = validateReviewData(rawData);
             if (!validation.valid) {
                 return errorResponse('Données invalides', 400, validation.errors);
+            }
+
+            const turnstile = await verifyTurnstile(
+                rawData.turnstileToken,
+                getClientIdentifier(event),
+                'review'
+            );
+            if (!turnstile.valid) {
+                return errorResponse('Vérification anti-spam invalide. Réessayez.', 403);
             }
 
             const newReview = await addReview(validation.data, clientIP);
