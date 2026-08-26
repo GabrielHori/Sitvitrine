@@ -103,6 +103,11 @@
                     <span id="badge-leads" class="badge" hidden>0</span>
                 </button>
 
+                <button class="nav-item" data-panel="planning">
+                    <span>📅</span>
+                    Planning
+                </button>
+
                 <button class="nav-item" data-panel="reviews">
                     <span>⭐</span>
                     Avis
@@ -277,6 +282,47 @@
                 </div>
 
                 <div id="leads-container" class="lead-list">
+                    <div class="loading-state">Chargement…</div>
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PLANNING
+            ================================================== -->
+            <section id="panel-planning" class="panel">
+
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">Organisation</span>
+                        <h2>Planning suggéré</h2>
+                        <p>Les durées et priorités sont proposées selon le type de demande. Validez toujours le créneau avec le client.</p>
+                    </div>
+
+                    <button id="refresh-planning" class="btn btn-secondary">
+                        ↻ Actualiser
+                    </button>
+                </div>
+
+                <div class="planning-summary">
+                    <article class="planning-stat">
+                        <span>À planifier</span>
+                        <strong id="planning-count">0</strong>
+                    </article>
+
+                    <article class="planning-stat planning-stat-urgent">
+                        <span>Prioritaires</span>
+                        <strong id="planning-priority-count">0</strong>
+                    </article>
+
+                    <article class="planning-stat">
+                        <span>Temps estimé</span>
+                        <strong id="planning-duration">0 h</strong>
+                    </article>
+                </div>
+
+                <div id="planning-container" class="planning-list">
                     <div class="loading-state">Chargement…</div>
                 </div>
 

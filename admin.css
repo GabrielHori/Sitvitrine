@@ -1007,6 +1007,118 @@ a {
     gap: 10px;
 }
 
+.planning-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 16px;
+}
+
+.planning-stat {
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.planning-stat span,
+.planning-stat strong {
+    display: block;
+}
+
+.planning-stat span {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+}
+
+.planning-stat strong {
+    margin-top: 4px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.35rem;
+}
+
+.planning-stat-urgent {
+    background: #fff8ed;
+    border-color: #f1d4a5;
+}
+
+.planning-list {
+    display: grid;
+    gap: 10px;
+}
+
+.planning-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 14px rgba(16, 34, 56, 0.025);
+}
+
+.planning-card-top,
+.planning-meta,
+.planning-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.planning-card-top {
+    justify-content: space-between;
+}
+
+.planning-card-top strong {
+    font-size: 0.82rem;
+}
+
+.planning-service {
+    margin-top: 5px;
+    color: var(--accent-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.planning-meta {
+    flex-wrap: wrap;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 0.66rem;
+}
+
+.planning-message {
+    margin-top: 10px;
+    color: var(--text-soft);
+    font-size: 0.72rem;
+    line-height: 1.6;
+}
+
+.planning-priority {
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.priority-high {
+    background: #fff0df;
+    color: #a85f00;
+}
+
+.priority-normal {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+}
+
+.planning-actions {
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .lead-card,
 .review-card {
     display: grid;
@@ -1569,13 +1681,17 @@ a {
     }
 
     .lead-card,
-    .review-card {
+    .review-card,
+    .planning-card {
         grid-template-columns: 1fr;
     }
 
     .lead-actions,
-    .review-actions {
+    .review-actions,
+    .planning-actions {
         justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: row;
     }
 
     .toolbar {
@@ -1586,6 +1702,10 @@ a {
 
     .select-control {
         width: 100%;
+    }
+
+    .planning-summary {
+        grid-template-columns: 1fr;
     }
 
 }
@@ -1679,6 +1799,8 @@ a {
 [data-theme="dark"] .stat-card,
 [data-theme="dark"] .lead-card,
 [data-theme="dark"] .review-card,
+[data-theme="dark"] .planning-card,
+[data-theme="dark"] .planning-stat,
 [data-theme="dark"] .select-control,
 [data-theme="dark"] .settings-card,
 [data-theme="dark"] .toast {

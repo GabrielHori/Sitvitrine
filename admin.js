@@ -436,6 +436,10 @@
             loadLeads();
         }
 
+        if (name === "planning") {
+            loadPlanning();
+        }
+
         if (name === "reviews") {
             loadReviews();
         }
@@ -680,6 +684,190 @@
                 );
             }
         }
+    }
+
+
+    /* =========================================================
+       10. PLANNING
+    ========================================================== */
+
+    function getPlanningSuggestion(lead) {
+
+        const service = String(lead.service || "").toLowerCase();
+
+        if (service.includes("récupération")) {
+            return { duration: 120, priority: "high", label: "À diagnostiquer rapidement" };
+        }
+
+        if (service.includes("montage")) {
+            return { duration: 180, priority: "normal", label: "Atelier / montage" };
+        }
+
+        if (service.includes("optimisation")) {
+            return { duration: 90, priority: "normal", label: "Optimisation" };
+        }
+
+        if (service.includes("smartphone")) {
+            return { duration: 60, priority: "normal", label: "Réparation mobile" };
+        }
+
+        if (service.includes("dépannage")) {
+            return { duration: 60, priority: "high", label: "Dépannage prioritaire" };
+        }
+
+        return { duration: 60, priority: "normal", label: "À qualifier" };
+    }
+
+
+    function formatDuration(minutes) {
+
+        const hours = Math.floor(minutes / 60);
+        const remainder = minutes % 60;
+
+        if (!hours) return `${remainder} min`;
+        if (!remainder) return `${hours} h`;
+
+        return `${hours} h ${remainder}`;
+    }
+
+
+    function nextPlanningSlot(duration) {
+
+        const start = new Date();
+
+        start.setDate(start.getDate() + 1);
+        start.setHours(9, 0, 0, 0);
+
+        while (start.getDay() === 0 || start.getDay() === 6) {
+            start.setDate(start.getDate() + 1);
+        }
+
+        const end = new Date(start.getTime() + duration * 60 * 1000);
+
+        const toCalendarDate = date =>
+            `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}00`;
+
+        return {
+            start,
+            end,
+            dates: `${toCalendarDate(start)}/${toCalendarDate(end)}`
+        };
+    }
+
+
+    function calendarHref(lead, suggestion) {
+
+        const slot = nextPlanningSlot(suggestion.duration);
+        const title = `${lead.service || "Intervention"} — ${lead.name || "Client"}`;
+        const details = [
+            `Client : ${lead.name || "Non renseigné"}`,
+            `Téléphone : ${formatPhone(lead.phone) || "Non renseigné"}`,
+            `E-mail : ${lead.email || "Non renseigné"}`,
+            "",
+            lead.message || ""
+        ].join("\n");
+
+        return "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+            `&text=${encodeURIComponent(title)}` +
+            `&details=${encodeURIComponent(details)}` +
+            `&dates=${encodeURIComponent(slot.dates)}` +
+            "&ctz=Europe%2FParis";
+    }
+
+
+    async function loadPlanning() {
+
+        if (!checkSession()) return;
+
+        const container = $("planning-container");
+
+        container.innerHTML = `
+            <div class="loading-state">
+                <span class="spinner"></span>
+                Chargement…
+            </div>`;
+
+        try {
+
+            allLeads = await api("admin-leads");
+
+            if (!Array.isArray(allLeads)) allLeads = [];
+
+            displayPlanning(
+                allLeads.filter(lead => lead.status !== "done")
+            );
+
+        } catch (error) {
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    Impossible de charger le planning.
+                </div>`;
+
+            if (error.message !== "Session expirée") {
+                toast(error.message, "error");
+            }
+        }
+    }
+
+
+    function displayPlanning(leads) {
+
+        const container = $("planning-container");
+        const suggestions = leads.map(lead => ({
+            lead,
+            suggestion: getPlanningSuggestion(lead)
+        }));
+
+        $("planning-count").textContent = suggestions.length;
+        $("planning-priority-count").textContent =
+            suggestions.filter(item => item.suggestion.priority === "high").length;
+        $("planning-duration").textContent =
+            formatDuration(
+                suggestions.reduce((total, item) => total + item.suggestion.duration, 0)
+            );
+
+        if (!suggestions.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    Aucune demande à planifier. Les demandes clôturées n'apparaissent pas ici.
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = suggestions
+            .sort((a, b) => Number(b.suggestion.priority === "high") - Number(a.suggestion.priority === "high"))
+            .map(({ lead, suggestion }) => `
+                <article class="planning-card">
+                    <div class="planning-card-main">
+                        <div class="planning-card-top">
+                            <strong>${escapeHTML(lead.name || "Sans nom")}</strong>
+                            <span class="planning-priority priority-${suggestion.priority}">
+                                ${suggestion.priority === "high" ? "Prioritaire" : "Standard"}
+                            </span>
+                        </div>
+                        <p class="planning-service">${escapeHTML(lead.service || "Besoin non précisé")}</p>
+                        <div class="planning-meta">
+                            <span>⏱ ${formatDuration(suggestion.duration)}</span>
+                            <span>• ${suggestion.label}</span>
+                            <span>• Reçue le ${formatDate(lead.created_at)}</span>
+                        </div>
+                        ${lead.message ? `<p class="planning-message">${escapeHTML(lead.message)}</p>` : ""}
+                    </div>
+                    <div class="planning-actions">
+                        <a class="btn btn-primary btn-small" href="${calendarHref(lead, suggestion)}" target="_blank" rel="noopener noreferrer">
+                            Ajouter à Google Agenda
+                        </a>
+                        <button class="btn btn-secondary btn-small" data-open-panel="leads">
+                            Voir la demande
+                        </button>
+                    </div>
+                </article>`)
+            .join("");
+
+        container.querySelectorAll("[data-open-panel]").forEach(button => {
+            button.addEventListener("click", () => openPanel(button.dataset.openPanel));
+        });
     }
 
 
@@ -1463,6 +1651,13 @@
         );
 
 
+    $("refresh-planning")
+        .addEventListener(
+            "click",
+            loadPlanning
+        );
+
+
     $("refresh-reviews")
         .addEventListener(
             "click",
@@ -1618,6 +1813,13 @@
                 "leads"
             ) {
                 loadLeads();
+            }
+
+            if (
+                currentPanel ===
+                "planning"
+            ) {
+                loadPlanning();
             }
 
             if (
