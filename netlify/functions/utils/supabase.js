@@ -193,6 +193,85 @@ async function deleteLead(leadId) {
     return true;
 }
 
+async function createQuote(quoteData) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('Base de données non configurée');
+
+    const { data: quote, error: quoteError } = await client
+        .from('quotes')
+        .insert([quoteData.quote])
+        .select()
+        .single();
+
+    if (quoteError) {
+        logger.error('Erreur createQuote:', quoteError);
+        throw new Error('Erreur lors de la création du devis');
+    }
+
+    if (quoteData.items?.length) {
+        const { error: itemsError } = await client
+            .from('quote_items')
+            .insert(quoteData.items.map(item => ({ ...item, quote_id: quote.id })));
+
+        if (itemsError) {
+            await client.from('quotes').delete().eq('id', quote.id);
+            logger.error('Erreur createQuote items:', itemsError);
+            throw new Error('Erreur lors de l’enregistrement des lignes du devis');
+        }
+    }
+
+    return quote;
+}
+
+async function getQuotes(status = 'all') {
+    const client = getSupabaseClient();
+    if (!client) return [];
+
+    let query = client
+        .from('quotes')
+        .select('*, quote_items(*)')
+        .order('created_at', { ascending: false });
+
+    if (status && status !== 'all') query = query.eq('status', status);
+
+    const { data, error } = await query;
+    if (error) {
+        logger.error('Erreur getQuotes:', error);
+        throw new Error('Impossible de charger les devis');
+    }
+
+    return data || [];
+}
+
+async function getQuoteById(quoteId) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('Base de données non configurée');
+
+    const { data, error } = await client
+        .from('quotes')
+        .select('*, quote_items(*)')
+        .eq('id', quoteId)
+        .single();
+
+    if (error) throw new Error('Devis introuvable');
+    return data;
+}
+
+async function updateQuoteStatus(quoteId, status) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('Base de données non configurée');
+
+    const { data, error } = await client
+        .from('quotes')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', quoteId)
+        .select()
+        .single();
+
+    if (error) throw new Error('Impossible de mettre à jour le devis');
+    return data;
+}
+
 function hashIP(ip) {
     const value = String(ip || 'unknown');
     const salt = process.env.IP_HASH_SALT;
@@ -221,5 +300,9 @@ module.exports = {
     addLead,
     getLeads,
     updateLeadStatus,
-    deleteLead
+    deleteLead,
+    createQuote,
+    getQuotes,
+    getQuoteById,
+    updateQuoteStatus
 };

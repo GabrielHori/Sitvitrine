@@ -1119,6 +1119,219 @@ a {
     justify-content: center;
 }
 
+.quote-modal[hidden] {
+    display: none;
+}
+
+.quote-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.quote-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 17, 28, 0.62);
+}
+
+.quote-dialog {
+    position: relative;
+    width: min(100%, 720px);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 25px 80px rgba(7, 17, 28, 0.28);
+}
+
+.quote-dialog-header,
+.quote-items-header,
+.quote-total-row,
+.quote-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.quote-dialog-header {
+    margin-bottom: 24px;
+}
+
+.quote-dialog-header h2 {
+    margin-top: 5px;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.icon-button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text);
+    font-size: 1.2rem;
+}
+
+.quote-client-grid,
+.quote-adjustments {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quote-dialog label {
+    display: grid;
+    gap: 6px;
+    color: var(--text-soft);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.quote-dialog input {
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text);
+}
+
+.quote-items-header {
+    margin-bottom: 10px;
+}
+
+.quote-items-header h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.95rem;
+}
+
+.quote-items {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.quote-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 80px 110px 34px;
+    gap: 8px;
+    align-items: center;
+}
+
+.quote-total-row {
+    margin: 6px 0 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-soft);
+    font-size: 0.8rem;
+}
+
+.quote-total-row strong {
+    color: var(--text);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.45rem;
+}
+
+.quote-actions {
+    justify-content: flex-end;
+}
+
+.planning-history-header {
+    margin-top: 34px;
+}
+
+.quote-history {
+    display: grid;
+    gap: 10px;
+}
+
+.quote-history-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.quote-history-total {
+    white-space: nowrap;
+    color: var(--text);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.15rem;
+}
+
+.quote-history-side {
+    display: grid;
+    justify-items: end;
+    gap: 8px;
+}
+
+.quote-history-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.quote-status-select {
+    min-height: 32px;
+    padding-right: 24px;
+    font-size: 0.65rem;
+}
+
+.quote-status-draft { background: #eef2f5; color: var(--text-soft); }
+.quote-status-sent { background: #e7f3ff; color: #14609b; }
+.quote-status-accepted,
+.quote-status-paid { background: #e8f8f1; color: #0c7550; }
+.quote-status-rejected,
+.quote-status-expired { background: #fff0f0; color: #a52e2e; }
+
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+
+    .quote-modal,
+    .quote-modal * {
+        visibility: visible !important;
+    }
+
+    .quote-modal {
+        position: static;
+        display: block;
+        padding: 0;
+    }
+
+    .quote-backdrop,
+    .quote-dialog-header .icon-button,
+    .quote-items-header button,
+    .quote-remove-item,
+    .quote-actions {
+        display: none !important;
+    }
+
+    .quote-dialog {
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+        border: 0;
+        box-shadow: none;
+    }
+}
+
 .lead-card,
 .review-card {
     display: grid;
@@ -1706,6 +1919,25 @@ a {
 
     .planning-summary {
         grid-template-columns: 1fr;
+    }
+
+    .quote-history-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .quote-history-side {
+        width: 100%;
+        justify-items: start;
+    }
+
+    .quote-client-grid,
+    .quote-adjustments {
+        grid-template-columns: 1fr;
+    }
+
+    .quote-item-row {
+        grid-template-columns: minmax(0, 1fr) 64px 90px 34px;
     }
 
 }

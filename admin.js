@@ -797,6 +797,8 @@
                 allLeads.filter(lead => lead.status !== "done")
             );
 
+            await loadQuotes();
+
         } catch (error) {
 
             container.innerHTML = `
@@ -807,6 +809,86 @@
             if (error.message !== "Session expirée") {
                 toast(error.message, "error");
             }
+        }
+    }
+
+
+    async function loadQuotes() {
+
+        const status = $("quote-status-filter").value;
+        const container = $("quotes-container");
+
+        try {
+            const quotes = await api(`admin-leads?resource=quotes&status=${encodeURIComponent(status)}`);
+            displayQuotes(Array.isArray(quotes) ? quotes : []);
+        } catch (error) {
+            container.innerHTML = `<div class="empty-state">Impossible de charger l'historique des devis.</div>`;
+            if (error.message !== "Session expirée") toast(error.message, "error");
+        }
+    }
+
+
+    function displayQuotes(quotes) {
+
+        const container = $("quotes-container");
+        const labels = {
+            draft: "Brouillon",
+            sent: "Envoyé",
+            accepted: "Accepté",
+            rejected: "Refusé",
+            expired: "Expiré",
+            paid: "Payé"
+        };
+
+        if (!quotes.length) {
+            container.innerHTML = `<div class="empty-state">Aucun devis enregistré pour le moment.</div>`;
+            return;
+        }
+
+        container.innerHTML = quotes.map(quote => `
+            <article class="quote-history-card">
+                <div>
+                    <div class="planning-card-top">
+                        <strong>Devis #${Number(quote.id)}</strong>
+                        <span class="planning-priority quote-status-${escapeHTML(quote.status || "draft")}">
+                            ${labels[quote.status] || "Brouillon"}
+                        </span>
+                    </div>
+                    <p class="planning-service">${escapeHTML(quote.client_name || "Client")}</p>
+                    <div class="planning-meta">
+                        <span>Créé le ${formatDate(quote.created_at)}</span>
+                        <span>• Valide jusqu'au ${quote.valid_until ? formatDate(quote.valid_until) : "non défini"}</span>
+                    </div>
+                </div>
+                <div class="quote-history-side">
+                    <strong class="quote-history-total">${Number(quote.total || 0).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}</strong>
+                    <div class="quote-history-actions">
+                        <select class="select-control quote-status-select" data-quote-action="status" data-id="${Number(quote.id)}" aria-label="Statut du devis #${Number(quote.id)}">
+                            ${["draft", "sent", "accepted", "rejected", "expired", "paid"].map(status => `<option value="${status}" ${quote.status === status ? "selected" : ""}>${labels[status]}</option>`).join("")}
+                        </select>
+                        ${quote.client_email ? `<button class="btn btn-primary btn-small" data-quote-action="send" data-id="${Number(quote.id)}">Envoyer</button>` : ""}
+                    </div>
+                </div>
+            </article>`).join("");
+    }
+
+
+    async function quoteAction(action, quoteId, status = null) {
+
+        try {
+            const payload = action === "send"
+                ? { action: "send_quote", quoteId }
+                : { action: "update_quote_status", quoteId, status };
+
+            await api("admin-leads", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            toast(action === "send" ? "Devis envoyé au client." : "Statut du devis mis à jour.", "success");
+            await loadQuotes();
+        } catch (error) {
+            toast(error.message || "Impossible de modifier le devis.", "error");
         }
     }
 
@@ -1060,6 +1142,14 @@
 
                         <div class="lead-actions">
 
+                            <button
+                                class="btn btn-secondary btn-small"
+                                data-lead-action="quote"
+                                data-id="${Number(lead.id)}"
+                            >
+                                Devis
+                            </button>
+
                             ${
                                 lead.status !==
                                 "contacted"
@@ -1115,6 +1205,118 @@
 
             })
             .join("");
+    }
+
+
+    /* =========================================================
+       11. DEVIS
+    ========================================================== */
+
+    let quoteLead = null;
+
+    function addQuoteItem(description = "", quantity = 1, price = 0) {
+
+        const row = document.createElement("div");
+        row.className = "quote-item-row";
+        row.innerHTML = `
+            <input class="quote-item-description" type="text" placeholder="Description" value="${escapeHTML(description)}" required>
+            <input class="quote-item-quantity" type="number" min="1" step="1" value="${quantity}" aria-label="Quantité">
+            <input class="quote-item-price" type="number" min="0" step="0.01" value="${price}" aria-label="Prix unitaire">
+            <button type="button" class="icon-button quote-remove-item" aria-label="Supprimer la ligne">×</button>
+        `;
+
+        $("quote-items").appendChild(row);
+        row.querySelectorAll("input").forEach(input => input.addEventListener("input", calculateQuote));
+        row.querySelector(".quote-remove-item").addEventListener("click", () => {
+            row.remove();
+            calculateQuote();
+        });
+        calculateQuote();
+    }
+
+
+    function calculateQuote() {
+
+        const itemsTotal = [...document.querySelectorAll(".quote-item-row")]
+            .reduce((total, row) => {
+                const quantity = Number(row.querySelector(".quote-item-quantity").value) || 0;
+                const price = Number(row.querySelector(".quote-item-price").value) || 0;
+                return total + quantity * price;
+            }, 0);
+
+        const travel = Number($("quote-travel").value) || 0;
+        const discount = Number($("quote-discount").value) || 0;
+        const total = Math.max(0, itemsTotal + travel - discount);
+
+        $("quote-total").textContent = total.toLocaleString("fr-FR", {
+            style: "currency",
+            currency: "EUR"
+        });
+    }
+
+
+    function openQuote(leadId) {
+
+        quoteLead = allLeads.find(lead => Number(lead.id) === Number(leadId));
+        if (!quoteLead) return;
+
+        $("quote-client").value = quoteLead.name || "";
+        $("quote-email").value = quoteLead.email || "";
+        $("quote-items").innerHTML = "";
+        addQuoteItem(quoteLead.service || "Prestation informatique", 1, 0);
+        $("quote-travel").value = 0;
+        $("quote-discount").value = 0;
+        $("quote-modal").hidden = false;
+        $("quote-client").focus();
+        calculateQuote();
+    }
+
+
+    function closeQuote() {
+        $("quote-modal").hidden = true;
+        quoteLead = null;
+    }
+
+
+    async function printQuote(event) {
+
+        event.preventDefault();
+
+        if (!quoteLead) return;
+
+        calculateQuote();
+
+        const items = [...document.querySelectorAll(".quote-item-row")].map(row => ({
+            description: row.querySelector(".quote-item-description").value,
+            quantity: Number(row.querySelector(".quote-item-quantity").value),
+            unit_price: Number(row.querySelector(".quote-item-price").value)
+        }));
+
+        const validUntil = new Date();
+        validUntil.setDate(validUntil.getDate() + 30);
+
+        try {
+            await api("admin-leads", {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "create_quote",
+                    leadId: Number(quoteLead.id),
+                    clientName: $("quote-client").value,
+                    clientEmail: $("quote-email").value,
+                    items,
+                    travelCost: Number($("quote-travel").value) || 0,
+                    discount: Number($("quote-discount").value) || 0,
+                    validUntil: validUntil.toISOString().slice(0, 10)
+                })
+            });
+
+            toast("Devis enregistré dans Supabase.", "success");
+        } catch (error) {
+            toast(error.message || "Impossible d'enregistrer le devis.", "error");
+            return;
+        }
+
+        window.print();
     }
 
 
@@ -1657,6 +1859,24 @@
             loadPlanning
         );
 
+    $("quote-status-filter")
+        .addEventListener(
+            "change",
+            loadQuotes
+        );
+
+    $("quotes-container")
+        .addEventListener("click", event => {
+            const button = event.target.closest("[data-quote-action=send]");
+            if (button) quoteAction("send", Number(button.dataset.id));
+        });
+
+    $("quotes-container")
+        .addEventListener("change", event => {
+            const select = event.target.closest("[data-quote-action=status]");
+            if (select) quoteAction("status", Number(select.dataset.id), select.value);
+        });
+
 
     $("refresh-reviews")
         .addEventListener(
@@ -1710,6 +1930,15 @@
 
                 if (
                     action ===
+                    "quote"
+                ) {
+
+                    openQuote(id);
+                    return;
+                }
+
+                if (
+                    action ===
                     "delete"
                 ) {
 
@@ -1740,6 +1969,26 @@
                 );
             }
         );
+
+
+    $("quote-add-item")
+        .addEventListener(
+            "click",
+            () => addQuoteItem()
+        );
+
+    $("quote-travel")
+        .addEventListener("input", calculateQuote);
+
+    $("quote-discount")
+        .addEventListener("input", calculateQuote);
+
+    $("quote-form")
+        .addEventListener("submit", printQuote);
+
+    document
+        .querySelectorAll("[data-quote-close]")
+        .forEach(button => button.addEventListener("click", closeQuote));
 
 
     $("reviews-container")

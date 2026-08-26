@@ -1,5 +1,6 @@
 # Local Netlify folder
-.netlify/
+.netlify 
+.supabase   
 
 # Dependencies
 node_modules/
@@ -31,6 +32,8 @@ yarn-error.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
 
 # Optional: compiled css is kept per your note
 # Compiled CSS (keep committed for Netlify fallback)

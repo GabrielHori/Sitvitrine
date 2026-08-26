@@ -326,6 +326,25 @@
                     <div class="loading-state">Chargement…</div>
                 </div>
 
+                <div class="card-header planning-history-header">
+                    <div>
+                        <span class="eyebrow">Suivi commercial</span>
+                        <h3>Historique des devis</h3>
+                    </div>
+                    <select id="quote-status-filter" class="select-control" aria-label="Filtrer les devis">
+                        <option value="all">Tous les statuts</option>
+                        <option value="draft">Brouillons</option>
+                        <option value="sent">Envoyés</option>
+                        <option value="accepted">Acceptés</option>
+                        <option value="rejected">Refusés</option>
+                        <option value="paid">Payés</option>
+                    </select>
+                </div>
+
+                <div id="quotes-container" class="quote-history">
+                    <div class="loading-state">Chargement…</div>
+                </div>
+
             </section>
 
 
@@ -420,6 +439,47 @@
             </section>
 
         </main>
+    </div>
+
+    <div id="quote-modal" class="quote-modal" hidden>
+        <div class="quote-backdrop" data-quote-close></div>
+        <section class="quote-dialog" role="dialog" aria-modal="true" aria-labelledby="quote-title">
+            <div class="quote-dialog-header">
+                <div>
+                    <span class="eyebrow">Document commercial</span>
+                    <h2 id="quote-title">Créer un devis</h2>
+                </div>
+                <button type="button" class="icon-button" data-quote-close aria-label="Fermer">×</button>
+            </div>
+
+            <form id="quote-form">
+                <div class="quote-client-grid">
+                    <label>Client<input id="quote-client" type="text" required></label>
+                    <label>E-mail<input id="quote-email" type="email"></label>
+                </div>
+
+                <div class="quote-items-header">
+                    <h3>Prestations</h3>
+                    <button type="button" id="quote-add-item" class="text-button">+ Ajouter une ligne</button>
+                </div>
+                <div id="quote-items" class="quote-items"></div>
+
+                <div class="quote-adjustments">
+                    <label>Déplacement (€)<input id="quote-travel" type="number" min="0" step="0.01" value="0"></label>
+                    <label>Remise (€)<input id="quote-discount" type="number" min="0" step="0.01" value="0"></label>
+                </div>
+
+                <div class="quote-total-row">
+                    <span>Total estimé</span>
+                    <strong id="quote-total">0,00 €</strong>
+                </div>
+
+                <div class="quote-actions">
+                    <button type="button" class="btn btn-secondary" data-quote-close>Annuler</button>
+                    <button type="submit" class="btn btn-primary">Imprimer / Enregistrer PDF</button>
+                </div>
+            </form>
+        </section>
     </div>
 
     <script src="admin.js"></script>
