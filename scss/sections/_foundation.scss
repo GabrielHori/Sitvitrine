@@ -1,0 +1,382 @@
+﻿/* ============================================================
+   HORIZON IT â€” STYLE.CSS
+   ============================================================
+
+   SOMMAIRE
+   ------------------------------------------------------------
+   01. Variables & couleurs                 Ligne 45
+   02. Mode sombre                          Ligne 113
+   03. Reset gÃ©nÃ©ral                        Ligne 343
+   04. Typographie                          Ligne 424
+   05. Conteneurs & sections                Ligne 505
+
+   06. Header / navigation                  Ligne 572
+   07. Mode nuit                            Ligne 776
+   08. Menu mobile                          Ligne 840
+   09. HERO                                 Ligne 875
+   10. Boutons                              Ligne 1395
+   11. Bloc urgence / SOS                   Ligne 1498
+   12. ProblÃ¨mes                            Ligne 1711
+   13. Services                             Ligne 1830
+   14. Mon histoire                         Ligne 2001
+   15. Comment Ã§a marche                    Ligne 2253
+   16. Tarifs                               Ligne 2341
+   17. Pourquoi Horizon IT                  Ligne 2556
+   18. RÃ©alisations                         Ligne 2657
+   19. Avis clients                         Ligne 2787
+   20. Zone d'intervention                  Ligne 2917
+   21. FAQ                                  Ligne 2989
+   22. CTA final                            Ligne 3068
+   23. Contact                              Ligne 3133
+   24. Formulaire                           Ligne 3253
+   25. Menu dÃ©roulant                       Ligne 3404
+   26. Footer                               Ligne 3449
+   27. Retour en haut                       Ligne 4080
+
+   28. Responsive tablette                  Ligne 4148
+   29. Responsive mobile                    Ligne 4242
+
+   29.1 Responsive â€” petits Ã©crans          Ligne 4449
+   30. AccessibilitÃ©                        Ligne 4646
+   ============================================================
+
+
+/* ============================================================
+   01. VARIABLES & COULEURS
+   ============================================================ */
+
+:root {
+
+    /* ---------- Fonds ---------- */
+
+    --bg: #edf4f8;
+
+    --bg-soft: #dce8ef;
+
+    --bg-white: #ffffff;
+
+
+    /* ---------- Textes ---------- */
+
+    --text: #102238;
+
+    --text-soft: #40566d;
+
+    --text-muted: #60758a;
+
+
+    /* ---------- Horizon IT ---------- */
+
+    --accent: #00a6c2;
+
+    --accent-dark: #00879f;
+
+    --accent-light: #d7f2f6;
+
+
+    /* ---------- Ã‰tats ---------- */
+
+    --success: #15966a;
+
+    --error: #c93d3d;
+
+
+    /* ---------- Bordures ---------- */
+
+    --border: #c8d6e0;
+
+    --border-light: #dce6ec;
+
+
+    /* ---------- Dimensions ---------- */
+
+    --container: 1180px;
+
+    --radius: 18px;
+
+    --transition: 220ms ease;
+
+
+    /* ---------- Ombres ---------- */
+
+    --shadow:
+        0 10px 30px
+        rgba(16, 34, 56, 0.09);
+
+    --shadow-hover:
+        0 18px 45px
+        rgba(0, 120, 150, 0.16);
+}
+
+
+/* ============================================================
+   02. MODE SOMBRE
+   ============================================================ */
+
+[data-theme="dark"] {
+
+    --bg: #0b1420;
+
+    --bg-soft: #101e2c;
+
+    --bg-white: #142536;
+
+
+    --text: #f2f7fa;
+
+    --text-soft: #b8c7d3;
+
+    --text-muted: #8fa4b5;
+
+
+    --accent: #19c1dc;
+
+    --accent-dark: #5bd4e7;
+
+    --accent-light: #173844;
+
+
+    --success: #39c994;
+
+    --error: #ff6b6b;
+
+
+    --border: #263c4f;
+
+    --border-light: #1d3244;
+
+
+    --shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.25);
+
+    --shadow-hover:
+        0 18px 45px
+        rgba(0, 0, 0, 0.38);
+}
+
+
+/* ---------- Fonds gÃ©nÃ©raux ---------- */
+
+[data-theme="dark"] body {
+    background: var(--bg);
+
+    color: var(--text);
+}
+
+
+[data-theme="dark"] .problem-section,
+[data-theme="dark"] .process-section,
+[data-theme="dark"] .portfolio-section,
+[data-theme="dark"] .area-section,
+[data-theme="dark"] .contact-section {
+    background: var(--bg);
+}
+
+
+[data-theme="dark"] .services-section,
+[data-theme="dark"] .pricing-section,
+[data-theme="dark"] .reviews-section,
+[data-theme="dark"] .faq-section {
+    background: var(--bg-soft);
+}
+
+
+[data-theme="dark"] .story-section,
+[data-theme="dark"] .trust-section {
+    background:
+        linear-gradient(
+            135deg,
+            #101e2c,
+            #0d1926
+        );
+}
+
+
+/* ---------- Cartes ---------- */
+
+[data-theme="dark"] .problem-card,
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .price-card,
+[data-theme="dark"] .portfolio-card,
+[data-theme="dark"] .portfolio-placeholder,
+[data-theme="dark"] .review-card,
+[data-theme="dark"] .empty-reviews,
+[data-theme="dark"] .trust-point,
+[data-theme="dark"] .contact-form-card,
+[data-theme="dark"] .story-quote {
+    background: var(--bg-white);
+
+    border-color: var(--border);
+}
+
+
+[data-theme="dark"] .problem-card:hover,
+[data-theme="dark"] .service-card:hover,
+[data-theme="dark"] .price-card:hover,
+[data-theme="dark"] .portfolio-card:hover,
+[data-theme="dark"] .portfolio-placeholder:hover,
+[data-theme="dark"] .review-card:hover,
+[data-theme="dark"] .trust-point:hover {
+    background: #172b3c;
+
+    border-color: var(--accent);
+}
+
+
+/* ---------- Header ---------- */
+
+[data-theme="dark"] .site-header {
+    background:
+        rgba(11, 20, 32, 0.94);
+
+    border-bottom-color:
+        var(--border);
+}
+
+
+/* ---------- Bouton secondaire ---------- */
+
+[data-theme="dark"] .btn-secondary {
+    background: #142536;
+
+    border-color: var(--border);
+
+    color: var(--text);
+}
+
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: #173844;
+
+    border-color: var(--accent);
+
+    color: var(--accent);
+}
+
+
+/* ---------- Formulaire ---------- */
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: #101e2c;
+
+    border-color: var(--border);
+
+    color: var(--text);
+}
+
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+    background: #142536;
+
+    border-color: var(--accent);
+}
+
+
+[data-theme="dark"] select option {
+    background: #142536;
+
+    color: #f2f7fa;
+}
+
+
+/* ---------- Contact â€” cartes ---------- */
+
+[data-theme="dark"] .contact-method {
+    background: #122536;
+
+    border-color: #294457;
+
+    color: #e8f0f5;
+}
+
+
+[data-theme="dark"] .contact-method:hover {
+    background: #173044;
+
+    border-color: var(--accent);
+}
+
+
+[data-theme="dark"] .contact-method-icon {
+    background: #173b4a;
+
+    color: #55d6e8;
+}
+
+
+[data-theme="dark"] .contact-method small {
+    color: #9fb4c2;
+}
+
+
+[data-theme="dark"] .contact-method strong {
+    color: #f2f7fa;
+}
+
+
+/* ---------- Zone d'intervention â€” villes ---------- */
+
+[data-theme="dark"] .area-list span {
+    background: #142b3d;
+
+    border-color: #315064;
+
+    color: #dce9f0;
+}
+
+
+[data-theme="dark"] .area-list span:hover {
+    background: #193b4d;
+
+    border-color: var(--accent);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   03. RESET GÃ‰NÃ‰RAL
+   ============================================================ */
+
+* {
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+
+    scroll-padding-top: 90px;
+}
+
+
+body {
+    min-height: 100vh;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    line-height: 1.6;
+
+    overflow-x: hidden;
+
+    transition:
+        background-color 220ms ease,
+        color 220ms ease;
+}
+
+

@@ -1,0 +1,252 @@
+﻿/* ============================================================
+   14. MON HISTOIRE
+   ============================================================ */
+
+.story-section {
+    background:
+        linear-gradient(
+            135deg,
+            #f1f6f9,
+            #e1ebf1
+        );
+}
+
+
+.story-container {
+    display: grid;
+
+    grid-template-columns:
+        0.85fr 1.15fr;
+
+    align-items: center;
+
+    gap: 90px;
+}
+
+
+.story-image-wrapper {
+    position: relative;
+
+    max-width: 470px;
+
+    margin-inline: auto;
+}
+
+
+.story-image-wrapper img {
+    width: 100%;
+
+    aspect-ratio: 4 / 5;
+
+    object-fit: cover;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 25px 60px
+        rgba(
+            16,
+            34,
+            56,
+            0.15
+        );
+}
+
+
+.story-image-label {
+    position: absolute;
+
+    right: -35px;
+
+    bottom: 35px;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        14px 17px;
+
+    background: #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 18px 40px
+        rgba(
+            16,
+            34,
+            56,
+            0.14
+        );
+}
+
+
+.story-label-dot {
+    width: 9px;
+
+    height: 9px;
+
+    flex-shrink: 0;
+
+    background: var(--success);
+
+    border-radius: 50%;
+}
+
+
+.story-image-label strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 0.82rem;
+}
+
+
+.story-image-label small {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+}
+
+
+.story-content {
+    max-width: 650px;
+}
+
+
+.story-content h2 {
+    margin:
+        15px 0 25px;
+}
+
+
+.story-content h2 span {
+    display: block;
+
+    color: var(--accent);
+}
+
+
+.story-content > p {
+    margin-bottom: 17px;
+
+    font-size: 0.92rem;
+
+    line-height: 1.8;
+}
+
+
+.story-content > p strong {
+    color: var(--text);
+}
+
+
+.story-quote {
+    position: relative;
+
+    margin:
+        35px 0 30px;
+
+    padding:
+        25px 30px 25px 40px;
+
+    background: #ffffff;
+
+    border-left:
+        3px solid var(--accent);
+
+    border-radius:
+        0 14px 14px 0;
+}
+
+
+.quote-mark {
+    position: absolute;
+
+    top: 5px;
+
+    left: 14px;
+
+    color:
+        rgba(
+            0,
+            166,
+            194,
+            0.2
+        );
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 3rem;
+}
+
+
+.story-quote p {
+    position: relative;
+
+    z-index: 1;
+
+    color: var(--text);
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 1.05rem;
+
+    font-weight: 600;
+
+    line-height: 1.55;
+}
+
+
+.story-signature {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.signature-line {
+    width: 35px;
+
+    height: 2px;
+
+    background: var(--accent);
+}
+
+
+.story-signature strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 0.85rem;
+}
+
+
+.story-signature small {
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+}
+
+

@@ -1,0 +1,79 @@
+﻿/* ============================================================
+   21. FAQ
+   ============================================================ */
+
+.faq-section {
+    background: var(--bg-soft);
+}
+
+
+.faq-list {
+    max-width: 850px;
+
+    margin-inline: auto;
+}
+
+
+.faq-list details {
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.faq-list summary {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding:
+        23px 0;
+
+    cursor: pointer;
+
+    color: var(--text);
+
+    font-size: 0.95rem;
+
+    font-weight: 600;
+
+    list-style: none;
+}
+
+
+.faq-list summary::-webkit-details-marker {
+    display: none;
+}
+
+
+.faq-list summary span {
+    color: var(--accent);
+
+    font-size: 1.3rem;
+
+    transition:
+        transform var(--transition);
+}
+
+
+.faq-list details[open] summary span {
+    transform:
+        rotate(45deg);
+}
+
+
+.faq-list details p {
+    max-width: 750px;
+
+    padding:
+        0 40px 25px 0;
+
+    font-size: 0.85rem;
+
+    line-height: 1.7;
+}
+
+

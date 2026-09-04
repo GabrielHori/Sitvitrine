@@ -1,0 +1,45 @@
+﻿/* ============================================================
+   25. MENU DÃ‰ROULANT
+   ============================================================ */
+
+select {
+    min-height: 48px;
+
+    cursor: pointer;
+
+    color: var(--text);
+
+    background-color: #edf4f8;
+}
+
+
+select option {
+    background: #ffffff;
+
+    color: #102238;
+
+    font-size: 0.9rem;
+}
+
+
+select option:checked {
+    background: #d7f2f6;
+
+    color: #00879f;
+}
+
+
+[data-theme="dark"] select {
+    background: #101e2c;
+
+    color: #f2f7fa;
+}
+
+
+[data-theme="dark"] select option {
+    background: #142536;
+
+    color: #f2f7fa;
+}
+
+

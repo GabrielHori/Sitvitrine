@@ -1,0 +1,64 @@
+﻿/* ============================================================
+   07. MODE NUIT
+   ============================================================ */
+
+.theme-toggle {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    background: var(--bg-white);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    transition:
+        background var(--transition),
+        color var(--transition),
+        border-color var(--transition),
+        transform var(--transition);
+}
+
+
+.theme-toggle:hover {
+    background: var(--accent-light);
+
+    border-color: var(--accent);
+
+    color: var(--accent);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.theme-icon {
+    font-size: 19px;
+
+    line-height: 1;
+
+    transition:
+        transform 220ms ease;
+}
+
+
+.theme-toggle:hover .theme-icon {
+    transform:
+        rotate(15deg);
+}
+
+

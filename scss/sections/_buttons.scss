@@ -1,0 +1,103 @@
+﻿/* ============================================================
+   10. BOUTONS
+   ============================================================ */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    min-height: 52px;
+
+    padding:
+        0 22px;
+
+    border:
+        1px solid transparent;
+
+    border-radius: 12px;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    transition:
+        transform var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+
+.btn:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+.btn-primary {
+    background: var(--accent);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 25px
+        rgba(
+            0,
+            166,
+            194,
+            0.18
+        );
+}
+
+
+.btn-primary:hover {
+    background: var(--accent-dark);
+
+    box-shadow:
+        0 15px 35px
+        rgba(
+            0,
+            166,
+            194,
+            0.28
+        );
+}
+
+
+.btn-secondary {
+    background: #ffffff;
+
+    border-color: var(--border);
+
+    color: var(--text);
+
+    box-shadow:
+        0 5px 20px
+        rgba(
+            16,
+            34,
+            56,
+            0.05
+        );
+}
+
+
+.btn-secondary:hover {
+    background: var(--accent-light);
+
+    border-color: var(--accent);
+
+    color: var(--accent-dark);
+}
+
+
+.btn-full {
+    width: 100%;
+}
+
+

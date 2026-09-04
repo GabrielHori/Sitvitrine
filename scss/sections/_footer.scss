@@ -1,0 +1,631 @@
+﻿/* ============================================================
+   26. FOOTER
+   ============================================================ */
+
+
+/* ============================================================
+   CONTENEUR PRINCIPAL
+   ============================================================ */
+
+.footer {
+    position: relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d2035 0%,
+            #102a43 100%
+        );
+
+    color: #ffffff;
+
+    border-top:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+}
+
+
+/* ============================================================
+   CONTENU PRINCIPAL DU FOOTER
+   ============================================================ */
+
+.footer-main {
+    display: grid;
+
+    grid-template-columns:
+        1.6fr
+        0.8fr
+        1fr
+        1.15fr;
+
+    gap: 55px;
+
+    padding:
+        75px 0 65px;
+}
+
+
+/* ============================================================
+   IDENTITÃ‰ HORIZON IT
+   ============================================================ */
+
+.footer-brand {
+    max-width: 390px;
+}
+
+
+/* ---------- Logo ---------- */
+
+.footer-logo {
+    display: inline-block;
+
+    margin-bottom: 18px;
+
+    color: #ffffff;
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 1.35rem;
+
+    font-weight: 700;
+
+    letter-spacing: -0.05em;
+
+    transition:
+        opacity var(--transition);
+}
+
+
+.footer-logo span {
+    color: var(--accent);
+}
+
+
+.footer-logo:hover {
+    opacity: 0.85;
+}
+
+
+/* ---------- Description ---------- */
+
+.footer-description {
+    max-width: 350px;
+
+    margin-bottom: 25px;
+
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.72
+        );
+
+    font-size: 0.82rem;
+
+    line-height: 1.75;
+}
+
+
+/* ============================================================
+   LOCALISATION
+   ============================================================ */
+
+.footer-location {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: fit-content;
+
+    margin-bottom: 22px;
+
+    padding:
+        10px 13px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.045
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+
+    border-radius: 10px;
+}
+
+
+.footer-location-icon {
+    display: grid;
+
+    place-items: center;
+
+    width: 34px;
+
+    height: 34px;
+
+    background:
+        rgba(
+            0,
+            166,
+            194,
+            0.15
+        );
+
+    border-radius: 8px;
+
+    color: #5ed8e8;
+
+    font-size: 0.85rem;
+}
+
+
+.footer-location strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 0.75rem;
+}
+
+
+.footer-location small {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.55
+        );
+
+    font-size: 0.65rem;
+}
+
+
+/* ============================================================
+   INSTAGRAM
+   ============================================================ */
+
+.footer-social {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.7
+        );
+
+    font-size: 0.75rem;
+
+    transition:
+        color var(--transition);
+}
+
+
+.footer-social span {
+    display: grid;
+
+    place-items: center;
+
+    width: 25px;
+
+    height: 25px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.06
+        );
+
+    border-radius: 7px;
+
+    font-size: 0.95rem;
+}
+
+
+.footer-social:hover {
+    color: #5ed8e8;
+}
+
+
+/* ============================================================
+   COLONNES
+   ============================================================ */
+
+.footer-column {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+}
+
+
+/* ---------- Titres ---------- */
+
+.footer-column h3 {
+    margin-bottom: 10px;
+
+    color: #ffffff;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.12em;
+}
+
+
+/* ---------- Liens ---------- */
+
+.footer-column > a {
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.65
+        );
+
+    font-size: 0.75rem;
+
+    transition:
+        color var(--transition),
+        transform var(--transition);
+}
+
+
+.footer-column > a:hover {
+    color: #5ed8e8;
+
+    transform:
+        translateX(3px);
+}
+
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+
+.footer-contact p {
+    max-width: 250px;
+
+    margin-bottom: 8px;
+
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.62
+        );
+
+    font-size: 0.75rem;
+
+    line-height: 1.65;
+}
+
+
+/* ============================================================
+   TÃ‰LÃ‰PHONE
+   ============================================================ */
+
+.footer-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 7px;
+
+    color: #ffffff;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    transition:
+        color var(--transition);
+}
+
+
+.footer-phone span {
+    color: #5ed8e8;
+
+    font-size: 0.9rem;
+}
+
+
+.footer-phone:hover {
+    color: #5ed8e8;
+}
+
+
+/* ============================================================
+   BOUTON DEMANDER UN DEVIS
+   ============================================================ */
+
+.footer-cta {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    min-height: 43px;
+
+    margin-top: 8px;
+
+    padding:
+        0 17px;
+
+    background: var(--accent);
+
+    border:
+        1px solid var(--accent);
+
+    border-radius: 9px;
+
+    color: #ffffff !important;
+
+    font-size: 0.75rem;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 20px
+        rgba(
+            0,
+            166,
+            194,
+            0.18
+        );
+
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+
+.footer-cta:hover {
+    background: var(--accent-dark);
+
+    border-color: var(--accent-dark);
+
+    color: #ffffff !important;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(
+            0,
+            166,
+            194,
+            0.28
+        );
+}
+
+
+/* ============================================================
+   BARRE INFÃ‰RIEURE
+   ============================================================ */
+
+.footer-bottom {
+    border-top:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+}
+
+
+.footer-bottom-inner {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    min-height: 65px;
+
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.48
+        );
+
+    font-size: 0.68rem;
+}
+
+
+/* ============================================================
+   LIENS BAS DE PAGE
+   ============================================================ */
+
+.footer-bottom-links {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.footer-bottom a {
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.55
+        );
+
+    transition:
+        color var(--transition);
+}
+
+
+.footer-bottom a:hover {
+    color: #5ed8e8;
+}
+
+
+.footer-bottom-links > span {
+    color:
+        rgba(
+            225,
+            235,
+            242,
+            0.25
+        );
+}
+
+
+/* ============================================================
+   MODE SOMBRE
+   ============================================================ */
+
+[data-theme="dark"] .footer {
+    background:
+        linear-gradient(
+            135deg,
+            #070e17 0%,
+            #0b1724 100%
+        );
+
+    border-top-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.06
+        );
+}
+
+
+/* ============================================================
+   RESPONSIVE TABLETTE
+   ============================================================ */
+
+@media (max-width: 950px) {
+
+    .footer-main {
+        grid-template-columns:
+            1.4fr
+            1fr
+            1fr;
+
+        gap: 45px;
+    }
+
+
+    .footer-brand {
+        grid-column:
+            1 / -1;
+
+        max-width: 600px;
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .footer-main {
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+
+        padding:
+            55px 0 45px;
+    }
+
+
+    .footer-brand {
+        grid-column: auto;
+    }
+
+
+    .footer-description {
+        max-width: 100%;
+    }
+
+
+    .footer-column {
+        gap: 9px;
+    }
+
+
+    .footer-contact p {
+        max-width: 100%;
+    }
+
+
+    .footer-bottom-inner {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        padding:
+            18px 0;
+
+        gap: 8px;
+    }
+
+}
+
+

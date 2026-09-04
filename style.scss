@@ -1,0 +1,32 @@
+// Point d'entrée Sass. Chaque bloc visuel est isolé pour simplifier
+// la recherche, la correction et l'évolution d'une section du site.
+
+@use "scss/sections/foundation";
+@use "scss/sections/domotique";
+@use "scss/sections/core";
+@use "scss/sections/typography";
+@use "scss/sections/layout";
+@use "scss/sections/navigation";
+@use "scss/sections/theme";
+@use "scss/sections/menu";
+@use "scss/sections/hero";
+@use "scss/sections/buttons";
+@use "scss/sections/emergency";
+@use "scss/sections/problems";
+@use "scss/sections/services";
+@use "scss/sections/story";
+@use "scss/sections/process";
+@use "scss/sections/pricing";
+@use "scss/sections/trust";
+@use "scss/sections/portfolio";
+@use "scss/sections/reviews";
+@use "scss/sections/area";
+@use "scss/sections/faq";
+@use "scss/sections/cta";
+@use "scss/sections/contact";
+@use "scss/sections/form";
+@use "scss/sections/dropdown";
+@use "scss/sections/footer";
+@use "scss/sections/back-to-top";
+@use "scss/sections/responsive";
+@use "scss/sections/accessibility";

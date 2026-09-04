@@ -1,0 +1,72 @@
+﻿/* ============================================================
+   20. ZONE D'INTERVENTION
+   ============================================================ */
+
+.area-section {
+    background: #ffffff;
+}
+
+
+.area-container {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    align-items: center;
+
+    gap: 80px;
+}
+
+
+.area-container h2 {
+    margin:
+        12px 0;
+}
+
+
+.area-container p {
+    max-width: 550px;
+}
+
+
+.area-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.area-list span {
+    padding:
+        10px 14px;
+
+    background: #edf4f8;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 999px;
+
+    color: var(--text-soft);
+
+    font-size: 0.78rem;
+
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        color var(--transition);
+}
+
+
+.area-list span:hover {
+    background: var(--accent-light);
+
+    border-color: var(--accent);
+
+    color: var(--accent-dark);
+}
+
+

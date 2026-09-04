@@ -19,6 +19,129 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
+       00. TRANSITION ENTRE LES UNIVERS DU SITE
+       ================================================= */
+
+    const pageTransition =
+        document.getElementById("page-transition");
+
+
+    if (pageTransition) {
+
+        requestAnimationFrame(() => {
+            pageTransition.classList.remove("is-visible");
+        });
+
+
+        document
+            .querySelectorAll("a[data-page-transition]")
+            .forEach(link => {
+
+                link.addEventListener("click", event => {
+
+                    if (
+                        event.defaultPrevented ||
+                        event.button !== 0 ||
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey
+                    ) {
+                        return;
+                    }
+
+
+                    const destination = new URL(
+                        link.href,
+                        window.location.href
+                    );
+
+
+                    if (
+                        destination.origin !== window.location.origin ||
+                        destination.pathname === window.location.pathname
+                    ) {
+                        return;
+                    }
+
+
+                    event.preventDefault();
+                    pageTransition.classList.add("is-visible");
+
+                    window.setTimeout(() => {
+                        window.location.href = destination.href;
+                    }, 260);
+
+                });
+
+            });
+
+    }
+
+
+    /* =================================================
+       00.1 ARRIVÉE SUR UNE SECTION
+       ================================================= */
+
+    const reduceMotion =
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+
+    function highlightSection(target) {
+
+        if (!target || reduceMotion) {
+            return;
+        }
+
+
+        window.setTimeout(() => {
+
+            target.classList.remove("section-arriving");
+
+            // Relance l'animation même si la même section est sélectionnée deux fois.
+            void target.offsetWidth;
+
+            target.classList.add("section-arriving");
+
+            window.setTimeout(() => {
+                target.classList.remove("section-arriving");
+            }, 720);
+
+        }, 260);
+
+    }
+
+
+    document
+        .querySelectorAll('a[href^="#"]')
+        .forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                const targetId =
+                    link.getAttribute("href")
+                        .slice(1);
+
+
+                if (!targetId) {
+                    return;
+                }
+
+
+                highlightSection(
+                    document.getElementById(
+                        decodeURIComponent(targetId)
+                    )
+                );
+
+            });
+
+        });
+
+
+    /* =================================================
        01. MODE CLAIR / SOMBRE
        ================================================= */
 

@@ -1,0 +1,167 @@
+﻿/* ============================================================
+   19. AVIS CLIENTS
+   ============================================================ */
+
+.reviews-section {
+    background: var(--bg-soft);
+}
+
+
+/* ---------- Grille des avis ---------- */
+
+.reviews-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+
+/* ---------- Bouton laisser un avis ---------- */
+
+.reviews-actions {
+    display: flex;
+
+    justify-content: center;
+
+    width: 100%;
+
+    margin-top: 35px;
+}
+
+
+/* ---------- Aucun avis ---------- */
+
+.empty-reviews {
+    grid-column:
+        1 / -1;
+
+    padding:
+        55px 30px;
+
+    background: #ffffff;
+
+    border:
+        1px dashed var(--border);
+
+    border-radius: var(--radius);
+
+    text-align: center;
+}
+
+
+.empty-reviews span {
+    font-size: 2rem;
+}
+
+
+.empty-reviews h3 {
+    margin:
+        15px 0 8px;
+}
+
+
+.empty-reviews p {
+    font-size: 0.85rem;
+}
+
+
+/* ---------- Carte avis ---------- */
+
+.review-card {
+    padding: 25px;
+
+    background: #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+
+.review-card:hover {
+    transform:
+        translateY(-5px);
+
+    border-color: var(--accent);
+
+    box-shadow: var(--shadow-hover);
+}
+
+
+/* ---------- En-tÃªte ---------- */
+
+.review-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.review-client {
+    color: var(--text);
+
+    font-weight: 700;
+}
+
+
+.review-rating {
+    color: #f5a623;
+
+    font-size: 0.75rem;
+}
+
+
+/* ---------- Prestation ---------- */
+
+.review-service {
+    margin-top: 6px;
+
+    color: var(--accent-dark);
+
+    font-size: 0.72rem;
+}
+
+
+/* ---------- Commentaire ---------- */
+
+.review-text {
+    margin-top: 20px;
+
+    font-size: 0.85rem;
+}
+
+
+/* ---------- Date ---------- */
+
+.review-date {
+    margin-top: 20px;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+    .reviews-actions {
+        margin-top: 28px;
+    }
+
+}
+

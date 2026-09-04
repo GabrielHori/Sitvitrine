@@ -1,0 +1,215 @@
+﻿/* ============================================================
+   16. TARIFS
+   ============================================================ */
+
+.pricing-section {
+    background: var(--bg-soft);
+}
+
+
+.pricing-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+.price-card {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding:
+        30px 25px;
+
+    background: #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow:
+        0 5px 20px
+        rgba(
+            16,
+            34,
+            56,
+            0.05
+        );
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+
+.price-card:hover {
+    transform:
+        translateY(-6px);
+
+    border-color: var(--accent);
+
+    box-shadow: var(--shadow-hover);
+}
+
+
+.price-card.featured {
+    border-color:
+        rgba(
+            0,
+            166,
+            194,
+            0.35
+        );
+}
+
+
+.price-badge {
+    position: absolute;
+
+    top: 15px;
+
+    right: 15px;
+
+    padding:
+        5px 9px;
+
+    background: var(--accent);
+
+    color: #ffffff;
+
+    border-radius: 999px;
+
+    font-size: 0.65rem;
+
+    font-weight: 800;
+}
+
+
+.price-icon {
+    margin-bottom: 20px;
+
+    font-size: 1.7rem;
+}
+
+
+.price-card h3 {
+    font-size: 1.05rem;
+}
+
+
+.price {
+    margin:
+        15px 0;
+
+    color: var(--accent-dark);
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 2.2rem;
+
+    font-weight: 700;
+}
+
+
+.price small {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 0.7rem;
+
+    font-weight: 500;
+}
+
+
+.price-card > p {
+    min-height: 75px;
+
+    font-size: 0.8rem;
+}
+
+
+.price-card ul {
+    display: grid;
+
+    gap: 10px;
+
+    margin:
+        20px 0 25px;
+}
+
+
+.price-card li {
+    color: var(--text-soft);
+
+    font-size: 0.78rem;
+}
+
+
+.price-card li::before {
+    content: "âœ“";
+
+    margin-right: 8px;
+
+    color: var(--success);
+}
+
+
+.price-button {
+    display: block;
+
+    margin-top: auto;
+
+    padding: 12px;
+
+    background: transparent;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    text-align: center;
+
+    font-size: 0.78rem;
+
+    font-weight: 700;
+}
+
+
+.price-button:hover {
+    background: var(--accent-light);
+
+    border-color: var(--accent);
+
+    color: var(--accent-dark);
+}
+
+
+.pricing-note {
+    margin-top: 25px;
+
+    color: var(--text-muted);
+
+    text-align: center;
+
+    font-size: 0.72rem;
+}
+
+

@@ -1,0 +1,213 @@
+﻿/* ============================================================
+   11. BLOC URGENCE / SOS
+   ============================================================ */
+
+.emergency-section {
+    padding:
+        35px 0;
+
+    background: var(--bg);
+}
+
+
+.emergency-box {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    min-height: 125px;
+
+    padding:
+        25px 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f8,
+            #fffafa
+        );
+
+    border:
+        1px solid #f0caca;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 35px
+        rgba(
+            160,
+            40,
+            40,
+            0.06
+        );
+}
+
+
+.emergency-box::before {
+    content: "";
+
+    position: absolute;
+
+    top: 25px;
+
+    bottom: 25px;
+
+    left: 0;
+
+    width: 4px;
+
+    background: #ff6262;
+
+    border-radius:
+        0 4px 4px 0;
+}
+
+
+.emergency-icon {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff4f78,
+            #ed3764
+        );
+
+    border-radius: 7px;
+
+    color: #ffffff;
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 0.9rem;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 7px 18px
+        rgba(
+            237,
+            55,
+            100,
+            0.22
+        );
+}
+
+
+.emergency-content {
+    flex: 1;
+}
+
+
+.emergency-content h2 {
+    margin-bottom: 5px;
+
+    color: #e74d5d;
+
+    font-size: 1.35rem;
+
+    line-height: 1.2;
+}
+
+
+.emergency-content p {
+    max-width: 750px;
+
+    color: var(--text-soft);
+
+    font-size: 0.82rem;
+
+    line-height: 1.6;
+}
+
+
+.emergency-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 46px;
+
+    flex-shrink: 0;
+
+    padding:
+        0 24px;
+
+    background: #ff6262;
+
+    border:
+        1px solid #ff6262;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    font-size: 0.8rem;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    transition:
+        background var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+
+.emergency-button:hover {
+    background: #e94d55;
+
+    border-color: #e94d55;
+
+    color: #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(
+            255,
+            98,
+            98,
+            0.25
+        );
+}
+
+
+/* ---------- SOS mode sombre ---------- */
+
+[data-theme="dark"] .emergency-box {
+    background:
+        linear-gradient(
+            135deg,
+            #1b1016,
+            #17111a
+        );
+
+    border-color:
+        #4a2932;
+}
+
+

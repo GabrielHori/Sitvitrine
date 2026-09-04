@@ -1,0 +1,68 @@
+﻿/* ============================================================
+   27. RETOUR EN HAUT
+   ============================================================ */
+
+.back-to-top {
+    position: fixed;
+
+    right: 20px;
+
+    bottom: 20px;
+
+    z-index: 900;
+
+    width: 44px;
+
+    height: 44px;
+
+    background: #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: var(--accent-dark);
+
+    box-shadow:
+        0 8px 25px
+        rgba(
+            16,
+            34,
+            56,
+            0.12
+        );
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateY(10px);
+
+    transition:
+        opacity var(--transition),
+        visibility var(--transition),
+        transform var(--transition);
+}
+
+
+.back-to-top.visible {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(0);
+}
+
+
+[data-theme="dark"] .back-to-top {
+    background: #142536;
+
+    border-color: var(--border);
+
+    color: var(--accent);
+}
+
+

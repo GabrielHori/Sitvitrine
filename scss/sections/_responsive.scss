@@ -1,0 +1,498 @@
+﻿/* ============================================================
+   28. RESPONSIVE â€” TABLETTE
+   ============================================================ */
+
+@media (max-width: 1050px) {
+
+    .problem-grid,
+    .pricing-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .hero-container {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+    }
+
+
+    .hero-content {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        margin-inline: auto;
+    }
+
+
+    .hero-reassurance {
+        justify-content: center;
+    }
+
+
+    .hero-visual {
+        width: 100%;
+
+        max-width: 600px;
+
+        margin-inline: auto;
+    }
+
+
+    .story-container {
+        grid-template-columns: 1fr;
+
+        gap: 60px;
+    }
+
+
+    .story-image-wrapper {
+        width:
+            min(
+                100%,
+                500px
+            );
+    }
+
+
+    .story-content {
+        max-width: 750px;
+
+        margin-inline: auto;
+    }
+
+
+    .trust-container,
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+
+
+    .process-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 30px;
+    }
+
+
+    .process-line {
+        display: none;
+    }
+
+
+    .emergency-box {
+        flex-wrap: wrap;
+    }
+
+}
+
+
+/* ============================================================
+   29. RESPONSIVE â€” MOBILE
+   ============================================================ */
+
+@media (max-width: 800px) {
+
+    /* ---------- Menu ---------- */
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+
+    .nav-menu {
+        position: absolute;
+
+        top: 76px;
+
+        left: 20px;
+
+        right: 20px;
+
+        display: none;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 5px;
+
+        margin-left: 0;
+
+        padding: 15px;
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.98
+            );
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 15px;
+
+        box-shadow:
+            0 20px 50px
+            rgba(
+                16,
+                34,
+                56,
+                0.14
+            );
+    }
+
+
+    [data-theme="dark"] .nav-menu {
+        background:
+            rgba(
+                11,
+                20,
+                32,
+                0.98
+            );
+    }
+
+
+    .nav-menu.open {
+        display: flex;
+    }
+
+
+    .nav-menu > a {
+        padding: 13px;
+
+        border-radius: 8px;
+    }
+
+
+    .nav-menu > a:not(.nav-cta):hover {
+        background: var(--accent-light);
+    }
+
+
+    .theme-toggle {
+        width: 100%;
+
+        height: 44px;
+
+        margin: 4px 0;
+    }
+
+
+    .nav-cta {
+        width: 100%;
+
+        margin-left: 0;
+
+        text-align: center;
+    }
+
+
+    /* ---------- Hero ---------- */
+
+    .hero {
+        min-height: auto;
+    }
+
+
+    .hero-container {
+        padding-top: 70px;
+
+        padding-bottom: 80px;
+    }
+
+
+    .hero-location {
+        justify-content: center;
+    }
+
+
+    .hero-reassurance {
+        justify-content: center;
+
+        gap: 10px 18px;
+    }
+
+
+    .hero-floating-card-top {
+        left: -15px;
+    }
+
+
+    .hero-floating-card-bottom {
+        right: -15px;
+    }
+
+
+    /* ---------- SOS ---------- */
+
+    .emergency-box {
+        display: grid;
+
+        grid-template-columns:
+            auto 1fr;
+
+        gap: 18px;
+
+        padding:
+            25px 22px;
+    }
+
+
+    .emergency-content {
+        min-width: 0;
+    }
+
+
+    .emergency-content h2 {
+        font-size: 1.15rem;
+    }
+
+
+    .emergency-content p {
+        font-size: 0.78rem;
+    }
+
+
+    .emergency-button {
+        grid-column:
+            1 / -1;
+
+        width: 100%;
+    }
+
+
+    /* ---------- Grilles ---------- */
+
+    .portfolio-grid,
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .area-container {
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+    }
+
+
+    .final-cta-box {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .footer-container {
+        flex-direction: column;
+    }
+
+}
+
+
+/* ============================================================
+   29.1 RESPONSIVE â€” PETITS Ã‰CRANS
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .container {
+        width:
+            min(
+                calc(100% - 28px),
+                var(--container)
+            );
+    }
+
+
+    .section {
+        padding: 80px 0;
+    }
+
+
+    /* ---------- Hero ---------- */
+
+    .hero h1 {
+        font-size:
+            clamp(
+                2.7rem,
+                14vw,
+                4rem
+            );
+    }
+
+
+    .hero-subtitle {
+        font-size: 0.92rem;
+    }
+
+
+    .hero-actions {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+
+    .hero-location {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+
+    .hero-reassurance {
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 8px;
+    }
+
+
+    .hero-image-card {
+        width: 90%;
+    }
+
+
+    .hero-floating-card {
+        padding: 10px;
+
+        transform: scale(0.9);
+    }
+
+
+    /* ---------- Grilles ---------- */
+
+    .problem-grid,
+    .services-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* ---------- Cartes ---------- */
+
+    .service-card,
+    .price-card {
+        padding: 25px;
+    }
+
+
+    /* ---------- Histoire ---------- */
+
+    .story-container {
+        gap: 45px;
+    }
+
+
+    .story-image-wrapper {
+        width: 90%;
+    }
+
+
+    .story-image-label {
+        right: -10px;
+
+        bottom: 20px;
+
+        padding:
+            11px 13px;
+    }
+
+
+    .story-content h2 {
+        font-size:
+            clamp(
+                2.2rem,
+                11vw,
+                3rem
+            );
+    }
+
+
+    .story-content > p {
+        font-size: 0.88rem;
+
+        line-height: 1.75;
+    }
+
+
+    .story-quote {
+        padding:
+            22px 20px 22px 32px;
+
+        margin-top: 28px;
+    }
+
+
+    .story-quote p {
+        font-size: 0.95rem;
+    }
+
+
+    /* ---------- Formulaire ---------- */
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+
+    .contact-form-card {
+        padding: 22px;
+    }
+
+
+    /* ---------- CTA ---------- */
+
+    .final-cta-box {
+        padding:
+            30px 24px;
+    }
+
+
+    .final-cta-actions {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+
+    .final-cta-actions .btn {
+        width: 100%;
+    }
+
+
+    /* ---------- Footer ---------- */
+
+    .footer-links {
+        gap: 40px;
+    }
+
+
+    .footer-bottom .container {
+        flex-direction: column;
+    }
+
+}
+
+

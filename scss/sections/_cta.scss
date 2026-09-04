@@ -1,0 +1,65 @@
+﻿/* ============================================================
+   22. CTA FINAL
+   ============================================================ */
+
+.final-cta {
+    padding:
+        80px 0;
+
+    background: var(--bg);
+}
+
+
+.final-cta-box {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding: 50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4f0f4,
+            #dce8f2
+        );
+
+    border:
+        1px solid #bddfe6;
+
+    border-radius: 25px;
+}
+
+
+[data-theme="dark"] .final-cta-box {
+    background:
+        linear-gradient(
+            135deg,
+            #15313b,
+            #142a3b
+        );
+
+    border-color:
+        #295160;
+}
+
+
+.final-cta-box h2 {
+    margin:
+        12px 0;
+}
+
+
+.final-cta-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+

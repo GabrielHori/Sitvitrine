@@ -1,0 +1,151 @@
+﻿/* ============================================================
+   24. FORMULAIRE
+   ============================================================ */
+
+.contact-form-card {
+    padding: 32px;
+
+    background: #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow:
+        0 15px 45px
+        rgba(
+            16,
+            34,
+            56,
+            0.08
+        );
+}
+
+
+.form-row {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+}
+
+
+.form-group {
+    display: grid;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+}
+
+
+.form-group label {
+    color: var(--text);
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+}
+
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding:
+        13px 15px;
+
+    background: #edf4f8;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    outline: none;
+
+    transition:
+        border-color var(--transition),
+        background var(--transition),
+        box-shadow var(--transition);
+}
+
+
+input::placeholder,
+textarea::placeholder {
+    color: #718497;
+}
+
+
+input:focus,
+select:focus,
+textarea:focus {
+    background: #ffffff;
+
+    border-color: var(--accent);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            0,
+            166,
+            194,
+            0.12
+        );
+}
+
+
+textarea {
+    min-height: 150px;
+
+    resize: vertical;
+}
+
+
+.form-note {
+    margin-top: 12px;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+
+    text-align: center;
+}
+
+
+.form-message {
+    margin-top: 15px;
+
+    text-align: center;
+
+    font-size: 0.8rem;
+}
+
+
+.form-message.success {
+    color: var(--success);
+}
+
+
+.form-message.error {
+    color: var(--error);
+}
+
+
+.honeypot {
+    position: absolute;
+
+    left: -9999px;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+

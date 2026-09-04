@@ -1,0 +1,120 @@
+﻿/* ============================================================
+   23. CONTACT
+   ============================================================ */
+
+.contact-section {
+    background: #ffffff;
+}
+
+
+.contact-container {
+    display: grid;
+
+    grid-template-columns:
+        0.8fr 1.2fr;
+
+    align-items: start;
+
+    gap: 80px;
+}
+
+
+.contact-info h2 {
+    margin:
+        15px 0;
+
+    font-size:
+        clamp(
+            2.2rem,
+            4vw,
+            3.5rem
+        );
+}
+
+
+.contact-info > p {
+    max-width: 500px;
+
+    font-size: 0.95rem;
+
+    line-height: 1.75;
+}
+
+
+.contact-methods {
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 35px;
+}
+
+
+.contact-method {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    background: #edf4f8;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    transition:
+        border-color var(--transition),
+        background var(--transition),
+        transform var(--transition);
+}
+
+
+.contact-method:hover {
+    background: var(--accent-light);
+
+    border-color: var(--accent);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.contact-method-icon {
+    display: grid;
+
+    place-items: center;
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    background: var(--accent-light);
+
+    border-radius: 10px;
+
+    color: var(--accent-dark);
+}
+
+
+.contact-method small {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+}
+
+
+.contact-method strong {
+    color: var(--text);
+
+    font-size: 0.85rem;
+}
+
+

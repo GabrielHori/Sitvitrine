@@ -1,0 +1,89 @@
+﻿/* ---------- Passage entre Informatique et Maison connectÃ©e ---------- */
+
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: grid;
+    place-items: center;
+    background: #102b3d;
+    color: #ffffff;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 260ms ease, visibility 260ms ease;
+}
+
+.page-transition::before {
+    content: "";
+    position: absolute;
+    width: min(58vw, 680px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(25,193,220,.33), transparent 68%);
+}
+
+.page-transition span { position: relative; font-family: "Space Grotesk", sans-serif; font-size: clamp(1.8rem, 5vw, 3.4rem); font-weight: 700; letter-spacing: -.06em; }
+.page-transition b { color: #5bd4e7; }.page-transition.is-visible { opacity: 1; visibility: visible; }
+
+.page-context {
+    display: inline-grid;
+    gap: 1px;
+    margin-bottom: 22px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.56);
+    transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.page-context:hover { border-color: var(--accent); background: var(--bg-white); transform: translateY(-2px); }
+.page-context-label { color: var(--text-muted); font-size: .62rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }.page-context strong { color: var(--text); font-family: "Space Grotesk", sans-serif; font-size: .96rem; }.page-context-switch { color: var(--accent-dark); font-size: .7rem; font-weight: 600; }.page-context-home { border-color: rgba(91,212,231,.32); background: rgba(11,31,45,.42); }.page-context-home .page-context-label { color: #a9c8d2; }.page-context-home strong { color: #ffffff; }.page-context-home .page-context-switch { color: #7ce2ef; }
+
+
+/* ============================================================
+   PAGE DOMOTIQUE
+   ============================================================ */
+
+.dom-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 174px 0 100px;
+    background: linear-gradient(135deg, #e9f7f8 0%, #edf4f8 52%, #dcecf3 100%);
+}
+
+.dom-hero-content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    align-items: center;
+    gap: 72px;
+}
+
+.dom-hero h1 { max-width: 680px; margin: 17px 0 22px; font-size: clamp(3rem, 6vw, 5.35rem); line-height: .98; letter-spacing: -.065em; }
+.dom-hero h1 span { color: var(--accent); }
+.dom-hero p { max-width: 590px; font-size: 1.08rem; line-height: 1.75; }
+.dom-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+.dom-hero-note { margin-top: 19px; font-size: .8rem !important; color: var(--text-muted) !important; }
+.dom-hero-orb { position: absolute; border-radius: 50%; filter: blur(2px); opacity: .55; }
+.dom-hero-orb-one { width: 430px; height: 430px; right: -80px; top: 60px; background: radial-gradient(circle, rgba(25,193,220,.28), transparent 68%); }
+.dom-hero-orb-two { width: 280px; height: 280px; left: 38%; bottom: -170px; background: radial-gradient(circle, rgba(0,135,159,.18), transparent 68%); }
+.dom-house-card { position: relative; min-height: 415px; padding: 24px; border: 1px solid rgba(0,166,194,.2); border-radius: 28px; background: linear-gradient(145deg, #17384b, #0d2234); box-shadow: 0 28px 58px rgba(16,34,56,.2); }
+.dom-status { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #dceff3; font-size: .75rem; font-weight: 600; background: rgba(255,255,255,.08); }
+.dom-status span { width: 7px; height: 7px; border-radius: 50%; background: #4be0a8; box-shadow: 0 0 10px #4be0a8; }
+.dom-house-icon { position: absolute; top: 75px; left: 50%; color: rgba(91,212,231,.23); font-size: 15rem; line-height: 1; transform: translateX(-50%); }
+.dom-control { position: absolute; z-index: 1; display: flex; align-items: center; gap: 10px; min-width: 190px; padding: 12px; border: 1px solid rgba(174,230,240,.18); border-radius: 14px; background: rgba(255,255,255,.1); backdrop-filter: blur(10px); color: #f6fcfd; }
+.dom-control > span { display:grid; width: 34px; height: 34px; place-items:center; border-radius: 10px; background: rgba(91,212,231,.2); color: #8de4f1; }
+.dom-control div { display: grid; gap: 1px; }
+.dom-control strong { font-size: .78rem; }.dom-control small { color: #afc9d2; font-size: .67rem; }.dom-control b { margin-left: auto; color: #4be0a8; font-size: .65rem; }
+.dom-control-light { top: 112px; right: -20px; }.dom-control-heat { top: 213px; left: -24px; }.dom-control-shutter { right: 6px; bottom: 32px; }
+.dom-intro { background: var(--bg); }.dom-solutions-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 17px; }
+.dom-solution-card { padding: 27px 23px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-white); box-shadow: 0 5px 20px rgba(16,34,56,.05); transition: transform var(--transition), border-color var(--transition); }
+.dom-solution-card:hover { border-color: var(--accent); transform: translateY(-5px); }.dom-solution-icon { display:grid; width:48px; height:48px; place-items:center; margin-bottom:20px; border-radius:13px; color:var(--accent-dark); background:var(--accent-light); font-size:1.4rem; }.dom-solution-card h3 { font-size:1rem; margin-bottom:9px; }.dom-solution-card p { font-size:.84rem; line-height:1.65; }
+.dom-process { background: linear-gradient(135deg, #102b3d, #0d1d2d); }.dom-process h2 { margin:14px 0 18px; color:#fff; }.dom-process p { color:#b8d0db; }.dom-process .eyebrow { color:#75ddec; }.dom-process-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:90px; align-items:center; }.dom-steps { display:grid; gap:25px; }.dom-steps li { display:grid; grid-template-columns:55px 1fr; gap:18px; }.dom-steps li > span { color:#5bd4e7; font-family:"Space Grotesk",sans-serif; font-size:1.05rem; font-weight:700; }.dom-steps li:not(:last-child) > span { position:relative; }.dom-steps li:not(:last-child) > span::after { content:""; position:absolute; top:34px; left:11px; width:1px; height:50px; background:rgba(91,212,231,.35); }.dom-steps h3 { margin-bottom:5px; color:#fff; font-size:1rem; }.dom-steps p { font-size:.86rem; }
+.dom-pricing { background: var(--bg-soft); }.dom-price-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch; }.dom-price-card { position:relative; display:flex; flex-direction:column; padding:32px 27px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-white); box-shadow:0 5px 20px rgba(16,34,56,.05); }.dom-price-card.featured { border:2px solid var(--accent); box-shadow:var(--shadow-hover); transform:translateY(-10px); }.dom-price-badge { position:absolute; top:-13px; left:50%; padding:5px 12px; border-radius:999px; background:var(--accent); color:#fff; font-size:.68rem; font-weight:700; white-space:nowrap; transform:translateX(-50%); }.dom-price-kicker { min-height:22px; color:var(--accent-dark); font-size:.72rem !important; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }.dom-price-card h3 { margin:7px 0; font-size:1.3rem; }.dom-price { margin:5px 0 17px; color:var(--text-muted); font-size:.8rem !important; }.dom-price strong { display:block; margin-top:2px; color:var(--accent-dark); font-family:"Space Grotesk",sans-serif; font-size:2.22rem; line-height:1.1; }.dom-price-card > p:not(.dom-price):not(.dom-price-kicker) { min-height:65px; font-size:.84rem; }.dom-price-card ul { display:grid; gap:11px; margin:20px 0 26px; }.dom-price-card li { color:var(--text-soft); font-size:.8rem; line-height:1.45; }.dom-price-card li::before { content:"âœ“"; margin-right:8px; color:var(--success); font-weight:700; }.dom-price-card .price-button { margin-top:auto; text-align:center; }.dom-price-disclaimer { max-width:850px; margin:34px auto 0; color:var(--text-muted); font-size:.78rem; text-align:center; }
+.dom-contact { border-top:0; }
+[data-theme="dark"] .dom-hero { background:linear-gradient(135deg,#0e2533,#0b1420 60%,#102938); } [data-theme="dark"] .dom-intro { background:var(--bg); } [data-theme="dark"] .dom-solution-card,[data-theme="dark"] .dom-price-card { background:var(--bg-white); } [data-theme="dark"] .dom-solution-card:hover { background:#172b3c; }
+@media (max-width: 900px) { .dom-hero-content,.dom-process-grid { grid-template-columns:1fr; gap:50px; }.dom-house-card { max-width:520px; width:calc(100% - 20px); margin:0 auto; }.dom-solutions-grid { grid-template-columns:repeat(2,1fr); }.dom-price-grid { grid-template-columns:1fr; max-width:500px; margin:0 auto; }.dom-price-card.featured { transform:none; }.dom-price-card > p:not(.dom-price):not(.dom-price-kicker) { min-height:0; } }
+@media (max-width: 580px) { .dom-hero { padding:130px 0 70px; }.dom-hero h1 { font-size:clamp(2.7rem,14vw,4rem); }.dom-hero-actions .btn { width:100%; }.dom-house-card { min-height:370px; }.dom-control { min-width:170px; }.dom-control-light { right:-10px; }.dom-control-heat { left:-10px; }.dom-solutions-grid { grid-template-columns:1fr; }.dom-process-grid { gap:38px; }.dom-price-card { padding:30px 23px; } }
