@@ -1,31 +1,12 @@
-# Local Netlify and Supabase state
-.netlify/
-.supabase/
+# Local Netlify folder
+.netlify 
+.supabase   
 
 # Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-*.log
-logs/
-
-# Build tools, caches and temporary files
-.sass-cache/
-.cache/
-.parcel-cache/
-.eslintcache
-.stylelintcache
-coverage/
-dist/
-build/
-tmp/
-temp/
-*.tmp
-*.temp
-*.tsbuildinfo
 
 # Environment Variables
 .env
@@ -33,8 +14,6 @@ temp/
 .env.development.local
 .env.test.local
 .env.production.local
-.env.*
-!.env.example
 
 # IDEs and Editors
 .vscode/
@@ -53,7 +32,6 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
-Desktop.ini
 
 
 
