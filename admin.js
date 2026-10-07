@@ -27,6 +27,8 @@
 
     let allReviews = [];
 
+    let editingReviewId = null;
+
     const SESSION_TIMEOUT =
         4 * 60 * 60 * 1000;
 
@@ -1527,6 +1529,10 @@
                                     }
                                 </span>
 
+                                ${review.is_test
+                                    ? `<span class="status-pill test-review-pill">TEST interne</span>`
+                                    : ""}
+
                             </div>
 
                             <div class="review-service">
@@ -1554,8 +1560,16 @@
 
                         <div class="review-actions">
 
+                            ${review.is_test
+                                ? `<button
+                                    class="btn btn-secondary btn-small"
+                                    data-review-action="edit"
+                                    data-id="${Number(review.id)}"
+                                >Modifier</button>`
+                                : ""}
+
                             ${
-                                !review.approved
+                                !review.approved && !review.is_test
                                     ? `
                                         <button
                                             class="btn btn-success btn-small"
@@ -1591,6 +1605,99 @@
 
             })
             .join("");
+    }
+
+
+    function openReviewEditor(reviewId) {
+
+        const review = allReviews.find(
+            item => Number(item.id) === Number(reviewId)
+        );
+
+        if (!review) return;
+
+        editingReviewId = Number(review.id);
+        $("review-editor-name").value = review.name || "";
+        $("review-editor-rating").value = String(review.rating || 5);
+        $("review-editor-service").value = review.service || "";
+        $("review-editor-text").value = review.text || "";
+        $("review-modal").hidden = false;
+        $("review-editor-name").focus();
+    }
+
+
+    function closeReviewEditor() {
+
+        $("review-modal").hidden = true;
+        $("review-editor-form").reset();
+        editingReviewId = null;
+    }
+
+
+    async function saveReviewEdit(event) {
+
+        event.preventDefault();
+        if (!editingReviewId) return;
+
+        const submitButton = $("review-editor-form").querySelector("button[type='submit']");
+        submitButton.disabled = true;
+
+        try {
+            await api("admin-reviews", {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "edit",
+                    reviewId: editingReviewId,
+                    name: $("review-editor-name").value,
+                    rating: Number($("review-editor-rating").value),
+                    service: $("review-editor-service").value,
+                    text: $("review-editor-text").value
+                })
+            });
+
+            closeReviewEditor();
+            toast("Avis modifié.", "success");
+            await loadReviews();
+            await loadDashboard();
+        } catch (error) {
+            if (error.message !== "Session expirée") {
+                toast(error.message, "error");
+            }
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+
+    async function seedTestReviews() {
+
+        const button = $("add-test-reviews");
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "Ajout des exemples…";
+
+        try {
+            const result = await api("admin-reviews", {
+                method: "POST",
+                body: JSON.stringify({ action: "seed-test" })
+            });
+
+            if (result.created) {
+                toast(`${result.created} avis de test ajouté(s).`, "success");
+            } else {
+                toast("Les avis de test sont déjà présents.", "info");
+            }
+
+            await loadReviews();
+            await loadDashboard();
+        } catch (error) {
+            if (error.message !== "Session expirée") {
+                toast(error.message, "error");
+            }
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
     }
 
 
@@ -1884,6 +1991,16 @@
             loadReviews
         );
 
+    $("add-test-reviews")
+        .addEventListener("click", seedTestReviews);
+
+    $("review-editor-form")
+        .addEventListener("submit", saveReviewEdit);
+
+    document
+        .querySelectorAll("[data-review-close]")
+        .forEach(button => button.addEventListener("click", closeReviewEditor));
+
 
     $("leads-filter")
         .addEventListener(
@@ -2012,6 +2129,11 @@
                     Number(
                         button.dataset.id
                     );
+
+                if (action === "edit") {
+                    openReviewEditor(id);
+                    return;
+                }
 
                 if (
                     action ===

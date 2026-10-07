@@ -11,7 +11,7 @@ const {
     logger
 } = require('./utils/shared');
 
-const { getSupabaseClient } = require('./utils/supabase');
+const { getSupabaseClient, isTestReview } = require('./utils/supabase');
 
 const DEFAULT_STATS = {
     pcBuilt: 0,
@@ -52,16 +52,19 @@ async function getStatsFromDB(client) {
 
     const { data: reviews, error: reviewsError } = await client
         .from('reviews')
-        .select('rating')
+        .select('rating, ip_hash')
         .eq('approved', true);
+
+    const publicReviews = (reviews || [])
+        .filter(review => !isTestReview(review.ip_hash));
 
     let avgRating = 0;
     let totalReviews = 0;
 
-    if (!reviewsError && reviews?.length) {
-        totalReviews = reviews.length;
+    if (!reviewsError && publicReviews.length) {
+        totalReviews = publicReviews.length;
         avgRating = Math.round(
-            (reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / totalReviews) * 10
+            (publicReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / totalReviews) * 10
         ) / 10;
     }
 

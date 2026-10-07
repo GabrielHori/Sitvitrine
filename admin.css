@@ -1207,6 +1207,33 @@ a {
     color: var(--text);
 }
 
+.review-dialog select,
+.review-dialog textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+}
+
+.review-dialog textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.review-editor-field {
+    margin-bottom: 16px;
+}
+
+.review-editor-note {
+    margin: -8px 0 20px;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
 .quote-items-header {
     margin-bottom: 10px;
 }
@@ -1569,6 +1596,11 @@ a {
 .pending-pill {
     background: #fff0df;
     color: #a85b00;
+}
+
+.test-review-pill {
+    background: #e9e5ff;
+    color: #5947a8;
 }
 
 
@@ -2094,4 +2126,9 @@ a {
 [data-theme="dark"] .pending-pill {
     background: #3b2c19;
     color: #ffc878;
+}
+
+[data-theme="dark"] .test-review-pill {
+    background: #302b4d;
+    color: #c4b8ff;
 }

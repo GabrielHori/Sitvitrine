@@ -7,6 +7,7 @@
 const jwt = require('jsonwebtoken');
 
 const {
+    validateReviewData,
     successResponse,
     errorResponse,
     optionsResponse
@@ -14,7 +15,9 @@ const {
 
 const {
     getReviews,
+    addTestReviews,
     updateReviewStatus,
+    updateReview,
     deleteReview
 } = require('./utils/supabase');
 
@@ -45,9 +48,27 @@ exports.handler = async (event) => {
             try { body = JSON.parse(event.body || '{}'); }
             catch { return errorResponse('Format JSON invalide', 400); }
 
+            if (body.action === 'seed-test') {
+                const result = await addTestReviews();
+                return successResponse({
+                    message: 'Avis de test ajoutés',
+                    ...result
+                });
+            }
+
             const reviewId = Number(body.reviewId);
             if (!Number.isInteger(reviewId) || reviewId <= 0) {
                 return errorResponse('reviewId invalide', 400);
+            }
+
+            if (body.action === 'edit') {
+                const validation = validateReviewData(body);
+                if (!validation.valid) {
+                    return errorResponse('Données invalides', 400, validation.errors);
+                }
+
+                await updateReview(reviewId, validation.data);
+                return successResponse({ message: 'Avis modifié', reviewId });
             }
 
             if (body.action === 'approve') {
@@ -71,6 +92,10 @@ exports.handler = async (event) => {
         return errorResponse('Méthode non autorisée', 405);
     } catch (error) {
         console.error('Erreur admin-reviews:', error);
-        return errorResponse('Erreur serveur interne', 500);
+        const statusCode = Number.isInteger(error.statusCode) ? error.statusCode : 500;
+        return errorResponse(
+            statusCode < 500 ? error.message : 'Erreur serveur interne',
+            statusCode
+        );
     }
 };

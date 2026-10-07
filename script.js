@@ -610,6 +610,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
+                if (!contactForm.checkValidity()) {
+                    contactForm.reportValidity();
+                    return;
+                }
+
 
                 const originalText =
                     submitButton.innerHTML;
@@ -748,8 +753,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!response.ok) {
 
                         throw new Error(
-                            data.error ||
-                            "Une erreur est survenue."
+                            [data.error, ...(Array.isArray(data.details) ? data.details : [])]
+                                .filter(Boolean)
+                                .join(" — ") || "Une erreur est survenue."
                         );
 
                     }
@@ -793,6 +799,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (formMessage) {
 
                         formMessage.textContent =
+                            error.message ||
                             "Impossible d'envoyer votre demande. Vous pouvez également me contacter directement par téléphone.";
 
                         formMessage.classList.add(

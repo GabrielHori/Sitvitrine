@@ -368,6 +368,9 @@
                 <div class="toolbar">
                     <span id="reviews-count" class="count-label"></span>
 
+                    <button id="add-test-reviews" class="btn btn-secondary">
+                        + Ajouter des avis de test
+                    </button>
                     <select id="reviews-filter" class="select-control">
                         <option value="all">Tous les avis</option>
                         <option value="pending">En attente</option>
@@ -439,6 +442,42 @@
             </section>
 
         </main>
+    </div>
+
+    <div id="review-modal" class="quote-modal" hidden>
+        <div class="quote-backdrop" data-review-close></div>
+        <section class="quote-dialog review-dialog" role="dialog" aria-modal="true" aria-labelledby="review-editor-title">
+            <div class="quote-dialog-header">
+                <div>
+                    <span class="eyebrow">Modération</span>
+                    <h2 id="review-editor-title">Modifier un avis</h2>
+                </div>
+                <button type="button" class="icon-button" data-review-close aria-label="Fermer">×</button>
+            </div>
+
+            <p class="review-editor-note">Les avis de test restent masqués sur le site public, même après modification.</p>
+
+            <form id="review-editor-form">
+                <div class="quote-client-grid">
+                    <label>Nom affiché<input id="review-editor-name" type="text" minlength="2" maxlength="50" required></label>
+                    <label>Note
+                        <select id="review-editor-rating" required>
+                            <option value="5">5 étoiles</option>
+                            <option value="4">4 étoiles</option>
+                            <option value="3">3 étoiles</option>
+                            <option value="2">2 étoiles</option>
+                            <option value="1">1 étoile</option>
+                        </select>
+                    </label>
+                </div>
+                <label class="review-editor-field">Prestation<input id="review-editor-service" type="text" minlength="3" maxlength="100" required></label>
+                <label class="review-editor-field">Commentaire<textarea id="review-editor-text" minlength="10" maxlength="500" rows="5" required></textarea></label>
+                <div class="quote-actions">
+                    <button type="button" class="btn btn-secondary" data-review-close>Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </section>
     </div>
 
     <div id="quote-modal" class="quote-modal" hidden>

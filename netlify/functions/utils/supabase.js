@@ -8,6 +8,40 @@ const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 const { logger } = require('./shared');
 
+const TEST_REVIEW_MARKERS = [
+    'TESTREVIEW000001',
+    'TESTREVIEW000002',
+    'TESTREVIEW000003'
+];
+
+const TEST_REVIEW_SAMPLES = [
+    {
+        marker: TEST_REVIEW_MARKERS[0],
+        name: 'TEST — Camille',
+        rating: 5,
+        service: 'Montage PC (test)',
+        text: 'AVIS FICTIF DE TEST — Exemple interne pour vérifier la présentation et la modération.'
+    },
+    {
+        marker: TEST_REVIEW_MARKERS[1],
+        name: 'TEST — Alex',
+        rating: 4,
+        service: 'Dépannage informatique (test)',
+        text: 'AVIS FICTIF DE TEST — Exemple interne pour contrôler l’affichage d’un avis de quatre étoiles.'
+    },
+    {
+        marker: TEST_REVIEW_MARKERS[2],
+        name: 'TEST — Morgan',
+        rating: 3,
+        service: 'Optimisation PC (test)',
+        text: 'AVIS FICTIF DE TEST — Exemple interne pour vérifier les filtres et la modification depuis l’admin.'
+    }
+];
+
+function isTestReview(marker) {
+    return TEST_REVIEW_MARKERS.includes(String(marker || '').trim());
+}
+
 function getSupabaseClient() {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey =
@@ -29,7 +63,9 @@ async function getReviews(approvedOnly = true) {
     if (!client) return [];
 
     try {
-        let query = client.from('reviews').select('*');
+        let query = client
+            .from('reviews')
+            .select('id, name, rating, service, text, approved, created_at, ip_hash');
         if (approvedOnly) query = query.eq('approved', true);
 
         const { data, error } = await query.order('created_at', { ascending: false });
@@ -38,7 +74,12 @@ async function getReviews(approvedOnly = true) {
             return [];
         }
 
-        return data || [];
+        return (data || [])
+            .filter(review => !approvedOnly || !isTestReview(review.ip_hash))
+            .map(({ ip_hash, ...review }) => ({
+                ...review,
+                is_test: isTestReview(ip_hash)
+            }));
     } catch (error) {
         logger.error('Exception getReviews:', error);
         return [];
@@ -73,9 +114,75 @@ async function addReview(reviewData, clientIP = 'unknown') {
     return data;
 }
 
+async function addTestReviews() {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('Base de données non configurée');
+
+    const { data: existing, error: lookupError } = await client
+        .from('reviews')
+        .select('ip_hash')
+        .in('ip_hash', TEST_REVIEW_MARKERS);
+
+    if (lookupError) {
+        logger.error('Erreur de recherche des avis de test:', lookupError);
+        throw new Error('Impossible de vérifier les avis de test existants');
+    }
+
+    const existingMarkers = new Set(
+        (existing || []).map(review => String(review.ip_hash || '').trim())
+    );
+    const now = new Date().toISOString();
+    const newReviews = TEST_REVIEW_SAMPLES
+        .filter(review => !existingMarkers.has(review.marker))
+        .map(({ marker, ...review }) => ({
+            ...review,
+            approved: false,
+            ip_hash: marker,
+            created_at: now
+        }));
+
+    if (!newReviews.length) {
+        return { created: 0, total: TEST_REVIEW_SAMPLES.length };
+    }
+
+    const { error: insertError } = await client
+        .from('reviews')
+        .insert(newReviews);
+
+    if (insertError) {
+        logger.error('Erreur d’ajout des avis de test:', insertError);
+        throw new Error('Impossible d’ajouter les avis de test');
+    }
+
+    return { created: newReviews.length, total: TEST_REVIEW_SAMPLES.length };
+}
+
 async function updateReviewStatus(reviewId, approved) {
     const client = getSupabaseClient();
     if (!client) throw new Error('Base de données non configurée');
+
+    const { data: currentReview, error: lookupError } = await client
+        .from('reviews')
+        .select('ip_hash')
+        .eq('id', reviewId)
+        .maybeSingle();
+
+    if (lookupError) {
+        logger.error('Erreur de recherche de l’avis:', lookupError);
+        throw new Error('Impossible de vérifier cet avis');
+    }
+
+    if (!currentReview) {
+        const error = new Error('Avis introuvable');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (approved && isTestReview(currentReview.ip_hash)) {
+        const error = new Error('Un avis de test ne peut pas être publié');
+        error.statusCode = 400;
+        throw error;
+    }
 
     const { data, error } = await client
         .from('reviews')
@@ -87,6 +194,53 @@ async function updateReviewStatus(reviewId, approved) {
     if (error) {
         logger.error('Erreur updateReviewStatus:', error);
         throw new Error('Erreur lors de la mise à jour');
+    }
+
+    return data;
+}
+
+async function updateReview(reviewId, reviewData) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('Base de données non configurée');
+
+    const { data: currentReview, error: lookupError } = await client
+        .from('reviews')
+        .select('ip_hash')
+        .eq('id', reviewId)
+        .maybeSingle();
+
+    if (lookupError) {
+        logger.error('Erreur de recherche de l’avis à modifier:', lookupError);
+        throw new Error('Impossible de vérifier cet avis');
+    }
+
+    if (!currentReview) {
+        const error = new Error('Avis introuvable');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (!isTestReview(currentReview.ip_hash)) {
+        const error = new Error('Seuls les avis de test peuvent être modifiés ici');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const { data, error } = await client
+        .from('reviews')
+        .update({
+            name: reviewData.name,
+            rating: reviewData.rating,
+            service: reviewData.service,
+            text: reviewData.text
+        })
+        .eq('id', reviewId)
+        .select('id')
+        .single();
+
+    if (error) {
+        logger.error('Erreur updateReview:', error);
+        throw new Error('Impossible de modifier cet avis');
     }
 
     return data;
@@ -294,7 +448,10 @@ module.exports = {
     getSupabaseClient,
     getReviews,
     addReview,
+    addTestReviews,
+    isTestReview,
     updateReviewStatus,
+    updateReview,
     deleteReview,
     hashIP,
     addLead,

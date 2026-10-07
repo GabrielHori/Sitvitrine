@@ -12,7 +12,7 @@ const {
     optionsResponse
 } = require('./utils/shared');
 
-const { getSupabaseClient } = require('./utils/supabase');
+const { getSupabaseClient, isTestReview } = require('./utils/supabase');
 
 function verifyAdminToken(authHeader) {
     if (!authHeader || !authHeader.startsWith('Bearer ') || !process.env.JWT_SECRET) return null;
@@ -115,22 +115,23 @@ async function getAdminStats(client) {
     try {
         const { data: reviews, error: reviewsError } = await client
             .from('reviews')
-            .select('id, name, rating, service, text, approved, created_at')
+            .select('id, name, rating, service, text, approved, created_at, ip_hash')
             .order('created_at', { ascending: false });
 
         if (!reviewsError && reviews) {
-            stats.reviews.total = reviews.length;
-            stats.reviews.approved = reviews.filter(r => r.approved).length;
-            stats.reviews.pending = reviews.filter(r => !r.approved).length;
+            const businessReviews = reviews.filter(review => !isTestReview(review.ip_hash));
+            stats.reviews.total = businessReviews.length;
+            stats.reviews.approved = businessReviews.filter(r => r.approved).length;
+            stats.reviews.pending = businessReviews.filter(r => !r.approved).length;
 
-            const approved = reviews.filter(r => r.approved);
+            const approved = businessReviews.filter(r => r.approved);
             if (approved.length) {
                 stats.reviews.avgRating = Math.round(
                     (approved.reduce((sum, r) => sum + Number(r.rating || 0), 0) / approved.length) * 10
                 ) / 10;
             }
 
-            stats.recent = reviews.slice(0, 5);
+            stats.recent = businessReviews.slice(0, 5).map(({ ip_hash, ...review }) => review);
         }
 
         const { data: leads, error: leadsError } = await client

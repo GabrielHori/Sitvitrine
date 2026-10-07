@@ -2213,6 +2213,8 @@
                             id="user_name"
                             name="user_name"
                             placeholder="Votre nom"
+                            minlength="2"
+                            maxlength="80"
                             autocomplete="name"
                             required
                         >
@@ -2231,6 +2233,7 @@
                             id="user_email"
                             name="user_email"
                             placeholder="vous@email.fr"
+                            maxlength="254"
                             autocomplete="email"
                             required
                         >
@@ -2253,6 +2256,7 @@
                         id="user_phone"
                         name="user_phone"
                         placeholder="06 00 00 00 00"
+                        maxlength="30"
                         autocomplete="tel"
                     >
 
@@ -2270,6 +2274,7 @@
                     <select
                         id="service"
                         name="service"
+                        required
                     >
 
                         <option value="Dépannage informatique">
@@ -2313,6 +2318,8 @@
                         id="message"
                         name="message"
                         rows="6"
+                        minlength="10"
+                        maxlength="3000"
                         placeholder="Exemple : mon PC démarre mais devient très lent depuis quelques jours..."
                         required
                     ></textarea>
