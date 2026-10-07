@@ -203,6 +203,29 @@ async function updateReview(reviewId, reviewData) {
     const client = getSupabaseClient();
     if (!client) throw new Error('Base de données non configurée');
 
+    const { data: currentReview, error: lookupError } = await client
+        .from('reviews')
+        .select('ip_hash')
+        .eq('id', reviewId)
+        .maybeSingle();
+
+    if (lookupError) {
+        logger.error('Erreur de recherche de l’avis à modifier:', lookupError);
+        throw new Error('Impossible de vérifier cet avis');
+    }
+
+    if (!currentReview) {
+        const error = new Error('Avis introuvable');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (!isTestReview(currentReview.ip_hash)) {
+        const error = new Error('Seuls les avis de test peuvent être modifiés ici');
+        error.statusCode = 400;
+        throw error;
+    }
+
     const { data, error } = await client
         .from('reviews')
         .update({
