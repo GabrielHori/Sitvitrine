@@ -1560,13 +1560,11 @@
 
                         <div class="review-actions">
 
-                            ${review.is_test
-                                ? `<button
-                                    class="btn btn-secondary btn-small"
-                                    data-review-action="edit"
-                                    data-id="${Number(review.id)}"
-                                >Modifier</button>`
-                                : ""}
+                            <button
+                                class="btn btn-secondary btn-small"
+                                data-review-action="edit"
+                                data-id="${Number(review.id)}"
+                            >Modifier</button>
 
                             ${
                                 !review.approved && !review.is_test
