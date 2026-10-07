@@ -163,9 +163,11 @@
             const result = await response.json().catch(() => ({}));
             if (!response.ok) throw new Error(result.error || 'Impossible d’envoyer votre avis.');
             form.reset();
+            if (window.turnstile && typeof window.turnstile.reset === 'function') window.turnstile.reset();
             message.className = 'message success';
             message.textContent = '✓ Merci ! Votre avis a bien été envoyé et sera publié après validation.';
         } catch (error) {
+            if (window.turnstile && typeof window.turnstile.reset === 'function') window.turnstile.reset();
             message.className = 'message error';
             message.textContent = error.message || 'Une erreur est survenue. Réessayez dans quelques instants.';
         } finally {

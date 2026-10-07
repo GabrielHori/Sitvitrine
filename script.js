@@ -783,8 +783,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     contactForm.reset();
 
+                    if (window.turnstile && typeof window.turnstile.reset === "function") {
+                        window.turnstile.reset();
+                    }
+
 
                 } catch (error) {
+
+                    if (window.turnstile && typeof window.turnstile.reset === "function") {
+                        window.turnstile.reset();
+                    }
 
                     console.error(
                         "Erreur formulaire :",

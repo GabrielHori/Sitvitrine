@@ -35,8 +35,14 @@ function checkRateLimit(scope, clientIdentifier, limit, windowMs) {
 
 async function verifyTurnstile(token, remoteip, expectedAction) {
     const secret = process.env.TURNSTILE_SECRET_KEY;
-    if (!secret || typeof token !== 'string' || !token) {
-        return { valid: false };
+    if (!secret) {
+        logger.error('Turnstile non configuré : TURNSTILE_SECRET_KEY est absent');
+        return { valid: false, reason: 'not-configured' };
+    }
+
+    if (typeof token !== 'string' || !token.trim()) {
+        logger.error('Turnstile : jeton absent de la requête', { expectedAction });
+        return { valid: false, reason: 'missing-token' };
     }
 
     const formData = new URLSearchParams({ secret, response: token });
@@ -48,18 +54,36 @@ async function verifyTurnstile(token, remoteip, expectedAction) {
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
+                body: formData.toString(),
+                signal: AbortSignal.timeout(8000)
             }
         );
-        const result = await response.json();
+        const result = await response.json().catch(() => ({}));
+        const valid = response.ok &&
+            result.success === true &&
+            result.action === expectedAction;
+
+        if (!valid) {
+            logger.error('Turnstile a refusé la vérification', {
+                httpStatus: response.status,
+                errorCodes: Array.isArray(result['error-codes']) ? result['error-codes'] : [],
+                expectedAction,
+                receivedAction: result.action || null,
+                hostname: result.hostname || null
+            });
+        }
+
         return {
-            valid: response.ok &&
-                result.success === true &&
-                result.action === expectedAction
+            valid,
+            reason: valid
+                ? null
+                : result.success === true
+                    ? 'action-mismatch'
+                    : 'provider-rejected'
         };
     } catch (error) {
         logger.error('Erreur de vérification Turnstile:', error);
-        return { valid: false };
+        return { valid: false, reason: 'verification-unavailable' };
     }
 }
 

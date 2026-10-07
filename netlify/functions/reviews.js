@@ -65,6 +65,12 @@ exports.handler = async (event) => {
                 'review'
             );
             if (!turnstile.valid) {
+                if (turnstile.reason === 'not-configured') {
+                    return errorResponse('La protection anti-spam est temporairement indisponible. Réessayez plus tard.', 503);
+                }
+                if (turnstile.reason === 'missing-token') {
+                    return errorResponse('La vérification anti-spam n’a pas été transmise. Actualisez la page et réessayez.', 400);
+                }
                 return errorResponse('Vérification anti-spam invalide. Réessayez.', 403);
             }
 
