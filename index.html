@@ -14,9 +14,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Horizon IT | Dépannage informatique à Arles
-    </title>
+    <title>Horizon IT</title>
 
     <link
         rel="canonical"
@@ -27,7 +25,7 @@
 
     <meta
         name="description"
-        content="Horizon IT vous accompagne pour le dépannage informatique, le montage PC sur mesure, l'optimisation et la récupération de données à Arles et alentours."
+        content="Dépannage informatique à Arles, Istres et Salon-de-Provence : réparation de PC, optimisation, montage sur mesure et récupération de données avec Horizon IT."
     >
 
     <meta
@@ -59,12 +57,12 @@
 
     <meta
         property="og:title"
-        content="Horizon IT | Dépannage informatique à Arles"
+        content="Dépannage informatique à Arles, Istres et Salon-de-Provence | Horizon IT"
     >
 
     <meta
         property="og:description"
-        content="PC en panne, ordinateur lent ou besoin d'un nouveau PC ? Horizon IT vous accompagne à Arles et alentours."
+        content="PC en panne ou lent ? Horizon IT propose dépannage, réparation et assistance informatique à Arles, Istres, Salon-de-Provence et alentours."
     >
 
     <meta
@@ -84,12 +82,12 @@
 
     <meta
         name="twitter:title"
-        content="Horizon IT | Dépannage informatique à Arles"
+        content="Dépannage informatique à Arles, Istres et Salon-de-Provence | Horizon IT"
     >
 
     <meta
         name="twitter:description"
-        content="Dépannage, montage PC sur mesure et assistance informatique à Arles et alentours."
+        content="Dépannage informatique, réparation PC et assistance à Arles, Istres, Salon-de-Provence et alentours."
     >
 
     <meta
@@ -143,34 +141,45 @@
 
     {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-
-        "name": "Horizon IT",
-
-        "url": "https://ithorizon.netlify.app/",
-
-        "sameAs": [
-            "https://www.instagram.com/ithorizontech/"
-        ],
-
-        "telephone": "+33766491225",
-
-        "description": "Dépannage informatique, montage PC sur mesure, optimisation et assistance informatique à Arles et alentours.",
-
-        "areaServed": [
-            "Arles",
-            "Tarascon",
-            "Saint-Rémy-de-Provence",
-            "Nîmes",
-            "Istres"
-        ],
-
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Arles",
-            "postalCode": "13200",
-            "addressCountry": "FR"
-        }
+        "@graph": [
+            {
+                "@type": "ComputerRepair",
+                "@id": "https://ithorizon.netlify.app/#business",
+                "name": "Horizon IT",
+                "url": "https://ithorizon.netlify.app/",
+                "image": "https://ithorizon.netlify.app/images/build1.webp",
+                "sameAs": ["https://www.instagram.com/ithorizontech/"],
+                "telephone": "+33766491225",
+                "description": "Dépannage informatique, réparation de PC, montage sur mesure, optimisation et récupération de données à Arles, Istres, Salon-de-Provence et alentours.",
+                "areaServed": [
+                    {"@type": "City", "name": "Arles"},
+                    {"@type": "City", "name": "Tarascon"},
+                    {"@type": "City", "name": "Saint-Rémy-de-Provence"},
+                    {"@type": "City", "name": "Nîmes"},
+                    {"@type": "City", "name": "Istres"},
+                    {"@type": "City", "name": "Salon-de-Provence"}
+                ],
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Arles",
+                    "postalCode": "13200",
+                    "addressCountry": "FR"
+                }
+            },
+            {
+                "@type": "Service",
+                "@id": "https://ithorizon.netlify.app/#depannage-informatique",
+                "name": "Dépannage et réparation informatique",
+                "serviceType": "Dépannage informatique et réparation d'ordinateurs",
+                "provider": {"@id": "https://ithorizon.netlify.app/#business"},
+                "areaServed": [
+                    {"@type": "City", "name": "Arles"},
+                    {"@type": "City", "name": "Istres"},
+                    {"@type": "City", "name": "Salon-de-Provence"}
+                ],
+                "url": "https://ithorizon.netlify.app/"
+            }
+        ]
     }
 
     </script>
@@ -346,13 +355,10 @@
             <!-- ---------- Titre ---------- -->
 
             <h1>
-
-                Votre problème informatique,
-
+                Dépannage informatique
                 <span>
-                    ma solution.
+                    à Arles & alentours.
                 </span>
-
             </h1>
 
 
@@ -363,9 +369,10 @@
                 PC en panne, ordinateur lent, problème Windows
                 ou besoin d'un nouveau PC ?
 
-                Horizon IT vous accompagne avec des explications
-                claires, des tarifs transparents et un service
-                de proximité.
+                Horizon IT vous accompagne à Arles, Istres,
+                Salon-de-Provence et dans les communes alentour,
+                avec des explications claires, des tarifs
+                transparents et un service de proximité.
 
             </p>
 
@@ -565,7 +572,7 @@
                 <p>
                     Une panne critique ? Un écran qui ne s'allume plus ?
                     J'interviens en priorité pour les urgences informatiques
-                    à Arles et alentours.
+                    à Arles, Istres, Salon-de-Provence et alentours.
                 </p>
 
             </div>
@@ -1751,57 +1758,35 @@
         <div class="section-heading center">
 
             <span class="eyebrow">
-                Avis clients
+                Avis Google
             </span>
 
             <h2>
-                Votre satisfaction parlera pour Horizon IT.
+                Retrouvez les avis clients sur Google.
             </h2>
 
             <p>
-                Les avis affichés ici proviennent de véritables clients.
+                Les avis et les notes sont publiés sur la fiche Google
+                Horizon IT. Consultez-les directement à leur source.
             </p>
 
         </div>
 
-
-        <div
-            id="reviews-list"
-            class="reviews-grid"
-        >
-
-            <div class="empty-reviews">
-
-                <span>
-                    ⭐
-                </span>
-
-                <h3>
-                    Les premiers avis arrivent bientôt.
-                </h3>
-
-                <p>
-                    Après votre intervention, pensez à partager
-                    votre expérience.
-                </p>
-
+        <div class="google-reviews-panel">
+            <div class="google-reviews-mark" aria-hidden="true">G</div>
+            <div class="google-reviews-copy">
+                <strong>Horizon IT sur Google</strong>
+                <p>Consultez les avis existants ou partagez votre expérience sur Google.</p>
             </div>
-
-        </div>
-
-
-        <!-- ---------- Bouton laisser un avis ---------- -->
-
-        <div class="reviews-actions">
-
             <a
-                href="/avis"
+                href="https://share.google/KF40bfuhpMLgVI3D0"
                 class="btn btn-primary"
+                target="_blank"
+                rel="noopener noreferrer"
             >
-                ⭐ Laisser un avis
-                <span>→</span>
+                Voir les avis Google
+                <span aria-hidden="true">↗</span>
             </a>
-
         </div>
 
 
@@ -1825,12 +1810,13 @@
             </span>
 
             <h2>
-                Une informatique de proximité.
+                Dépannage informatique à Arles, Istres et Salon-de-Provence.
             </h2>
 
             <p>
-                Horizon IT intervient principalement à Arles et
-                dans les communes alentours selon le type de prestation.
+                Horizon IT intervient principalement à Arles, Istres,
+                Salon-de-Provence et dans les communes alentours, selon
+                le type de prestation.
             </p>
 
         </div>
@@ -1856,6 +1842,10 @@
 
             <span>
                 Istres
+            </span>
+
+            <span>
+                Salon-de-Provence
             </span>
 
         </div>
@@ -1906,8 +1896,9 @@
                 </summary>
 
                 <p>
-                    J'interviens principalement à Arles et dans
-                    les communes alentours. Pour une intervention
+                    J'interviens principalement à Arles, Istres,
+                    Salon-de-Provence et dans les communes alentours.
+                    Pour une intervention
                     plus éloignée, contactez-moi afin de vérifier
                     la possibilité.
                 </p>

@@ -6,6 +6,53 @@
     background: var(--bg-soft);
 }
 
+.google-reviews-panel {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 26px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.google-reviews-mark {
+    display: grid;
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: #4285f4;
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.google-reviews-copy {
+    flex: 1;
+}
+
+.google-reviews-copy strong {
+    display: block;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.google-reviews-copy p {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.google-reviews-panel .btn {
+    flex: 0 0 auto;
+}
+
 
 /* ---------- Grille des avis ---------- */
 
@@ -161,6 +208,22 @@
 
     .reviews-actions {
         margin-top: 28px;
+    }
+
+    .google-reviews-panel {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 20px;
+    }
+
+    .google-reviews-copy {
+        flex-basis: calc(100% - 68px);
+    }
+
+    .google-reviews-panel .btn {
+        width: 100%;
+        justify-content: center;
     }
 
 }
